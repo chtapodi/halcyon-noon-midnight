@@ -214,44 +214,44 @@ module.exports = function (minified) {
       "SETTING_RING_SUNSET_COLOR": "aaaaaa",
       "SETTING_SUN_STROKE_COLOR": "000000",
       "SETTING_SUN_FILL_COLOR": "ffffff"
-      },
-      "bwTheme4": {
-        "SETTING_TIME_COLOR": "ffffff",
-        "SETTING_SUBTEXT_PRIMARY_COLOR": "ffffff",
-        "SETTING_SUBTEXT_SECONDARY_COLOR": "ffffff",
-        "SETTING_BG_COLOR": "000000",
-        "SETTING_PIP_COLOR_PRIMARY": "ffffff",
-        "SETTING_PIP_COLOR_SECONDARY": "ffffff",
-        "SETTING_RING_STROKE_COLOR": "000000",
-        "SETTING_RING_NIGHT_COLOR": "000000",
-        "SETTING_RING_DAY_COLOR": "000000",
-        "SETTING_RING_SUNRISE_COLOR": "aaaaaa",
-        "SETTING_RING_SUNSET_COLOR": "aaaaaa",
-        "SETTING_SUN_STROKE_COLOR": "000000",
-        "SETTING_SUN_FILL_COLOR": "ffffff"
-      }
-    };
-
-    // Generate day and night presets from shared themes
-    var presets = sharedThemes;
-    var nightPresets = {};
-
-    // Convert day theme keys to night theme keys
-    var themeNames = Object.keys(sharedThemes);
-    for (var i = 0; i < themeNames.length; i++) {
-      var themeName = themeNames[i];
-      var dayTheme = sharedThemes[themeName];
-      var nightTheme = {};
-
-      var dayKeys = Object.keys(dayTheme);
-      for (var j = 0; j < dayKeys.length; j++) {
-        var dayKey = dayKeys[j];
-        var nightKey = dayKey.replace('SETTING_', 'SETTING_NIGHT_');
-        nightTheme[nightKey] = dayTheme[dayKey];
-      }
-
-      nightPresets[themeName] = nightTheme;
+    },
+    "bwTheme4": {
+      "SETTING_TIME_COLOR": "ffffff",
+      "SETTING_SUBTEXT_PRIMARY_COLOR": "ffffff",
+      "SETTING_SUBTEXT_SECONDARY_COLOR": "ffffff",
+      "SETTING_BG_COLOR": "000000",
+      "SETTING_PIP_COLOR_PRIMARY": "ffffff",
+      "SETTING_PIP_COLOR_SECONDARY": "ffffff",
+      "SETTING_RING_STROKE_COLOR": "000000",
+      "SETTING_RING_NIGHT_COLOR": "000000",
+      "SETTING_RING_DAY_COLOR": "000000",
+      "SETTING_RING_SUNRISE_COLOR": "aaaaaa",
+      "SETTING_RING_SUNSET_COLOR": "aaaaaa",
+      "SETTING_SUN_STROKE_COLOR": "000000",
+      "SETTING_SUN_FILL_COLOR": "ffffff"
     }
+  };
+
+  // Generate day and night presets from shared themes
+  var presets = sharedThemes;
+  var nightPresets = {};
+
+  // Convert day theme keys to night theme keys
+  var themeNames = Object.keys(sharedThemes);
+  for (var i = 0; i < themeNames.length; i++) {
+    var themeName = themeNames[i];
+    var dayTheme = sharedThemes[themeName];
+    var nightTheme = {};
+
+    var dayKeys = Object.keys(dayTheme);
+    for (var j = 0; j < dayKeys.length; j++) {
+      var dayKey = dayKeys[j];
+      var nightKey = dayKey.replace('SETTING_', 'SETTING_NIGHT_');
+      nightTheme[nightKey] = dayTheme[dayKey];
+    }
+
+    nightPresets[themeName] = nightTheme;
+  }
 
   function decimalToHex(decimalColor) {
     return ('0' + decimalColor.toString(16)).slice(-2);
@@ -439,6 +439,25 @@ module.exports = function (minified) {
     applyPreset();
     applyNightPreset();
     attachColorListeners();
+
+    var useNightThemeToggle = clayConfig.getItemByMessageKey('SETTING_USE_NIGHT_THEME');
+
+    function toggleNightPresetAndPreview() {
+      var isNightThemeEnabled = useNightThemeToggle.get();
+      //  if night theme is disabled, hide everything related to it
+      var nightPresetSelector = clayConfig.getItemByMessageKey('SETTING_NIGHT_PRESET');
+      var nightPreviewElement = document.getElementById('svg-night-preview');
+
+      if (isNightThemeEnabled) {
+        nightPresetSelector.show();
+        nightPreviewElement.style.display = 'block';
+      } else {
+        nightPresetSelector.hide();
+        nightPreviewElement.style.display = 'none';
+      }
+    }
+    useNightThemeToggle.on('change', toggleNightPresetAndPreview);
+    toggleNightPresetAndPreview();
 
     // Initialize day theme preview
     var dayColorKeys = Object.keys(presets.default);
