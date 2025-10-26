@@ -118,7 +118,12 @@ void Settings_updateDynamicSettings() {
 
 ColorTheme getCurrentColorTheme() {
   ColorTheme theme;
-  bool useNight = isNightTime();
+
+  // Get current time in minutes since midnight
+  struct tm *timeInfo = getCurrentTime();
+  int currentMinutes = timeInfo->tm_hour * 60 + timeInfo->tm_min;
+
+  bool useNight = globalSettings.useNightTheme && isNightTime(currentMinutes);
 
   if (useNight) {
     theme.timeColor = globalSettings.nightTimeColor;

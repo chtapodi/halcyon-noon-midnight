@@ -446,7 +446,7 @@ module.exports = function (minified) {
       var isNightThemeEnabled = useNightThemeToggle.get();
       //  if night theme is disabled, hide everything related to it
       var nightPresetSelector = clayConfig.getItemByMessageKey('SETTING_NIGHT_PRESET');
-      var nightPreviewElement = document.getElementById('svg-night-preview');
+      var nightPreviewElement = document.getElementById('svg-night-preview').parentElement.parentElement;
 
       if (isNightThemeEnabled) {
         nightPresetSelector.show();
@@ -474,6 +474,19 @@ module.exports = function (minified) {
       var nightColorValue = clayConfig.getItemByMessageKey(nightKey).get();
       updateSVGColors(nightKey, nightColorValue, true);
     }
+
+    // Apply custom styles to preview field
+    var previewContainer = document.getElementById("svg-preview").parentElement.parentElement.parentElement;
+    previewContainer.style.display = 'flex';
+    previewContainer.style.justifyContent = 'space-evenly';
+    previewContainer.style.position = 'fixed';
+    previewContainer.style.top = 0;
+    previewContainer.style.left = 0;
+    previewContainer.style.right = 0;
+    previewContainer.style.zIndex = 1;
+
+    var mainForm = document.getElementById("main-form");
+    mainForm.style.paddingTop = '224px';
 
     // Create export button
     var exportButton = document.createElement("button");

@@ -1,8 +1,8 @@
-#include <pebble.h>
 #include "solarUtils.h"
-#include "sun_calc.h"
 #include "settings.h"
+#include "sun_calc.h"
 #include "utils.h"
+#include <pebble.h>
 
 SolarInfo currentSolarInfo;
 
@@ -12,7 +12,7 @@ void solarUtils_updateLocation(LocationInfo loc) {
   //         (int)loc.lat, (int)loc.lng, (int)loc.tzOffset);
 
   // if the location is zero, it's not real; ignore it
-  if(loc.lat != 0 && loc.lng != 0) {
+  if (loc.lat != 0 && loc.lng != 0) {
     persist_write_data(LOCATION_DATA_KEY, &loc, sizeof(LocationInfo));
   }
 
@@ -23,12 +23,12 @@ void solarUtils_updateLocation(LocationInfo loc) {
 // Using the stored location OR the defaults, returns the sunrise and sunset
 #ifdef USE_FAKE_TIME
 SolarInfo priv_recalculateSolarData() {
-    SolarInfo solarInfo = {
-      sunsetMinute : DEFAULT_SUNSET_TIME,
-      sunriseMinute : DEFAULT_SUNRISE_TIME
-    };
+  SolarInfo solarInfo = {
+    sunsetMinute : DEFAULT_SUNSET_TIME,
+    sunriseMinute : DEFAULT_SUNRISE_TIME
+  };
 
-    return solarInfo;
+  return solarInfo;
 }
 #else
 SolarInfo priv_recalculateSolarData() {
@@ -79,37 +79,25 @@ SolarInfo priv_recalculateSolarData() {
     // APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise recalculated! R: %d, S: %d",
     //         sunRiseMin, sunSetMin);
 
-    SolarInfo solarInfo = {
-      sunsetMinute : sunSetMin,
-      sunriseMinute : sunRiseMin
-    };
+    SolarInfo solarInfo = {.sunsetMinute = sunSetMin,
+                           .sunriseMinute = sunRiseMin};
 
     return solarInfo;
   } else {
     // otherwise, just use the default data
-    SolarInfo solarInfo = {
-      sunsetMinute : DEFAULT_SUNSET_TIME,
-      sunriseMinute : DEFAULT_SUNRISE_TIME
-    };
+    SolarInfo solarInfo = {.sunsetMinute = DEFAULT_SUNSET_TIME,
+                           .sunriseMinute = DEFAULT_SUNRISE_TIME};
 
     return solarInfo;
   }
 }
 #endif
 
-void solarUtils_recalculateSolarData () {
+void solarUtils_recalculateSolarData() {
   currentSolarInfo = priv_recalculateSolarData();
 }
 
-bool isNightTime() {
-  if (!globalSettings.useNightTheme) {
-    return false;
-  }
-
-  // Get current time in minutes since midnight
-  struct tm *timeInfo = getCurrentTime();
-  int currentMinutes = timeInfo->tm_hour * 60 + timeInfo->tm_min;
-
+bool isNightTime(int currentMinutes) {
   // Check if current time is between sunset and sunrise
   return (currentMinutes >= currentSolarInfo.sunsetMinute ||
           currentMinutes < currentSolarInfo.sunriseMinute);

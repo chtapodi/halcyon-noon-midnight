@@ -29,7 +29,12 @@ static char dateText[DATE_STR_LEN];
 static void draw_center_text(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
   bool useLargeFontSetting = globalSettings.useLargeFonts;
-  bool useNightColors = isNightTime();
+
+  // Get current time in minutes since midnight
+  struct tm *timeInfo = getCurrentTime();
+  int currentMinutes = timeInfo->tm_hour * 60 + timeInfo->tm_min;
+
+  bool useNightColors = globalSettings.useNightTheme && isNightTime(currentMinutes);
 
   GFont time_font = fonts_get_system_font(useLargeFontSetting ? FONT_TIME_LARGE : FONT_TIME_STANDARD);
   GFont date_font = fonts_get_system_font(useLargeFontSetting ? FONT_DATE_LARGE : FONT_DATE_STANDARD);
