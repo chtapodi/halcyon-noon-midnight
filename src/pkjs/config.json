@@ -205,6 +205,11 @@
         "type": "toggle",
         "messageKey": "SETTING_USE_LARGE_FONTS",
         "label": "Use large fonts"
+      },
+      {
+        "type": "toggle",
+        "messageKey": "SETTING_SHOW_LEADING_ZERO",
+        "label": "Show leading zero in the 0-9 hour"
       }
     ]
   },

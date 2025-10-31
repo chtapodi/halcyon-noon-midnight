@@ -32,6 +32,7 @@ void Settings_loadFromStorage() {
 
   // metrics
   globalSettings.useLargeFonts = false;
+  globalSettings.showLeadingZero = false;
 
   // globalSettings.widgets[0] = PBL_IF_HEALTH_ELSE(HEALTH, BATTERY_METER);
   // globalSettings.widgets[1] = EMPTY;

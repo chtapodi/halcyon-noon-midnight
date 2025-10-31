@@ -62,6 +62,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   Tuple *sunStrokeColor_tuple = dict_find(iterator, MESSAGE_KEY_SETTING_SUN_STROKE_COLOR);
   Tuple *sunFillColor_tuple = dict_find(iterator, MESSAGE_KEY_SETTING_SUN_FILL_COLOR);
   Tuple *useLargeFonts_tuple = dict_find(iterator, MESSAGE_KEY_SETTING_USE_LARGE_FONTS);
+  Tuple *showLeadingZero_tuple = dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_LEADING_ZERO);
 
   if(timeColor_tuple != NULL) {
     globalSettings.timeColor = GColorFromHEX(timeColor_tuple->value->int32);
@@ -117,6 +118,10 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 
   if(useLargeFonts_tuple != NULL) {
     globalSettings.useLargeFonts = (bool)useLargeFonts_tuple->value->int8;
+  }
+
+  if(showLeadingZero_tuple != NULL) {
+    globalSettings.showLeadingZero = (bool)showLeadingZero_tuple->value->int8;
   }
 
   Settings_saveToStorage();

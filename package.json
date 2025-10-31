@@ -45,7 +45,8 @@
             "SETTING_RING_SUNSET_COLOR",
             "SETTING_SUN_STROKE_COLOR",
             "SETTING_SUN_FILL_COLOR",
-            "SETTING_USE_LARGE_FONTS"
+            "SETTING_USE_LARGE_FONTS",
+            "SETTING_SHOW_LEADING_ZERO"
         ],
         "resources": {
             "media": [

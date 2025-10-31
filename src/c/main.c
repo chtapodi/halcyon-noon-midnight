@@ -96,11 +96,13 @@ static void update_clock() {
     strftime(timeText, TIME_STR_LEN, "%I:%M", timeInfo);
   }
 
-  // now trim leading 0's
-  if (timeText[0] == '0') {
-    // shuffle everyone back by 1
-    for (int i = 0; i < TIME_STR_LEN; i++) {
-      timeText[i] = timeText[i + 1];
+  if (!globalSettings.showLeadingZero) {
+    // now trim leading 0's
+    if (timeText[0] == '0') {
+      // shuffle everyone back by 1
+      for (int i = 0; i < TIME_STR_LEN; i++) {
+        timeText[i] = timeText[i + 1];
+      }
     }
   }
 
