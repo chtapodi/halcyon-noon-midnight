@@ -61,7 +61,8 @@
       "SETTING_NIGHT_SUN_FILL_COLOR",
       "SETTING_USE_LARGE_FONTS",
       "SETTING_USE_NIGHT_THEME",
-      "SETTING_PIP_VISIBILITY"
+      "SETTING_PIP_VISIBILITY",
+      "SETTING_SHOW_LEADING_ZERO"
     ],
     "resources": {
       "media": [

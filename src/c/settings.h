@@ -131,50 +131,10 @@ typedef struct {
   GColor nightSunStrokeColor;
   GColor nightSunFillColor;
 
-  bool useLargeFonts;
   bool useNightTheme;
+  bool useLargeFonts;
+  bool showLeadingZero;
   PipVisibilityType pipVisibility;
-
-  // // general settings
-  // uint8_t languageId;
-  // bool showLeadingZero;
-  // uint8_t clockFontId;
-
-  // // vibration settings
-  // bool btVibe;
-  // VibeIntervalType hourlyVibe;
-
-  // // sidebar settings
-  // SidebarWidgetType widgets[3];
-  // bool sidebarOnLeft;
-  // bool useLargeFonts;
-  // bool activateDisconnectIcon;
-
-  // // weather widget settings
-  // bool useMetric;
-
-  // // battery meter widget settings
-  // bool showBatteryPct;
-  // bool disableAutobattery;
-
-  // // alt tz widget settings
-  // char altclockName[8];
-  // int altclockOffset;
-
-  // // health widget Settings
-  // bool healthUseDistance;
-  // bool healthUseRestfulSleep;
-  // char decimalSeparator;
-
-  // // dynamic settings (calculated based the currently-selected widgets)
-  // bool disableWeather;
-  // bool updateScreenEverySecond;
-  // bool enableAutoBatteryWidget;
-  // bool enableBeats;
-  // bool enableAltTimeZone;
-
-  // GColor iconFillColor;
-  // GColor iconStrokeColor;
 } Settings;
 
 typedef struct {
@@ -210,30 +170,11 @@ typedef struct {
   GColor nightSunStrokeColor;
   GColor nightSunFillColor;
 
-  bool useLargeFonts;
   bool useNightTheme;
+  bool useLargeFonts;
+  bool showLeadingZero;
+
   PipVisibilityType pipVisibility;
-
-  // other appearance settings
-  // uint8_t timeShowLeadingZero:1;
-
-  // vibration settings
-  // uint8_t btVibe:1;
-  // int8_t hourlyVibe:7;
-
-  // // battery meter widget settings
-  // uint8_t showBatteryPct:1;
-  // uint8_t disableAutobattery:1;
-
-  // // health widget Settings
-  // uint8_t healthUseDistance:1;
-
-  // // alt tz widget settings
-  // char altclockName[8];
-  // int8_t altclockOffset;
-
-  // // bluetooth disconnection icon
-  // int8_t activateDisconnectIcon:1;
 } StoredSettings;
 
 extern Settings globalSettings;

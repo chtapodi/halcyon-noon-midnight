@@ -45,26 +45,16 @@ void Settings_loadFromStorage() {
   globalSettings.nightSunFillColor = DEFAULT_NIGHT_SUN_FILL_COLOR;
 
    // various appearance settings
-   globalSettings.useLargeFonts = false;
    globalSettings.useNightTheme = false;
+   globalSettings.useLargeFonts = false;
+   globalSettings.showLeadingZero = false;
    globalSettings.pipVisibility = PIP_SHOW_ALL;
-   APP_LOG(APP_LOG_LEVEL_INFO, "Default pipVisibility: %d", globalSettings.pipVisibility);
-
-  // globalSettings.widgets[0] = PBL_IF_HEALTH_ELSE(HEALTH, BATTERY_METER);
-  // globalSettings.widgets[1] = EMPTY;
-  // globalSettings.widgets[2] = DATE;
-
-  // globalSettings.activateDisconnectIcon = true;
-  // strncpy(globalSettings.altclockName, "ALT",
-  // sizeof(globalSettings.altclockName)); globalSettings.decimalSeparator =
-  // '.'; globalSettings.showBatteryPct = true;
 
    if (persist_exists(SETTINGS_PERSIST_KEY)) {
      StoredSettings storedSettings;
      persist_read_data(SETTINGS_PERSIST_KEY, &storedSettings,
                        sizeof(StoredSettings));
      memcpy(&globalSettings, &storedSettings, sizeof(StoredSettings));
-     APP_LOG(APP_LOG_LEVEL_INFO, "Loaded pipVisibility from storage: %d", globalSettings.pipVisibility);
    }
 
   Settings_updateDynamicSettings();

@@ -444,14 +444,9 @@
         "defaultValue": "Appearance"
       },
       {
-        "type": "toggle",
-        "messageKey": "SETTING_USE_LARGE_FONTS",
-        "label": "Use large fonts"
-      },
-      {
         "type": "select",
         "messageKey": "SETTING_PIP_VISIBILITY",
-        "label": "Pips",
+        "label": "Dial Markings",
         "defaultValue": 0,
         "options": [
           {
@@ -467,6 +462,16 @@
             "value": 2
           }
         ]
+      },
+      {
+        "type": "toggle",
+        "messageKey": "SETTING_SHOW_LEADING_ZERO",
+        "label": "Show leading zero"
+      },
+      {
+        "type": "toggle",
+        "messageKey": "SETTING_USE_LARGE_FONTS",
+        "label": "Use larger font size"
       }
     ]
   },

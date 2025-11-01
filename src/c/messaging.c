@@ -101,11 +101,16 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   Tuple *nightSunFillColor_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_SUN_FILL_COLOR);
 
-  Tuple *useLargeFonts_tuple =
-      dict_find(iterator, MESSAGE_KEY_SETTING_USE_LARGE_FONTS);
   Tuple *useNightTheme_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_USE_NIGHT_THEME);
-  Tuple *pipVisibility_tuple =
+
+  Tuple *useLargeFonts_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_USE_LARGE_FONTS);
+  
+  Tuple *showLeadingZero_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_LEADING_ZERO);
+
+        Tuple *pipVisibility_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_PIP_VISIBILITY);
 
   if (timeColor_tuple != NULL) {
@@ -249,6 +254,10 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
     APP_LOG(APP_LOG_LEVEL_INFO, "Received pipVisibility: %d",
             (int)pipVisibility_tuple->value->int8);
     globalSettings.pipVisibility = (PipVisibilityType)(pipVisibility_tuple->value->int8 - 48);
+  }
+
+  if(showLeadingZero_tuple != NULL) {
+    globalSettings.showLeadingZero = (bool)showLeadingZero_tuple->value->int8;
   }
 
   Settings_saveToStorage();
