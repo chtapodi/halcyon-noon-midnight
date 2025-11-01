@@ -63,21 +63,21 @@ SolarInfo priv_recalculateSolarData() {
         calcSunSet(timeInfo->tm_year, timeInfo->tm_mon + 1, timeInfo->tm_mday,
                    loc.lat, loc.lng, ZENITH_OFFICIAL);
 
-    // APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise Time Initial R: %d, S: %d",
-    //         (int)(sunRiseTime * 100), (int)(sunSetTime * 100));
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise Time Initial R: %d, S: %d",
+            (int)(sunRiseTime * 100), (int)(sunSetTime * 100));
 
     sunRiseTime = adjustTimezone(sunRiseTime, loc.tzOffset);
     sunSetTime = adjustTimezone(sunSetTime, loc.tzOffset);
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "After timezone adjustment R: %d, S: %d",
+            (int)(sunRiseTime * 100), (int)(sunSetTime * 100));
 
     // for some reason, we have to add/subtract 12 hours (720 minutes)
     sunRiseMin = (int)(sunRiseTime * 60) - 720;
     sunSetMin = (int)(sunSetTime * 60) + 720;
 
-    // APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise Time Initial R: %d, S: %d",
-    //         (int)(sunRiseTime * 100), (int)(sunSetTime * 100));
-
-    // APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise recalculated! R: %d, S: %d",
-    //         sunRiseMin, sunSetMin);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise recalculated! R: %d, S: %d",
+            sunRiseMin, sunSetMin);
 
     SolarInfo solarInfo = {.sunsetMinute = sunSetMin,
                            .sunriseMinute = sunRiseMin};
@@ -99,6 +99,11 @@ void solarUtils_recalculateSolarData() {
 
 bool isNightTime(int currentMinutes) {
   // Check if current time is between sunset and sunrise
-  return (currentMinutes >= currentSolarInfo.sunsetMinute ||
+  bool result = (currentMinutes >= currentSolarInfo.sunsetMinute ||
           currentMinutes < currentSolarInfo.sunriseMinute);
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "isNightTime: current=%d, sunrise=%d, sunset=%d, result=%d", 
+          currentMinutes, currentSolarInfo.sunriseMinute, currentSolarInfo.sunsetMinute, result);
+  
+  return result;
 }

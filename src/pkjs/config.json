@@ -447,6 +447,26 @@
         "type": "toggle",
         "messageKey": "SETTING_USE_LARGE_FONTS",
         "label": "Use large fonts"
+      },
+      {
+        "type": "select",
+        "messageKey": "SETTING_PIP_VISIBILITY",
+        "label": "Pips",
+        "defaultValue": 0,
+        "options": [
+          {
+            "label": "Show all (every hour)",
+            "value": 0
+          },
+          {
+            "label": "Show only major (every 3 hours)",
+            "value": 1
+          },
+          {
+            "label": "Hidden",
+            "value": 2
+          }
+        ]
       }
     ]
   },

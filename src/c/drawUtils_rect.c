@@ -76,6 +76,23 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
 
   for (int i = 0; i < numPips; i++) {
     bool is_main_pip = ((i - (numPips / 8)) % (numPips / 4) == 0);
+
+    // Check pip visibility setting
+    bool should_draw_pip = false;
+    switch (globalSettings.pipVisibility) {
+      case PIP_SHOW_ALL:
+        should_draw_pip = true;
+        break;
+      case PIP_SHOW_MAJOR:
+        should_draw_pip = is_main_pip;
+        break;
+      case PIP_HIDDEN:
+        should_draw_pip = false;
+        break;
+    }
+
+    if (!should_draw_pip) continue;
+
     int length = is_main_pip ? long_pip_length : pip_length;
 
       graphics_context_set_stroke_color(ctx, is_main_pip ? currentTheme.pipColorPrimary
