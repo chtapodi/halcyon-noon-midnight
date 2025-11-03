@@ -480,10 +480,12 @@ module.exports = function (minified) {
     previewContainer.style.display = 'flex';
     previewContainer.style.justifyContent = 'space-evenly';
     previewContainer.style.position = 'fixed';
-    previewContainer.style.top = 0;
+    previewContainer.style.top = '-12px';
     previewContainer.style.left = 0;
     previewContainer.style.right = 0;
     previewContainer.style.zIndex = 1;
+    previewContainer.style.background = '#333';
+    previewContainer.style.borderBottom = '1px solid #444';
 
     var mainForm = document.getElementById("main-form");
     mainForm.style.paddingTop = '224px';
