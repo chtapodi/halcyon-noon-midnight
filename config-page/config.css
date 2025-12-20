@@ -336,20 +336,26 @@ body {
 
 .color-grid-modal {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 8px;
-    padding: 20px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0px;
+    padding: 10px;
     overflow-y: auto;
 }
 
 .color-swatch-modal {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
+    width: 100%;
+    aspect-ratio: 1.5;
+    border: 4px solid #fff;
     cursor: pointer;
+    border-radius: 8px;
 }
 
-.color-swatch-modal:hover {
+.color-swatch-modal:hover:not(:disabled) {
     border-color: #3498db;
+}
+
+.color-swatch-modal:disabled {
+    border: none;
+    background: transparent;
+    cursor: default;
 }

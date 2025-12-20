@@ -66,6 +66,124 @@ const pebbleColors = {
   "#00FFAA": { name: "Medium Spring Green", identifier: "MediumSpringGreen" }
 };
 
+// Custom color order with blanks
+const colorOrder = [
+  "#000000",
+  "#555555",
+  "#AAAAAA",
+  "#FFFFFF",
+  null,
+  null,
+  null,
+  null,
+  null,
+  "#FF0055",
+  null,
+  null,
+  "#AA5555",
+  "#550000",
+  "#AA0000",
+  "#FF0000",
+  "#FF5555",
+  "#FFAAAA",
+  null,
+  null,
+  null,
+  "#FF5500",
+  null,
+  null,
+  null,
+  null,
+  "#AA5500",
+  "#FFAA00",
+  "#FFAA55",
+  null,
+  "#AAAA55",
+  "#555500",
+  "#AAAA00",
+  "#FFFF00",
+  "#FFFF55",
+  "#FFFFAA",
+  null,
+  null,
+  "#55AA00",
+  "#AAFF00",
+  "#AAFF55",
+  null,
+  null,
+  null,
+  null,
+  "#55FF00",
+  null,
+  null,
+  "#55AA55",
+  "#005500",
+  "#00AA00",
+  "#00FF00",
+  "#55FF55",
+  "#AAFFAA",
+  null,
+  null,
+  null,
+  "#00FF55",
+  null,
+  null,
+  null,
+  null,
+  "#00AA55",
+  "#00FFAA",
+  "#55FFAA",
+  null,
+  "#55AAAA",
+  "#005555",
+  "#00AAAA",
+  "#00FFFF",
+  "#55FFFF",
+  "#AAFFFF",
+  null,
+  null,
+  "#0055AA",
+  "#00AAFF",
+  "#55AAFF",
+  null,
+  null,
+  null,
+  null,
+  "#0055FF",
+  null,
+  null,
+  "#5555AA",
+  "#000055",
+  "#0000AA",
+  "#0000FF",
+  "#5555FF",
+  "#AAAAFF",
+  null,
+  null,
+  null,
+  "#5500FF",
+  null,
+  null,
+  null,
+  null,
+  "#5500AA",
+  "#AA00FF",
+  "#AA55FF",
+  null,
+  "#AA55AA",
+  "#550055",
+  "#AA00AA",
+  "#FF00FF",
+  "#FF55FF",
+  "#FFAAFF",
+  null,
+  null,
+  "#AA0055",
+  "#FF00AA",
+  "#FF55AA",
+  null
+];
+
 // Minimal preset selector system
 
 let themes = {};
@@ -136,13 +254,17 @@ function openColorModal(inputId) {
   const modal = document.getElementById('color-modal');
   const grid = document.getElementById('color-grid-modal');
   grid.innerHTML = ''; // Clear previous
-  Object.keys(pebbleColors).forEach(hex => {
+  colorOrder.forEach(item => {
     const swatch = document.createElement('button');
     swatch.type = 'button';
     swatch.className = 'color-swatch-modal';
-    swatch.style.backgroundColor = hex;
-    swatch.title = pebbleColors[hex].name + ' (' + hex + ')';
-    swatch.addEventListener('click', () => selectColor(inputId, hex));
+    if (item) {
+      swatch.style.backgroundColor = item;
+      swatch.title = pebbleColors[item].name + ' (' + item + ')';
+      swatch.addEventListener('click', () => selectColor(inputId, item));
+    } else {
+      swatch.disabled = true;
+    }
     grid.appendChild(swatch);
   });
   modal.style.display = 'block';
