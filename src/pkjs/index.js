@@ -1,4 +1,4 @@
-const USE_SERVER_CONFIG = true;
+const USE_SERVER_CONFIG = false;
 const configDataUri = require('./configDataUri.js');
 const configLocalUri = 'http://localhost:3000/config.html';
 
@@ -47,6 +47,17 @@ Pebble.addEventListener('ready',
 // Listen for when configuration is requested
 Pebble.addEventListener('showConfiguration', function () {
   var url = USE_SERVER_CONFIG ? configLocalUri : configDataUri;
+  // Load persisted settings from localStorage
+  var persistedSettings = localStorage.getItem('halcyonSettings');
+  if (persistedSettings) {
+    try {
+      var settings = JSON.parse(persistedSettings);
+      // Append settings as URL param
+      url += '?settings=' + encodeURIComponent(JSON.stringify(settings));
+    } catch (e) {
+      console.log('Error loading persisted settings:', e);
+    }
+  }
   Pebble.openURL(url);
 });
 
@@ -54,6 +65,9 @@ Pebble.addEventListener('showConfiguration', function () {
 Pebble.addEventListener('webviewclosed', function (e) {
   // Decode and parse the configuration data
   var configData = JSON.parse(decodeURIComponent(e.response));
+
+  // Save to localStorage for persistence
+  localStorage.setItem('halcyonSettings', JSON.stringify(configData));
 
   // Convert to proper format and send to watch
   var dict = {};

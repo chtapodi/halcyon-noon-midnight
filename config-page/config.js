@@ -111,33 +111,42 @@ function saveSettings() {
     }
   });
 
-  // Save to localStorage
-  localStorage.setItem('halcyonSettings', JSON.stringify(settings));
+  // Try to save to localStorage if available (for localhost mode)
+  try {
+    localStorage.setItem('halcyonSettings', JSON.stringify(settings));
+  } catch (e) {
+    // localStorage not available (e.g., data URI)
+  }
 
   const returnTo = getQueryParam('return_to', 'pebblejs://close#');
   document.location = returnTo + encodeURIComponent(JSON.stringify(settings));
 }
 
 function loadExistingSettings() {
+  let configData = null;
+
+  // First try URL params
   const settings = getQueryParam('settings', '');
-  let configData;
   if (settings) {
     try {
       configData = JSON.parse(decodeURIComponent(settings));
     } catch (e) {
-      console.error('Error loading existing settings:', e);
-    }
-  } else {
-    // Load from localStorage if no URL settings
-    const stored = localStorage.getItem('halcyonSettings');
-    if (stored) {
-      try {
-        configData = JSON.parse(stored);
-      } catch (e) {
-        console.error('Error loading stored settings:', e);
-      }
+      console.error('Error loading settings from URL:', e);
     }
   }
+
+  // Fallback to localStorage if no URL settings
+  if (!configData) {
+    try {
+      const stored = localStorage.getItem('halcyonSettings');
+      if (stored) {
+        configData = JSON.parse(stored);
+      }
+    } catch (e) {
+      // localStorage not available
+    }
+  }
+
   if (configData) {
     Object.keys(configData).forEach(key => {
       const element = document.getElementById(key);
