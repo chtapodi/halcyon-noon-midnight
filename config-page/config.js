@@ -159,6 +159,9 @@ function selectColor(inputId, hex) {
   updateColorDisplay(inputId);
   const isNight = inputId.startsWith('SETTING_NIGHT_');
   updateSVGColors(inputId, hex, isNight);
+  // Set preset to custom when color is manually changed
+  const presetId = isNight ? 'night-preset' : 'day-preset';
+  document.getElementById(presetId).value = 'custom';
   closeColorModal();
 }
 
@@ -270,7 +273,13 @@ function loadExistingSettings() {
 
   if (configData) {
     Object.keys(configData).forEach(key => {
-      const element = document.getElementById(key);
+      let element = document.getElementById(key);
+      // Special handling for preset selects since their ids don't match the keys
+      if (key === 'SETTING_PRESET') {
+        element = document.getElementById('day-preset');
+      } else if (key === 'SETTING_NIGHT_PRESET') {
+        element = document.getElementById('night-preset');
+      }
       if (element) {
         if (element.type === 'checkbox') {
           element.checked = configData[key] === 1;
