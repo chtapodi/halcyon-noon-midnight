@@ -1,3 +1,71 @@
+// Pebble Color Palette (64 colors)
+const pebbleColors = {
+  "#AAFFAA": { name: "Mint Green", identifier: "MintGreen" },
+  "#FFAAAA": { name: "Melon", identifier: "Melon" },
+  "#FF55FF": { name: "Shocking Pink (Crayola)", identifier: "ShockingPink" },
+  "#FF0055": { name: "Folly", identifier: "Folly" },
+  "#FF5555": { name: "Sunset Orange", identifier: "SunsetOrange" },
+  "#555500": { name: "Army Green", identifier: "ArmyGreen" },
+  "#0000AA": { name: "Duke Blue", identifier: "DukeBlue" },
+  "#00AAAA": { name: "Tiffany Blue", identifier: "TiffanyBlue" },
+  "#55FF55": { name: "Screamin' Green", identifier: "ScreaminGreen" },
+  "#FFFFAA": { name: "Pastel Yellow", identifier: "PastelYellow" },
+  "#FFAAFF": { name: "Rich Brilliant Lavender", identifier: "RichBrilliantLavender" },
+  "#55FF00": { name: "Bright Green", identifier: "BrightGreen" },
+  "#FF55AA": { name: "Brilliant Rose", identifier: "BrilliantRose" },
+  "#55AAAA": { name: "Cadet Blue", identifier: "CadetBlue" },
+  "#AA5555": { name: "Rose Vale", identifier: "RoseVale" },
+  "#FF00AA": { name: "Fashion Magenta", identifier: "FashionMagenta" },
+  "#00AA55": { name: "Jaeger Green", identifier: "JaegerGreen" },
+  "#AAAAFF": { name: "Baby Blue Eyes", identifier: "BabyBlueEyes" },
+  "#AA55AA": { name: "Purpureus", identifier: "Purpureus" },
+  "#FFAA00": { name: "Chrome Yellow", identifier: "ChromeYellow" },
+  "#005500": { name: "Dark Green (X11)", identifier: "DarkGreen" },
+  "#FF0000": { name: "Red", identifier: "Red" },
+  "#5555AA": { name: "Liberty", identifier: "Liberty" },
+  "#AAAAAA": { name: "Light Gray", identifier: "LightGray" },
+  "#AA00FF": { name: "Vivid Violet", identifier: "VividViolet" },
+  "#FFAA55": { name: "Rajah", identifier: "Rajah" },
+  "#5500AA": { name: "Indigo (Web)", identifier: "Indigo" },
+  "#55AA55": { name: "May Green", identifier: "MayGreen" },
+  "#FFFF55": { name: "Icterine", identifier: "Icterine" },
+  "#550000": { name: "Bulgarian Rose", identifier: "BulgarianRose" },
+  "#FF5500": { name: "Orange", identifier: "Orange" },
+  "#00FF00": { name: "Green", identifier: "Green" },
+  "#AA5500": { name: "Windsor Tan", identifier: "WindsorTan" },
+  "#AA55FF": { name: "Lavender Indigo", identifier: "LavenderIndigo" },
+  "#555555": { name: "Dark Gray", identifier: "DarkGray" },
+  "#55FFFF": { name: "Electric Blue", identifier: "ElectricBlue" },
+  "#0055FF": { name: "Blue Moon", identifier: "BlueMoon" },
+  "#00FFFF": { name: "Cyan", identifier: "Cyan" },
+  "#000000": { name: "Black", identifier: "Black" },
+  "#55FFAA": { name: "Medium Aquamarine", identifier: "MediumAquamarine" },
+  "#AA0000": { name: "Dark Candy Apple Red", identifier: "DarkCandyAppleRed" },
+  "#AAAA00": { name: "Limerick", identifier: "Limerick" },
+  "#0055AA": { name: "Cobalt Blue", identifier: "CobaltBlue" },
+  "#AAFFFF": { name: "Celeste", identifier: "Celeste" },
+  "#5500FF": { name: "Electric Ultramarine", identifier: "ElectricUltramarine" },
+  "#55AAFF": { name: "Picton Blue", identifier: "PictonBlue" },
+  "#AAFF55": { name: "Inchworm", identifier: "Inchworm" },
+  "#0000FF": { name: "Blue", identifier: "Blue" },
+  "#00AAFF": { name: "Vivid Cerulean", identifier: "VividCerulean" },
+  "#AA00AA": { name: "Purple", identifier: "Purple" },
+  "#55AA00": { name: "Kelly Green", identifier: "KellyGreen" },
+  "#00FF55": { name: "Malachite", identifier: "Malachite" },
+  "#005555": { name: "Midnight Green (Eagle Green)", identifier: "MidnightGreen" },
+  "#FFFF00": { name: "Yellow", identifier: "Yellow" },
+  "#FF00FF": { name: "Magenta", identifier: "Magenta" },
+  "#AAFF00": { name: "Spring Bud", identifier: "SpringBud" },
+  "#AA0055": { name: "Jazzberry Jam", identifier: "JazzberryJam" },
+  "#5555FF": { name: "Very Light Blue", identifier: "VeryLightBlue" },
+  "#FFFFFF": { name: "White", identifier: "White" },
+  "#00AA00": { name: "Islamic Green", identifier: "IslamicGreen" },
+  "#000055": { name: "Oxford Blue", identifier: "OxfordBlue" },
+  "#550055": { name: "Imperial Purple", identifier: "ImperialPurple" },
+  "#AAAA55": { name: "Brass", identifier: "Brass" },
+  "#00FFAA": { name: "Medium Spring Green", identifier: "MediumSpringGreen" }
+};
+
 // Minimal preset selector system
 
 let themes = {};
@@ -30,8 +98,7 @@ function applyPreset(presetName, isNight = false) {
     if (input) {
       input.value = '#' + theme[key];
       console.log('Set input value to:', input.value);
-      // Dispatch input event to update color picker visual
-      input.dispatchEvent(new Event('input', { bubbles: true }));
+      updateColorDisplay(inputKey);
       updateSVGColors(inputKey, theme[key], isNight);
     }
   });
@@ -48,19 +115,73 @@ function updateSVGColors(colorKey, colorValue, isNight) {
 }
 
 function attachColorListeners() {
-  document.addEventListener('input', (e) => {
-    if (e.target.type === 'color') {
-      const isNight = e.target.id.startsWith('SETTING_NIGHT_');
-      updateSVGColors(e.target.id, e.target.value, isNight);
-    }
+  // Color inputs are now hidden, but we handle changes via selectColor
+}
+
+// Color Picker Functions
+
+function updateColorDisplay(inputId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const picker = document.querySelector(`.color-picker[data-for="${inputId}"]`);
+  if (!picker) return;
+  const swatch = picker.querySelector('.color-swatch');
+  const hexSpan = picker.querySelector('.color-hex');
+  const color = input.value;
+  swatch.style.backgroundColor = color;
+  hexSpan.textContent = color;
+}
+
+function openColorModal(inputId) {
+  const modal = document.getElementById('color-modal');
+  const grid = document.getElementById('color-grid-modal');
+  grid.innerHTML = ''; // Clear previous
+  Object.keys(pebbleColors).forEach(hex => {
+    const swatch = document.createElement('button');
+    swatch.type = 'button';
+    swatch.className = 'color-swatch-modal';
+    swatch.style.backgroundColor = hex;
+    swatch.title = pebbleColors[hex].name + ' (' + hex + ')';
+    swatch.addEventListener('click', () => selectColor(inputId, hex));
+    grid.appendChild(swatch);
+  });
+  modal.style.display = 'block';
+  modal.dataset.forInput = inputId;
+}
+
+function closeColorModal() {
+  document.getElementById('color-modal').style.display = 'none';
+}
+
+function selectColor(inputId, hex) {
+  const input = document.getElementById(inputId);
+  input.value = hex;
+  updateColorDisplay(inputId);
+  const isNight = inputId.startsWith('SETTING_NIGHT_');
+  updateSVGColors(inputId, hex, isNight);
+  closeColorModal();
+}
+
+function initializeColorPickers() {
+  document.querySelectorAll('.color-picker').forEach(picker => {
+    const inputId = picker.dataset.for;
+    updateColorDisplay(inputId); // Initial display
+    picker.addEventListener('click', () => openColorModal(inputId));
+  });
+
+  // Modal close events
+  document.querySelector('.modal-close').addEventListener('click', closeColorModal);
+  document.getElementById('color-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'color-modal') closeColorModal();
   });
 }
 
 function initializePreviews() {
   // Update SVG from current input values
-  document.querySelectorAll('input[type="color"]').forEach(input => {
+  document.querySelectorAll('input[type="hidden"][id*="COLOR"]').forEach(input => {
     const isNight = input.id.startsWith('SETTING_NIGHT_');
     updateSVGColors(input.id, input.value, isNight);
+    updateColorDisplay(input.id);
   });
 }
 
@@ -153,9 +274,10 @@ function loadExistingSettings() {
       if (element) {
         if (element.type === 'checkbox') {
           element.checked = configData[key] === 1;
-        } else if (element.type === 'color') {
+        } else if (element.type === 'hidden' && element.id.includes('COLOR')) {
           const hexColor = '#' + (configData[key] || 0).toString(16).padStart(6, '0');
           element.value = hexColor;
+          updateColorDisplay(key);
         } else {
           element.value = configData[key];
         }
@@ -234,4 +356,5 @@ document.addEventListener('DOMContentLoaded', async function () {
   attachColorListeners();
   initializePreviews();
   initializeNightThemeToggle();
+  initializeColorPickers();
 });

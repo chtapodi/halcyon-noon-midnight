@@ -76,72 +76,124 @@
                 <div class="custom-colors" id="day-custom-colors">
                     <h3>Custom Colors</h3>
                     
-                    <div class="color-grid">
-                        <div class="form-group">
-                            <label for="SETTING_TIME_COLOR">Time Color</label>
-                            <input type="color" id="SETTING_TIME_COLOR" name="SETTING_TIME_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_SUBTEXT_PRIMARY_COLOR">Date Color</label>
-                            <input type="color" id="SETTING_SUBTEXT_PRIMARY_COLOR" name="SETTING_SUBTEXT_PRIMARY_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_SUBTEXT_SECONDARY_COLOR">Widget Text Color</label>
-                            <input type="color" id="SETTING_SUBTEXT_SECONDARY_COLOR" name="SETTING_SUBTEXT_SECONDARY_COLOR" value="#555555">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_BG_COLOR">Background Color</label>
-                            <input type="color" id="SETTING_BG_COLOR" name="SETTING_BG_COLOR" value="#FFFFFF">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_PIP_COLOR_PRIMARY">Pip Color (Primary)</label>
-                            <input type="color" id="SETTING_PIP_COLOR_PRIMARY" name="SETTING_PIP_COLOR_PRIMARY" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_PIP_COLOR_SECONDARY">Pip Color (Secondary)</label>
-                            <input type="color" id="SETTING_PIP_COLOR_SECONDARY" name="SETTING_PIP_COLOR_SECONDARY" value="#AAAAAA">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_RING_STROKE_COLOR">Ring Outline Color</label>
-                            <input type="color" id="SETTING_RING_STROKE_COLOR" name="SETTING_RING_STROKE_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_RING_NIGHT_COLOR">Ring Color: Night</label>
-                            <input type="color" id="SETTING_RING_NIGHT_COLOR" name="SETTING_RING_NIGHT_COLOR" value="#0055AA">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_RING_DAY_COLOR">Ring Color: Day</label>
-                            <input type="color" id="SETTING_RING_DAY_COLOR" name="SETTING_RING_DAY_COLOR" value="#00AAFF">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_RING_SUNRISE_COLOR">Ring Color: Sunrise</label>
-                            <input type="color" id="SETTING_RING_SUNRISE_COLOR" name="SETTING_RING_SUNRISE_COLOR" value="#FFAAAA">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_RING_SUNSET_COLOR">Ring Color: Sunset</label>
-                            <input type="color" id="SETTING_RING_SUNSET_COLOR" name="SETTING_RING_SUNSET_COLOR" value="#FFAA00">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_SUN_STROKE_COLOR">Sun Outline Color</label>
-                            <input type="color" id="SETTING_SUN_STROKE_COLOR" name="SETTING_SUN_STROKE_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_SUN_FILL_COLOR">Sun Color</label>
-                            <input type="color" id="SETTING_SUN_FILL_COLOR" name="SETTING_SUN_FILL_COLOR" value="#FFFF00">
-                        </div>
-                    </div>
+                     <div class="color-grid">
+                         <div class="form-group">
+                             <label for="SETTING_TIME_COLOR">Time Color</label>
+                             <input type="hidden" id="SETTING_TIME_COLOR" name="SETTING_TIME_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_TIME_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_SUBTEXT_PRIMARY_COLOR">Date Color</label>
+                             <input type="hidden" id="SETTING_SUBTEXT_PRIMARY_COLOR" name="SETTING_SUBTEXT_PRIMARY_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_SUBTEXT_PRIMARY_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_SUBTEXT_SECONDARY_COLOR">Widget Text Color</label>
+                             <input type="hidden" id="SETTING_SUBTEXT_SECONDARY_COLOR" name="SETTING_SUBTEXT_SECONDARY_COLOR" value="#555555">
+                             <div class="color-picker" data-for="SETTING_SUBTEXT_SECONDARY_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#555555</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_BG_COLOR">Background Color</label>
+                             <input type="hidden" id="SETTING_BG_COLOR" name="SETTING_BG_COLOR" value="#FFFFFF">
+                             <div class="color-picker" data-for="SETTING_BG_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFFFFF</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_PIP_COLOR_PRIMARY">Pip Color (Primary)</label>
+                             <input type="hidden" id="SETTING_PIP_COLOR_PRIMARY" name="SETTING_PIP_COLOR_PRIMARY" value="#000000">
+                             <div class="color-picker" data-for="SETTING_PIP_COLOR_PRIMARY">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_PIP_COLOR_SECONDARY">Pip Color (Secondary)</label>
+                             <input type="hidden" id="SETTING_PIP_COLOR_SECONDARY" name="SETTING_PIP_COLOR_SECONDARY" value="#AAAAAA">
+                             <div class="color-picker" data-for="SETTING_PIP_COLOR_SECONDARY">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#AAAAAA</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_RING_STROKE_COLOR">Ring Outline Color</label>
+                             <input type="hidden" id="SETTING_RING_STROKE_COLOR" name="SETTING_RING_STROKE_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_RING_STROKE_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_RING_NIGHT_COLOR">Ring Color: Night</label>
+                             <input type="hidden" id="SETTING_RING_NIGHT_COLOR" name="SETTING_RING_NIGHT_COLOR" value="#0055AA">
+                             <div class="color-picker" data-for="SETTING_RING_NIGHT_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#0055AA</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_RING_DAY_COLOR">Ring Color: Day</label>
+                             <input type="hidden" id="SETTING_RING_DAY_COLOR" name="SETTING_RING_DAY_COLOR" value="#00AAFF">
+                             <div class="color-picker" data-for="SETTING_RING_DAY_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#00AAFF</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_RING_SUNRISE_COLOR">Ring Color: Sunrise</label>
+                             <input type="hidden" id="SETTING_RING_SUNRISE_COLOR" name="SETTING_RING_SUNRISE_COLOR" value="#FFAAAA">
+                             <div class="color-picker" data-for="SETTING_RING_SUNRISE_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFAAAA</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_RING_SUNSET_COLOR">Ring Color: Sunset</label>
+                             <input type="hidden" id="SETTING_RING_SUNSET_COLOR" name="SETTING_RING_SUNSET_COLOR" value="#FFAA00">
+                             <div class="color-picker" data-for="SETTING_RING_SUNSET_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFAA00</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_SUN_STROKE_COLOR">Sun Outline Color</label>
+                             <input type="hidden" id="SETTING_SUN_STROKE_COLOR" name="SETTING_SUN_STROKE_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_SUN_STROKE_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_SUN_FILL_COLOR">Sun Color</label>
+                             <input type="hidden" id="SETTING_SUN_FILL_COLOR" name="SETTING_SUN_FILL_COLOR" value="#FFFF00">
+                             <div class="color-picker" data-for="SETTING_SUN_FILL_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFFF00</span>
+                             </div>
+                         </div>
+                     </div>
                 </div>
             </section>
 
@@ -178,72 +230,124 @@
                 <div class="custom-colors" id="night-custom-colors">
                     <h3>Custom Night Colors</h3>
                     
-                    <div class="color-grid">
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_TIME_COLOR">Night Time Color</label>
-                            <input type="color" id="SETTING_NIGHT_TIME_COLOR" name="SETTING_NIGHT_TIME_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR">Night Date Color</label>
-                            <input type="color" id="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR" name="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR">Night Widget Text Color</label>
-                            <input type="color" id="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR" name="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR" value="#555555">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_BG_COLOR">Night Background Color</label>
-                            <input type="color" id="SETTING_NIGHT_BG_COLOR" name="SETTING_NIGHT_BG_COLOR" value="#FFFFFF">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_PIP_COLOR_PRIMARY">Night Pip Color (Primary)</label>
-                            <input type="color" id="SETTING_NIGHT_PIP_COLOR_PRIMARY" name="SETTING_NIGHT_PIP_COLOR_PRIMARY" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_PIP_COLOR_SECONDARY">Night Pip Color (Secondary)</label>
-                            <input type="color" id="SETTING_NIGHT_PIP_COLOR_SECONDARY" name="SETTING_NIGHT_PIP_COLOR_SECONDARY" value="#AAAAAA">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_RING_STROKE_COLOR">Night Ring Outline Color</label>
-                            <input type="color" id="SETTING_NIGHT_RING_STROKE_COLOR" name="SETTING_NIGHT_RING_STROKE_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_RING_NIGHT_COLOR">Night Ring Color: Night</label>
-                            <input type="color" id="SETTING_NIGHT_RING_NIGHT_COLOR" name="SETTING_NIGHT_RING_NIGHT_COLOR" value="#0055AA">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_RING_DAY_COLOR">Night Ring Color: Day</label>
-                            <input type="color" id="SETTING_NIGHT_RING_DAY_COLOR" name="SETTING_NIGHT_RING_DAY_COLOR" value="#00AAFF">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_RING_SUNRISE_COLOR">Night Ring Color: Sunrise</label>
-                            <input type="color" id="SETTING_NIGHT_RING_SUNRISE_COLOR" name="SETTING_NIGHT_RING_SUNRISE_COLOR" value="#FFAAAA">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_RING_SUNSET_COLOR">Night Ring Color: Sunset</label>
-                            <input type="color" id="SETTING_NIGHT_RING_SUNSET_COLOR" name="SETTING_NIGHT_RING_SUNSET_COLOR" value="#FFAA00">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_SUN_STROKE_COLOR">Night Sun Outline Color</label>
-                            <input type="color" id="SETTING_NIGHT_SUN_STROKE_COLOR" name="SETTING_NIGHT_SUN_STROKE_COLOR" value="#000000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="SETTING_NIGHT_SUN_FILL_COLOR">Night Sun Color</label>
-                            <input type="color" id="SETTING_NIGHT_SUN_FILL_COLOR" name="SETTING_NIGHT_SUN_FILL_COLOR" value="#FFFF00">
-                        </div>
-                    </div>
+                     <div class="color-grid">
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_TIME_COLOR">Night Time Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_TIME_COLOR" name="SETTING_NIGHT_TIME_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_NIGHT_TIME_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR">Night Date Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR" name="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR">Night Widget Text Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR" name="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR" value="#555555">
+                             <div class="color-picker" data-for="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#555555</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_BG_COLOR">Night Background Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_BG_COLOR" name="SETTING_NIGHT_BG_COLOR" value="#FFFFFF">
+                             <div class="color-picker" data-for="SETTING_NIGHT_BG_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFFFFF</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_PIP_COLOR_PRIMARY">Night Pip Color (Primary)</label>
+                             <input type="hidden" id="SETTING_NIGHT_PIP_COLOR_PRIMARY" name="SETTING_NIGHT_PIP_COLOR_PRIMARY" value="#000000">
+                             <div class="color-picker" data-for="SETTING_NIGHT_PIP_COLOR_PRIMARY">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_PIP_COLOR_SECONDARY">Night Pip Color (Secondary)</label>
+                             <input type="hidden" id="SETTING_NIGHT_PIP_COLOR_SECONDARY" name="SETTING_NIGHT_PIP_COLOR_SECONDARY" value="#AAAAAA">
+                             <div class="color-picker" data-for="SETTING_NIGHT_PIP_COLOR_SECONDARY">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#AAAAAA</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_RING_STROKE_COLOR">Night Ring Outline Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_RING_STROKE_COLOR" name="SETTING_NIGHT_RING_STROKE_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_NIGHT_RING_STROKE_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_RING_NIGHT_COLOR">Night Ring Color: Night</label>
+                             <input type="hidden" id="SETTING_NIGHT_RING_NIGHT_COLOR" name="SETTING_NIGHT_RING_NIGHT_COLOR" value="#0055AA">
+                             <div class="color-picker" data-for="SETTING_NIGHT_RING_NIGHT_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#0055AA</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_RING_DAY_COLOR">Night Ring Color: Day</label>
+                             <input type="hidden" id="SETTING_NIGHT_RING_DAY_COLOR" name="SETTING_NIGHT_RING_DAY_COLOR" value="#00AAFF">
+                             <div class="color-picker" data-for="SETTING_NIGHT_RING_DAY_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#00AAFF</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_RING_SUNRISE_COLOR">Night Ring Color: Sunrise</label>
+                             <input type="hidden" id="SETTING_NIGHT_RING_SUNRISE_COLOR" name="SETTING_NIGHT_RING_SUNRISE_COLOR" value="#FFAAAA">
+                             <div class="color-picker" data-for="SETTING_NIGHT_RING_SUNRISE_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFAAAA</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_RING_SUNSET_COLOR">Night Ring Color: Sunset</label>
+                             <input type="hidden" id="SETTING_NIGHT_RING_SUNSET_COLOR" name="SETTING_NIGHT_RING_SUNSET_COLOR" value="#FFAA00">
+                             <div class="color-picker" data-for="SETTING_NIGHT_RING_SUNSET_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFAA00</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_SUN_STROKE_COLOR">Night Sun Outline Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_SUN_STROKE_COLOR" name="SETTING_NIGHT_SUN_STROKE_COLOR" value="#000000">
+                             <div class="color-picker" data-for="SETTING_NIGHT_SUN_STROKE_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#000000</span>
+                             </div>
+                         </div>
+
+                         <div class="form-group">
+                             <label for="SETTING_NIGHT_SUN_FILL_COLOR">Night Sun Color</label>
+                             <input type="hidden" id="SETTING_NIGHT_SUN_FILL_COLOR" name="SETTING_NIGHT_SUN_FILL_COLOR" value="#FFFF00">
+                             <div class="color-picker" data-for="SETTING_NIGHT_SUN_FILL_COLOR">
+                                 <button type="button" class="color-swatch"></button>
+                                 <span class="color-hex">#FFFF00</span>
+                             </div>
+                         </div>
+                     </div>
                 </div>
             </section>
 
@@ -281,6 +385,19 @@
                 <button type="button" id="export-theme" class="btn btn-secondary">Export Theme</button>
             </div>
         </form>
+    </div>
+
+    <!-- Color Picker Modal -->
+    <div id="color-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choose a Pebble Color</h3>
+                <button type="button" class="modal-close">&times;</button>
+            </div>
+            <div id="color-grid-modal" class="color-grid-modal">
+                <!-- Color swatches will be dynamically added here -->
+            </div>
+        </div>
     </div>
 
     <script src="config.js"></script>
