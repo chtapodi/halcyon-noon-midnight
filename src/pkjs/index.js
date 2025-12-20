@@ -1,4 +1,4 @@
-const USE_SERVER_CONFIG = true;
+const USE_SERVER_CONFIG = false;
 const configDataUri = require('./configDataUri.js');
 const configLocalUri = 'http://localhost:3000/config.html';
 
