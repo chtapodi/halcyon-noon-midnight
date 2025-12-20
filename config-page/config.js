@@ -188,24 +188,7 @@ function initializePreviews() {
   });
 }
 
-function exportTheme() {
-  const themeData = {};
-  document.querySelectorAll('input[id^="SETTING_"][type="color"]').forEach(input => {
-    if (!input.id.includes('NIGHT_')) {
-      themeData[input.id] = input.value;
-    }
-  });
-  const jsonData = JSON.stringify(themeData, null, 2);
-  const blob = new Blob([jsonData], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "watchface-theme.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+
 
 function saveSettings() {
   const form = document.getElementById('config-form');
@@ -348,13 +331,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     nightPresetSelector.addEventListener('change', () => applyPreset(nightPresetSelector.value, true));
   }
 
-  // Other listeners
-  const exportButton = document.getElementById('export-theme');
-  if (exportButton) {
-    exportButton.addEventListener('click', exportTheme);
-  }
-
-  const configForm = document.getElementById('config-form');
+   // Other listeners
+   const configForm = document.getElementById('config-form');
   if (configForm) {
     configForm.addEventListener('submit', function (e) {
       e.preventDefault();

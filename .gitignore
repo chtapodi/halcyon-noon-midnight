@@ -43,3 +43,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#custom things
+src/pkjs/configDataUri.js
