@@ -111,31 +111,47 @@ function saveSettings() {
     }
   });
 
+  // Save to localStorage
+  localStorage.setItem('halcyonSettings', JSON.stringify(settings));
+
   const returnTo = getQueryParam('return_to', 'pebblejs://close#');
   document.location = returnTo + encodeURIComponent(JSON.stringify(settings));
 }
 
 function loadExistingSettings() {
   const settings = getQueryParam('settings', '');
+  let configData;
   if (settings) {
     try {
-      const configData = JSON.parse(decodeURIComponent(settings));
-      Object.keys(configData).forEach(key => {
-        const element = document.getElementById(key);
-        if (element) {
-          if (element.type === 'checkbox') {
-            element.checked = configData[key] === 1;
-          } else if (element.type === 'color') {
-            const hexColor = '#' + (configData[key] || 0).toString(16).padStart(6, '0');
-            element.value = hexColor;
-          } else {
-            element.value = configData[key];
-          }
-        }
-      });
+      configData = JSON.parse(decodeURIComponent(settings));
     } catch (e) {
       console.error('Error loading existing settings:', e);
     }
+  } else {
+    // Load from localStorage if no URL settings
+    const stored = localStorage.getItem('halcyonSettings');
+    if (stored) {
+      try {
+        configData = JSON.parse(stored);
+      } catch (e) {
+        console.error('Error loading stored settings:', e);
+      }
+    }
+  }
+  if (configData) {
+    Object.keys(configData).forEach(key => {
+      const element = document.getElementById(key);
+      if (element) {
+        if (element.type === 'checkbox') {
+          element.checked = configData[key] === 1;
+        } else if (element.type === 'color') {
+          const hexColor = '#' + (configData[key] || 0).toString(16).padStart(6, '0');
+          element.value = hexColor;
+        } else {
+          element.value = configData[key];
+        }
+      }
+    });
   }
 }
 
