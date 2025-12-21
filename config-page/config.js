@@ -214,7 +214,7 @@ function applyPreset(presetName, isNight = false) {
     const input = document.getElementById(inputKey);
     console.log('Input found:', !!input);
     if (input) {
-      input.value = '#' + theme[key];
+      input.value = '#' + theme[key].toUpperCase();
       console.log('Set input value to:', input.value);
       updateColorDisplay(inputKey);
       updateSVGColors(inputKey, theme[key], isNight);
@@ -245,13 +245,20 @@ function updateColorDisplay(inputId) {
   if (!picker) return;
   const swatch = picker.querySelector('.color-swatch');
   const hexSpan = picker.querySelector('.color-hex');
+  const nameSpan = picker.querySelector('.color-name');
   const color = input.value;
   swatch.style.backgroundColor = color;
-  hexSpan.textContent = color;
+  hexSpan.textContent = color.toUpperCase();
+  nameSpan.textContent = pebbleColors[color] ? pebbleColors[color].name : '';
 }
 
 function openColorModal(inputId) {
+  const currentHex = document.getElementById(inputId).value.toUpperCase();
+  const label = document.querySelector(`label[for="${inputId}"]`);
   const modal = document.getElementById('color-modal');
+  if (label) {
+    modal.querySelector('.modal-header h3').textContent = label.textContent;
+  }
   const grid = document.getElementById('color-grid-modal');
   grid.innerHTML = ''; // Clear previous
   colorOrder.forEach(item => {
@@ -262,6 +269,9 @@ function openColorModal(inputId) {
       swatch.style.backgroundColor = item;
       swatch.title = pebbleColors[item].name + ' (' + item + ')';
       swatch.addEventListener('click', () => selectColor(inputId, item));
+      if (item.toUpperCase() === currentHex) {
+        swatch.classList.add('selected');
+      }
     } else {
       swatch.disabled = true;
     }
@@ -276,6 +286,7 @@ function closeColorModal() {
 }
 
 function selectColor(inputId, hex) {
+  hex = hex.toUpperCase();
   const input = document.getElementById(inputId);
   input.value = hex;
   updateColorDisplay(inputId);
@@ -389,7 +400,7 @@ function loadExistingSettings() {
         if (element.type === 'checkbox') {
           element.checked = configData[key] === 1;
         } else if (element.type === 'hidden' && element.id.includes('COLOR')) {
-          const hexColor = '#' + (configData[key] || 0).toString(16).padStart(6, '0');
+          const hexColor = '#' + (configData[key] || 0).toString(16).padStart(6, '0').toUpperCase();
           element.value = hexColor;
           updateColorDisplay(key);
         } else {
