@@ -403,6 +403,7 @@ function selectColor(inputId, hex) {
   // Set preset to custom when color is manually changed
   const presetId = inputId.startsWith('SETTING_NIGHT_') ? 'night-preset' : 'day-preset';
   document.getElementById(presetId).value = 'custom';
+  toggleCustomColors(inputId.startsWith('SETTING_NIGHT_'));
   closeColorModal();
 }
 
@@ -550,6 +551,16 @@ function initializeNightThemeToggle() {
   }
 }
 
+function toggleCustomColors(isNight) {
+  const presetId = isNight ? 'night-preset' : 'day-preset';
+  const customId = isNight ? '#night-custom-colors' : '#day-custom-colors';
+  const preset = document.getElementById(presetId);
+  const custom = document.querySelector(customId);
+  if (preset && custom) {
+    custom.style.display = preset.value === 'custom' ? 'block' : 'none';
+  }
+}
+
 function initColorSystem() {
   generateColorPickers();
   initializeColorPickers();
@@ -561,17 +572,30 @@ document.addEventListener('DOMContentLoaded', async function () {
   await loadThemes();
   initColorSystem();
   loadExistingSettings();
+  // Apply presets after loading settings
+  applyPreset(document.getElementById('day-preset').value, false);
+  applyPreset(document.getElementById('night-preset').value, true);
 
   // Preset listeners
   const dayPresetSelector = document.getElementById('day-preset');
   if (dayPresetSelector) {
-    dayPresetSelector.addEventListener('change', () => applyPreset(dayPresetSelector.value, false));
+    dayPresetSelector.addEventListener('change', () => {
+      applyPreset(dayPresetSelector.value, false);
+      toggleCustomColors(false);
+    });
   }
 
   const nightPresetSelector = document.getElementById('night-preset');
   if (nightPresetSelector) {
-    nightPresetSelector.addEventListener('change', () => applyPreset(nightPresetSelector.value, true));
+    nightPresetSelector.addEventListener('change', () => {
+      applyPreset(nightPresetSelector.value, true);
+      toggleCustomColors(true);
+    });
   }
+
+  // Initialize custom colors visibility
+  toggleCustomColors(false);
+  toggleCustomColors(true);
 
   // Other listeners
   const configForm = document.getElementById('config-form');
