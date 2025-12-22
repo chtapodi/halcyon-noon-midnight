@@ -275,6 +275,22 @@ function generateColorPickers() {
   });
 }
 
+// Theme display names
+const themeDisplayNames = {
+  default: 'Solar',
+  orangeDreams: 'Orange Dreams',
+  terminalGreen: 'Terminal Green',
+  lightOceanTheme: 'Light Ocean',
+  roseTheme: 'Rose',
+  fireworkTheme: 'Firework',
+  oceanTheme: 'Ocean',
+  mauveTheme: 'Mauve',
+  sandTheme: 'Sand',
+  greyTheme: 'Grey',
+  userTeal1: 'Teal',
+  custom: 'Custom'
+};
+
 // Minimal preset selector system
 
 let themes = {};
@@ -287,6 +303,95 @@ async function loadThemes() {
   } catch (error) {
     console.error('Error loading themes:', error);
   }
+}
+
+function createMiniPreview(theme, isNight) {
+  const templateId = isNight ? 'svg-night-preview' : 'svg-preview';
+  const template = document.getElementById(templateId).cloneNode(true);
+  template.setAttribute('width', '50');
+  template.setAttribute('height', '58');
+  template.style.width = '50px';
+  template.style.height = '58px';
+
+  // Update fills
+  Object.keys(theme).forEach(key => {
+    const baseKey = key.replace('SETTING_', '');
+    const colorKey = isNight ? `PREVIEW_SETTING_NIGHT_${baseKey}` : `PREVIEW_SETTING_${baseKey}`;
+    const element = template.querySelector(`#${colorKey}`);
+    if (element) {
+      element.setAttribute('fill', '#' + theme[key]);
+    }
+  });
+
+  return template;
+}
+
+function generatePresetSelectors() {
+  const dayContainer = document.getElementById('day-preset-selector');
+  const nightContainer = document.getElementById('night-preset-selector');
+  const daySelect = document.getElementById('day-preset');
+  const nightSelect = document.getElementById('night-preset');
+
+  // Generate for day
+  generateForContainer(dayContainer, false, daySelect);
+
+  // Generate for night
+  generateForContainer(nightContainer, true, nightSelect);
+}
+
+function generateForContainer(container, isNight, select) {
+  container.innerHTML = '';
+  const allKeys = ['custom', ...Object.keys(themes)];
+  allKeys.forEach(key => {
+    const optionDiv = document.createElement('div');
+    optionDiv.className = 'preset-option';
+
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = isNight ? 'night-preset-radio' : 'day-preset-radio';
+    radio.value = key;
+    radio.id = (isNight ? 'night-radio-' : 'day-radio-') + key;
+
+    const label = document.createElement('label');
+    label.htmlFor = radio.id;
+
+    const span = document.createElement('span');
+    span.textContent = themeDisplayNames[key] || key;
+
+    let preview;
+    if (key === 'custom') {
+      preview = document.createElement('div');
+      preview.textContent = '🎨';
+      preview.className = 'preset-custom-preview';
+    } else {
+      preview = createMiniPreview(themes[key], isNight);
+    }
+
+    const previewContainer = document.createElement(('div'));
+    previewContainer.className = "svg-preview-container";
+    previewContainer.appendChild(preview);
+
+    label.appendChild(previewContainer);
+    label.appendChild(span);
+
+    optionDiv.appendChild(radio);
+    optionDiv.appendChild(label);
+
+    if (key === select.value) {
+      radio.checked = true;
+    }
+
+    container.appendChild(optionDiv);
+  });
+
+  // Add change listener
+  container.addEventListener('change', (e) => {
+    if (e.target.type === 'radio') {
+      select.value = e.target.value;
+      applyPreset(e.target.value, isNight);
+      toggleCustomColors(isNight);
+    }
+  });
 }
 
 function applyPreset(presetName, isNight = false) {
@@ -401,9 +506,11 @@ function selectColor(inputId, hex) {
     updateSVGColors(inputId, hex, isNight);
   }
   // Set preset to custom when color is manually changed
-  const presetId = inputId.startsWith('SETTING_NIGHT_') ? 'night-preset' : 'day-preset';
+  const isNight = inputId.startsWith('SETTING_NIGHT_');
+  const presetId = isNight ? 'night-preset' : 'day-preset';
   document.getElementById(presetId).value = 'custom';
-  toggleCustomColors(inputId.startsWith('SETTING_NIGHT_'));
+  document.getElementById((isNight ? 'night-radio-' : 'day-radio-') + 'custom').checked = true;
+  toggleCustomColors(isNight);
   closeColorModal();
 }
 
@@ -572,26 +679,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   await loadThemes();
   initColorSystem();
   loadExistingSettings();
+  generatePresetSelectors();
   // Apply presets after loading settings
   applyPreset(document.getElementById('day-preset').value, false);
   applyPreset(document.getElementById('night-preset').value, true);
-
-  // Preset listeners
-  const dayPresetSelector = document.getElementById('day-preset');
-  if (dayPresetSelector) {
-    dayPresetSelector.addEventListener('change', () => {
-      applyPreset(dayPresetSelector.value, false);
-      toggleCustomColors(false);
-    });
-  }
-
-  const nightPresetSelector = document.getElementById('night-preset');
-  if (nightPresetSelector) {
-    nightPresetSelector.addEventListener('change', () => {
-      applyPreset(nightPresetSelector.value, true);
-      toggleCustomColors(true);
-    });
-  }
 
   // Initialize custom colors visibility
   toggleCustomColors(false);

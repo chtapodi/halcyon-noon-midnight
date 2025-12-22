@@ -1,7 +1,7 @@
 :root {
-    --bg-color: transparent;
+    --bg-color: #fff;
     --text-color: #000;
-    --container-bg: transparent;
+    --container-bg: #fff;
     --preview-bg: #333;
     --preview-text: white;
     --preview-subtitle: #ccc;
@@ -16,7 +16,7 @@
     --label-color: #000;
     --custom-heading-color: #000;
     --color-hex-color: #000;
-    --button-primary-bg: #3498db;
+    --button-primary-bg: #FF5500;
     --button-primary-text: white;
     --button-primary-hover: #2980b9;
     --button-secondary-bg: #95a5a6;
@@ -115,7 +115,7 @@ body.modal-open {
 
 .config-section h2 {
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     color: var(--heading-color);
 }
 
@@ -285,6 +285,75 @@ body.modal-open {
     font-size: 14px;
     color: var(--description-color);
     margin-left: 5px;
+}
+
+/* Preset Selector */
+.preset-selector {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 2px;
+}
+
+.preset-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    text-align: center;
+}
+
+.preset-option input[type="radio"] {
+    display: none;
+}
+
+.preset-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.preset-option label .svg-preview-container {
+    border: 3px solid black;
+    border-radius: 8px;
+    transition: box-shadow 250ms;
+    display: flex;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.preset-option label span {
+    font-size: 10px;
+    color: var(--text-color);
+    margin-top: 5px;
+    text-align: center;
+}
+
+.preset-option input[type="radio"]:checked + label {
+    /* background-color: var(--button-primary-bg); */
+}
+
+.preset-option input[type="radio"]:checked + label span {
+    /* color: var(--button-primary-text); */
+}
+
+.preset-option input[type="radio"]:checked + label .svg-preview-container,
+.preset-option input[type="radio"]:checked + label div {
+    box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--button-primary-bg);
+}
+
+.preset-custom-preview {
+    width: 50px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    pointer-events: none;
 }
 
 /* Modal */
