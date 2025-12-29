@@ -234,14 +234,15 @@ body.modal-open {
 }
 
 /* SVG Preview Styling */
-#svg-preview-container svg,
-#svg-night-preview-container svg {
+#svg-preview-container,
+#svg-night-preview-container {
     max-width: 144px;
     height: auto;
     display: flex;
     border: 6px solid black;
     border-radius: 12px;
     overflow: hidden;
+    background-color: black;
 }
 
 /* Night theme toggle */
@@ -292,7 +293,8 @@ body.modal-open {
     display: flex;
     overflow-x: auto;
     gap: 15px;
-    padding: 10px 2px;
+    padding: 10px 4px;
+    margin-left: -4px;
 }
 
 .preset-option {
@@ -321,6 +323,7 @@ body.modal-open {
     display: flex;
     pointer-events: none;
     overflow: hidden;
+    background-color: black;
 }
 
 .preset-option label span {

@@ -308,10 +308,6 @@ async function loadThemes() {
 function createMiniPreview(theme, isNight) {
   const templateId = isNight ? 'svg-night-preview' : 'svg-preview';
   const template = document.getElementById(templateId).cloneNode(true);
-  template.setAttribute('width', '50');
-  template.setAttribute('height', '58');
-  template.style.width = '50px';
-  template.style.height = '58px';
 
   // Update fills
   Object.keys(theme).forEach(key => {
