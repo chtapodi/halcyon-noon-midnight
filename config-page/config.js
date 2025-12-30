@@ -217,13 +217,22 @@ class ColorPicker {
   }
 
   updateDisplay() {
+    if (!this.input) return;
     const color = this.input.value;
-    this.swatch.style.backgroundColor = color;
-    this.hexSpan.textContent = color.toUpperCase();
-    this.nameSpan.textContent = pebbleColors[color] ? pebbleColors[color].name : '';
+    if (!color || color === 'undefined') {
+      this.swatch.style.backgroundColor = '#000000';
+      this.hexSpan.textContent = '#000000';
+      this.nameSpan.textContent = '';
+      return;
+    }
+    const upperColor = color.toUpperCase();
+    this.swatch.style.backgroundColor = upperColor;
+    this.hexSpan.textContent = upperColor;
+    this.nameSpan.textContent = pebbleColors[upperColor] ? pebbleColors[upperColor].name : '';
   }
 
   setValue(hex) {
+    if (!this.input) return;
     this.input.value = hex.toUpperCase();
     this.updateDisplay();
     updateSVGColors(this.inputId, hex, this.isNight);
@@ -312,7 +321,7 @@ function createMiniPreview(theme, isNight) {
   // Update fills
   Object.keys(theme).forEach(key => {
     const baseKey = key.replace('SETTING_', '');
-    const colorKey = isNight ? `PREVIEW_SETTING_NIGHT_${baseKey}` : `PREVIEW_SETTING_${baseKey}`;
+    const colorKey = isNight ? `SETTING_NIGHT_${baseKey}` : `SETTING_${baseKey}`;
     const element = template.querySelector(`#${colorKey}`);
     if (element) {
       element.setAttribute('fill', '#' + theme[key]);
@@ -420,8 +429,9 @@ function applyPreset(presetName, isNight = false) {
 }
 
 function updateSVGColors(colorKey, colorValue, isNight) {
+  if (!colorValue) return;
   const svgId = isNight ? 'svg-night-preview' : 'svg-preview';
-  const previewId = `PREVIEW_${colorKey}`;
+  const previewId = colorKey;
   const element = document.querySelector(`#${svgId} #${previewId}`);
   if (element) {
     const hexColor = colorValue.startsWith('#') ? colorValue : '#' + colorValue;
@@ -521,6 +531,7 @@ function initializeColorPickers() {
 function initializePreviews() {
   // Update SVG from current input values and displays
   colorPickers.forEach(picker => {
+    if (!picker.input) return;
     const isNight = picker.inputId.startsWith('SETTING_NIGHT_');
     updateSVGColors(picker.inputId, picker.input.value, isNight);
     picker.updateDisplay();
