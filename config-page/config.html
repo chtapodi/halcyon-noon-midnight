@@ -1,176 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Halcyon Watchface Configuration</title>
-    <link rel="stylesheet" href="config.css">
-</head>
-<body>
+    <link rel="stylesheet" href="config.css" />
+  </head>
+  <body>
     <div class="config-container">
-        <!-- Preview Section -->
-        <section class="preview-section">
-            <div class="preview-container">
-                <div class="preview-item">
-                    <div id="svg-preview-container">
-                        <svg id="svg-preview" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 144 168" fill="none">
-                            <path id="SETTING_RING_NIGHT_COLOR" fill="#05A" d="M0 86h144v82H0z"/>
-                            <path id="SETTING_RING_DAY_COLOR" fill="#05AAFF" d="M0 0h144v82H0z"/>
-                            <path id="SETTING_SUN_FILL_COLOR" fill="#FFA" d="M52 8.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z"/>
-                            <path id="SETTING_SUN_STROKE_COLOR" fill="#000" fill-rule="evenodd" d="M43.5 14a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Zm0 3a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z" clip-rule="evenodd"/>
-                            <path id="SETTING_RING_SUNRISE_COLOR" fill="#FAA" d="M19 72v25H0V72h19Z"/>
-                            <path id="SETTING_RING_SUNSET_COLOR" fill="#FFAA01" d="M144 72v25h-19V72h19Z"/>
-                            <path id="SETTING_BG_COLOR" fill="#fff" d="M16 16h112v136H16z"/>
-                            <path id="SETTING_PIP_COLOR_SECONDARY" fill="#AAA" d="M17 19.121 19.12 17l4.243 4.243-2.122 2.12L17 19.122ZM125.243 17l2.121 2.121-4.243 4.243L121 21.243 125.243 17ZM17 149.243l2.121 2.121 4.243-4.243L21.242 145 17 149.243ZM125.243 151.364l2.121-2.121-4.243-4.243-2.121 2.121 4.243 4.243ZM15.83 105.404l5.949-.783.391 2.975-5.948.783-.392-2.975ZM16.49 38.275l5.796 1.553-.777 2.897-5.795-1.553.777-2.897ZM33.275 151.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.776ZM34.827 22.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM90.595 145.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM87.621 21.779l.783-5.95 2.975.392-.784 5.95-2.974-.392ZM51.62 151.778l.784-5.948 2.974.391-.783 5.949-2.974-.392ZM54.595 15.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM106.827 152.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM105.275 21.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.777ZM122.221 104.621l5.949.783-.391 2.975-5.949-.783.391-2.975ZM121.714 39.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM15.714 127.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM16.221 60.621l5.95.783-.392 2.975-5.95-.783.392-2.975Z"/>
-                            <path id="SETTING_PIP_COLOR_PRIMARY" fill="#000" d="M17 83h6v3h-6v-3ZM70 23v-5h3v5h-3ZM70 151v-6h3v6h-3ZM121 83h6v3h-6v-3Z"/>
-                            <g id="SETTING_RING_STROKE_COLOR" fill="#000" fill-rule="evenodd" clip-rule="evenodd">
-                                <path d="M125 19H19v130h106V19ZM16 16v136h112V16H16Z"/>
-                                <path d="M0 97h19V72H0v3h16v19H0v3ZM144 72h-19v25h19v-3h-16V75h16v-3Z"/>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-                <div class="preview-item" id="night-preview-container">
-                    <div id="svg-night-preview-container">
-                        <svg id="svg-night-preview" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 144 168" fill="none">
-                            <path id="SETTING_NIGHT_RING_NIGHT_COLOR" fill="#05A" d="M0 86h144v82H0z"/>
-                            <path id="SETTING_NIGHT_RING_DAY_COLOR" fill="#05AAFF" d="M0 0h144v82H0z"/>
-                            <path id="SETTING_NIGHT_SUN_FILL_COLOR" fill="#FFA" d="M52 8.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z"/>
-                            <path id="SETTING_NIGHT_SUN_STROKE_COLOR" fill="#000" fill-rule="evenodd" d="M43.5 14a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Zm0 3a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z" clip-rule="evenodd"/>
-                            <path id="SETTING_NIGHT_RING_SUNRISE_COLOR" fill="#FAA" d="M19 72v25H0V72h19Z"/>
-                            <path id="SETTING_NIGHT_RING_SUNSET_COLOR" fill="#FFAA01" d="M144 72v25h-19V72h19Z"/>
-                            <path id="SETTING_NIGHT_BG_COLOR" fill="#fff" d="M16 16h112v136H16z"/>
-                            <path id="SETTING_NIGHT_PIP_COLOR_SECONDARY" fill="#AAA" d="M17 19.121 19.12 17l4.243 4.243-2.122 2.12L17 19.122ZM125.243 17l2.121 2.121-4.243 4.243L121 21.243 125.243 17ZM17 149.243l2.121 2.121 4.243-4.243L21.242 145 17 149.243ZM125.243 151.364l2.121-2.121-4.243-4.243-2.121 2.121 4.243 4.243ZM15.83 105.404l5.949-.783.391 2.975-5.948.783-.392-2.975ZM16.49 38.275l5.796 1.553-.777 2.897-5.795-1.553.777-2.897ZM33.275 151.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.776ZM34.827 22.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM90.595 145.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM87.621 21.779l.783-5.95 2.975.392-.784 5.95-2.974-.392ZM51.62 151.778l.784-5.948 2.974.391-.783 5.949-2.974-.392ZM54.595 15.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM106.827 152.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM105.275 21.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.777ZM122.221 104.621l5.949.783-.391 2.975-5.949-.783.391-2.975ZM121.714 39.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM15.714 127.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM16.221 60.621l5.95.783-.392 2.975-5.95-.783.392-2.975Z"/>
-                            <path id="SETTING_NIGHT_PIP_COLOR_PRIMARY" fill="#000" d="M17 83h6v3h-6v-3ZM70 23v-5h3v5h-3ZM70 151v-6h3v6h-3ZM121 83h6v3h-6v-3Z"/>
-                            <g id="SETTING_NIGHT_RING_STROKE_COLOR" fill="#000" fill-rule="evenodd" clip-rule="evenodd">
-                                <path d="M125 19H19v130h106V19ZM16 16v136h112V16H16Z"/>
-                                <path d="M0 97h19V72H0v3h16v19H0v3ZM144 72h-19v25h19v-3h-16V75h16v-3Z"/>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
+      <!-- Preview Section -->
+      <section class="preview-section">
+        <div class="preview-container">
+          <div class="preview-item">
+            <div id="svg-preview-container">
+              <svg
+                id="svg-preview"
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+                viewbox="0 0 144 168"
+                fill="none"
+              >
+                <path id="SETTING_RING_NIGHT_COLOR" fill="#05A" d="M0 86h144v82H0z" />
+                <path id="SETTING_RING_DAY_COLOR" fill="#05AAFF" d="M0 0h144v82H0z" />
+                <path
+                  id="SETTING_SUN_FILL_COLOR"
+                  fill="#FFA"
+                  d="M52 8.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z"
+                />
+                <path
+                  id="SETTING_SUN_STROKE_COLOR"
+                  fill="#000"
+                  fill-rule="evenodd"
+                  d="M43.5 14a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Zm0 3a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z"
+                  clip-rule="evenodd"
+                />
+                <path id="SETTING_RING_SUNRISE_COLOR" fill="#FAA" d="M19 72v25H0V72h19Z" />
+                <path id="SETTING_RING_SUNSET_COLOR" fill="#FFAA01" d="M144 72v25h-19V72h19Z" />
+                <path id="SETTING_BG_COLOR" fill="#fff" d="M16 16h112v136H16z" />
+                <path
+                  id="SETTING_PIP_COLOR_SECONDARY"
+                  fill="#AAA"
+                  d="M17 19.121 19.12 17l4.243 4.243-2.122 2.12L17 19.122ZM125.243 17l2.121 2.121-4.243 4.243L121 21.243 125.243 17ZM17 149.243l2.121 2.121 4.243-4.243L21.242 145 17 149.243ZM125.243 151.364l2.121-2.121-4.243-4.243-2.121 2.121 4.243 4.243ZM15.83 105.404l5.949-.783.391 2.975-5.948.783-.392-2.975ZM16.49 38.275l5.796 1.553-.777 2.897-5.795-1.553.777-2.897ZM33.275 151.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.776ZM34.827 22.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM90.595 145.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM87.621 21.779l.783-5.95 2.975.392-.784 5.95-2.974-.392ZM51.62 151.778l.784-5.948 2.974.391-.783 5.949-2.974-.392ZM54.595 15.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM106.827 152.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM105.275 21.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.777ZM122.221 104.621l5.949.783-.391 2.975-5.949-.783.391-2.975ZM121.714 39.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM15.714 127.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM16.221 60.621l5.95.783-.392 2.975-5.95-.783.392-2.975Z"
+                />
+                <path
+                  id="SETTING_PIP_COLOR_PRIMARY"
+                  fill="#000"
+                  d="M17 83h6v3h-6v-3ZM70 23v-5h3v5h-3ZM70 151v-6h3v6h-3ZM121 83h6v3h-6v-3Z"
+                />
+                <g
+                  id="SETTING_RING_STROKE_COLOR"
+                  fill="#000"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                >
+                  <path d="M125 19H19v130h106V19ZM16 16v136h112V16H16Z" />
+                  <path d="M0 97h19V72H0v3h16v19H0v3ZM144 72h-19v25h19v-3h-16V75h16v-3Z" />
+                </g>
+              </svg>
             </div>
+          </div>
+          <div class="preview-item" id="night-preview-container">
+            <div id="svg-night-preview-container">
+              <svg
+                id="svg-night-preview"
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+                viewbox="0 0 144 168"
+                fill="none"
+              >
+                <path id="SETTING_NIGHT_RING_NIGHT_COLOR" fill="#05A" d="M0 86h144v82H0z" />
+                <path id="SETTING_NIGHT_RING_DAY_COLOR" fill="#05AAFF" d="M0 0h144v82H0z" />
+                <path
+                  id="SETTING_NIGHT_SUN_FILL_COLOR"
+                  fill="#FFA"
+                  d="M52 8.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z"
+                />
+                <path
+                  id="SETTING_NIGHT_SUN_STROKE_COLOR"
+                  fill="#000"
+                  fill-rule="evenodd"
+                  d="M43.5 14a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Zm0 3a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z"
+                  clip-rule="evenodd"
+                />
+                <path id="SETTING_NIGHT_RING_SUNRISE_COLOR" fill="#FAA" d="M19 72v25H0V72h19Z" />
+                <path
+                  id="SETTING_NIGHT_RING_SUNSET_COLOR"
+                  fill="#FFAA01"
+                  d="M144 72v25h-19V72h19Z"
+                />
+                <path id="SETTING_NIGHT_BG_COLOR" fill="#fff" d="M16 16h112v136H16z" />
+                <path
+                  id="SETTING_NIGHT_PIP_COLOR_SECONDARY"
+                  fill="#AAA"
+                  d="M17 19.121 19.12 17l4.243 4.243-2.122 2.12L17 19.122ZM125.243 17l2.121 2.121-4.243 4.243L121 21.243 125.243 17ZM17 149.243l2.121 2.121 4.243-4.243L21.242 145 17 149.243ZM125.243 151.364l2.121-2.121-4.243-4.243-2.121 2.121 4.243 4.243ZM15.83 105.404l5.949-.783.391 2.975-5.948.783-.392-2.975ZM16.49 38.275l5.796 1.553-.777 2.897-5.795-1.553.777-2.897ZM33.275 151.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.776ZM34.827 22.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM90.595 145.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM87.621 21.779l.783-5.95 2.975.392-.784 5.95-2.974-.392ZM51.62 151.778l.784-5.948 2.974.391-.783 5.949-2.974-.392ZM54.595 15.83l.784 5.949-2.975.391-.783-5.949 2.974-.391ZM106.827 152.286l-1.552-5.796 2.897-.776 1.553 5.795-2.898.777ZM105.275 21.51l1.552-5.796 2.898.776-1.553 5.796-2.897-.777ZM122.221 104.621l5.949.783-.391 2.975-5.949-.783.391-2.975ZM121.714 39.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM15.714 127.827l5.795-1.552.777 2.897-5.796 1.553-.776-2.898ZM16.221 60.621l5.95.783-.392 2.975-5.95-.783.392-2.975Z"
+                />
+                <path
+                  id="SETTING_NIGHT_PIP_COLOR_PRIMARY"
+                  fill="#000"
+                  d="M17 83h6v3h-6v-3ZM70 23v-5h3v5h-3ZM70 151v-6h3v6h-3ZM121 83h6v3h-6v-3Z"
+                />
+                <g
+                  id="SETTING_NIGHT_RING_STROKE_COLOR"
+                  fill="#000"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                >
+                  <path d="M125 19H19v130h106V19ZM16 16v136h112V16H16Z" />
+                  <path d="M0 97h19V72H0v3h16v19H0v3ZM144 72h-19v25h19v-3h-16V75h16v-3Z" />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <form id="config-form">
+        <!-- Theme Section -->
+        <section class="config-section">
+          <h2>Theme</h2>
+
+          <div class="form-group">
+            <select id="day-preset" name="SETTING_PRESET" style="display: none">
+              <option value="default">Solar (Default)</option>
+              <option value="orangeDreams">Orange Dreams</option>
+              <option value="terminalGreen">Terminal Green</option>
+              <option value="lightOceanTheme">Light Ocean</option>
+              <option value="roseTheme">Rose Theme</option>
+              <option value="fireworkTheme">Firework</option>
+              <option value="oceanTheme">Ocean Theme</option>
+              <option value="mauveTheme">Mauve Alert</option>
+              <option value="sandTheme">Sand</option>
+              <option value="greyTheme">Grey</option>
+              <option value="userTeal1">User Teal 1</option>
+              <option value="bwTheme1">Black & White</option>
+              <option value="bwTheme2">Black & White 2</option>
+              <option value="custom">Custom...</option>
+            </select>
+            <div id="day-preset-selector" class="preset-selector"></div>
+          </div>
+
+          <div class="custom-colors" id="day-custom-colors">
+            <div class="color-grid"></div>
+          </div>
         </section>
 
-        <form id="config-form">
-            <!-- Theme Section -->
-            <section class="config-section">
-                <h2>Theme</h2>
-                
-                 <div class="form-group">
-                      <select id="day-preset" name="SETTING_PRESET" style="display: none;">
-                          <option value="default">Solar (Default)</option>
-                          <option value="orangeDreams">Orange Dreams</option>
-                          <option value="terminalGreen">Terminal Green</option>
-                          <option value="lightOceanTheme">Light Ocean</option>
-                          <option value="roseTheme">Rose Theme</option>
-                          <option value="fireworkTheme">Firework</option>
-                          <option value="oceanTheme">Ocean Theme</option>
-                          <option value="mauveTheme">Mauve Alert</option>
-                          <option value="sandTheme">Sand</option>
-                          <option value="greyTheme">Grey</option>
-                          <option value="userTeal1">User Teal 1</option>
-                          <option value="bwTheme1">Black & White</option>
-                          <option value="bwTheme2">Black & White 2</option>
-                          <option value="custom">Custom...</option>
-                      </select>
-                     <div id="day-preset-selector" class="preset-selector"></div>
-                 </div>
+        <!-- Night Theme Section -->
+        <section class="config-section">
+          <h2>Theme (Night)</h2>
 
-                 <div class="custom-colors" id="day-custom-colors">
-                     <div class="color-grid">
-                     </div>
-                 </div>
-            </section>
+          <div class="form-group">
+            <label for="SETTING_USE_NIGHT_THEME" class="label-content">
+              <span class="label-text">Enable night theme</span>
+              <p class="description">
+                If enabled, the selected theme will be used between sunset and sunrise
+              </p>
+            </label>
+            <label for="SETTING_USE_NIGHT_THEME" class="switch-label">
+              <input type="checkbox" id="SETTING_USE_NIGHT_THEME" name="SETTING_USE_NIGHT_THEME" />
+            </label>
+          </div>
 
-            <!-- Night Theme Section -->
-            <section class="config-section">
-                <h2>Theme (Night)</h2>
-                
-                 <div class="form-group">
-                     <label for="SETTING_USE_NIGHT_THEME" class="label-content">
-                         <span class="label-text">Enable night theme</span>
-                         <p class="description">If enabled, the selected theme will be used between sunset and sunrise</p>
-                     </label>
-                     <label for="SETTING_USE_NIGHT_THEME" class="switch-label">
-                         <input type="checkbox" id="SETTING_USE_NIGHT_THEME" name="SETTING_USE_NIGHT_THEME">
-                     </label>
-                 </div>
+          <div class="form-group">
+            <select id="night-preset" name="SETTING_NIGHT_PRESET" style="display: none">
+              <option value="default">Solar (Default)</option>
+              <option value="orangeDreams">Orange Dreams</option>
+              <option value="terminalGreen">Terminal Green</option>
+              <option value="lightOceanTheme">Light Ocean</option>
+              <option value="roseTheme">Rose Theme</option>
+              <option value="fireworkTheme">Firework</option>
+              <option value="oceanTheme">Ocean Theme</option>
+              <option value="mauveTheme">Mauve Alert</option>
+              <option value="sandTheme">Sand</option>
+              <option value="greyTheme">Grey</option>
+              <option value="userTeal1">User Teal 1</option>
+              <option value="bwTheme1">Black & White</option>
+              <option value="bwTheme2">Black & White 2</option>
+              <option value="custom">Custom...</option>
+            </select>
+            <div id="night-preset-selector" class="preset-selector"></div>
+          </div>
 
-                 <div class="form-group">
-                      <select id="night-preset" name="SETTING_NIGHT_PRESET" style="display: none;">
-                          <option value="default">Solar (Default)</option>
-                          <option value="orangeDreams">Orange Dreams</option>
-                          <option value="terminalGreen">Terminal Green</option>
-                          <option value="lightOceanTheme">Light Ocean</option>
-                          <option value="roseTheme">Rose Theme</option>
-                          <option value="fireworkTheme">Firework</option>
-                          <option value="oceanTheme">Ocean Theme</option>
-                          <option value="mauveTheme">Mauve Alert</option>
-                          <option value="sandTheme">Sand</option>
-                          <option value="greyTheme">Grey</option>
-                          <option value="userTeal1">User Teal 1</option>
-                          <option value="bwTheme1">Black & White</option>
-                          <option value="bwTheme2">Black & White 2</option>
-                          <option value="custom">Custom...</option>
-                      </select>
-                     <div id="night-preset-selector" class="preset-selector"></div>
-                 </div>
+          <div class="custom-colors" id="night-custom-colors">
+            <div class="color-grid"></div>
+          </div>
+        </section>
 
-                 <div class="custom-colors" id="night-custom-colors">
-                     <div class="color-grid">
-                     </div>
-                 </div>
-            </section>
+        <!-- Appearance Section -->
+        <section class="config-section">
+          <h2>Appearance</h2>
 
-            <!-- Appearance Section -->
-            <section class="config-section">
-                <h2>Appearance</h2>
-                
-                <div class="form-group">
-                    <label for="SETTING_PIP_VISIBILITY">Dial Markings</label>
-                    <select id="SETTING_PIP_VISIBILITY" name="SETTING_PIP_VISIBILITY">
-                        <option value="0">All (every hour)</option>
-                        <option value="1">Only major (every 3 hours)</option>
-                        <option value="2">None</option>
-                    </select>
-                </div>
-                
-                 <div class="form-group">
-                     <label for="SETTING_SHOW_LEADING_ZERO" class="text-label">Show leading zero</label>
-                     <label for="SETTING_SHOW_LEADING_ZERO" class="switch-label">
-                         <input type="checkbox" id="SETTING_SHOW_LEADING_ZERO" name="SETTING_SHOW_LEADING_ZERO">
-                     </label>
-                 </div>
+          <div class="form-group">
+            <label for="SETTING_PIP_VISIBILITY">Dial Markings</label>
+            <select id="SETTING_PIP_VISIBILITY" name="SETTING_PIP_VISIBILITY">
+              <option value="0">All (every hour)</option>
+              <option value="1">Only major (every 3 hours)</option>
+              <option value="2">None</option>
+            </select>
+          </div>
 
-                 <div class="form-group">
-                     <label for="SETTING_USE_LARGE_FONTS" class="text-label">Use larger font size</label>
-                     <label for="SETTING_USE_LARGE_FONTS" class="switch-label">
-                         <input type="checkbox" id="SETTING_USE_LARGE_FONTS" name="SETTING_USE_LARGE_FONTS">
-                     </label>
-                 </div>
-            </section>
+          <div class="form-group">
+            <label for="SETTING_SHOW_LEADING_ZERO" class="text-label">Show leading zero</label>
+            <label for="SETTING_SHOW_LEADING_ZERO" class="switch-label">
+              <input
+                type="checkbox"
+                id="SETTING_SHOW_LEADING_ZERO"
+                name="SETTING_SHOW_LEADING_ZERO"
+              />
+            </label>
+          </div>
 
-            <!-- Action Buttons -->
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">Save Settings</button>
-            </div>
-        </form>
+          <div class="form-group">
+            <label for="SETTING_USE_LARGE_FONTS" class="text-label">Use larger font size</label>
+            <label for="SETTING_USE_LARGE_FONTS" class="switch-label">
+              <input type="checkbox" id="SETTING_USE_LARGE_FONTS" name="SETTING_USE_LARGE_FONTS" />
+            </label>
+          </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+      </form>
     </div>
 
     <!-- Color Picker Modal -->
     <div id="color-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Choose a Pebble Color</h3>
-                <button type="button" class="modal-close">&times;</button>
-            </div>
-            <div id="color-grid-modal" class="color-grid-modal">
-                <!-- Color swatches will be dynamically added here -->
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Choose a Pebble Color</h3>
+          <button type="button" class="modal-close">&times;</button>
         </div>
+        <div id="color-grid-modal" class="color-grid-modal">
+          <!-- Color swatches will be dynamically added here -->
+        </div>
+      </div>
     </div>
 
-    <script src="config.js"></script>
-</body>
+    <script type="module" src="/src/config-refactored.ts"></script>
+  </body>
 </html>
