@@ -1,0 +1,800 @@
+/* CSS Variables and Dark Mode Support */
+:root {
+    --bg-color: #fff;
+    --text-color: #000;
+    --container-bg: #fff;
+    --preview-bg: #333;
+    --preview-text: white;
+    --preview-subtitle: #ccc;
+    --border-color: #ddd;
+    --border-color-hover: #3498db;
+    --input-bg: white;
+    --input-text: #000;
+    --input-border: #ddd;
+    --input-border-focus: #3498db;
+    --description-color: #666;
+    --heading-color: #000;
+    --label-color: #000;
+    --custom-heading-color: #000;
+    --color-hex-color: #000;
+    --button-primary-bg: #FF5500;
+    --button-primary-text: white;
+    --button-primary-hover: #2980b9;
+    --button-secondary-bg: #95a5a6;
+    --button-secondary-text: white;
+    --button-secondary-hover: #7f8c8d;
+    --button-group-bg: #FFF;
+    --modal-bg: #FFF;
+    --modal-header-bg: #FFFC;
+    --modal-header-text: #000;
+    --modal-close: #CCC;
+    --modal-close-hover: #FFF;
+    --selected-ring-color: #000;
+    --selected-ring-color-inner: #fff9;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #333;
+        --text-color: #CCC;
+        --container-bg: #333;
+        --input-bg: #555;
+        --input-text: #CCC;
+        --input-border: #666;
+        --heading-color: #FFF;
+        --label-color: #CCC;
+        --custom-heading-color: #CCC;
+        --color-hex-color: #CCC;
+        --button-secondary-bg: #666;
+        --button-secondary-text: #CCC;
+        --button-group-bg: #333;
+        --modal-bg: #000;
+        --modal-header-bg: #0009;
+        --modal-header-text: #FFF;
+        --selected-ring-color: #fff;
+        --selected-ring-color-inner: #0009;
+        --description-color: #AAA;
+    }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.config-container {
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--container-bg);
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.config-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.preview-section, .settings-form {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.preview-section h2, .settings-form h2 {
+  color: #3498db;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+/* Charming Preview Section Styling */
+.preview-container {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 16px;
+}
+
+.preview-item {
+    text-align: center;
+}
+
+.preview-item h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: var(--preview-subtitle);
+}
+
+.preview-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  background: #f9f9f9;
+}
+
+.placeholder {
+  background: #eee;
+  border: 1px dashed #ccc;
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  border-radius: 4px;
+}
+
+.form-section {
+  margin-bottom: 25px;
+}
+
+.form-section h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+/* Charming Form Groups */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-group .label-content {
+    flex: 1;
+    margin-right: 15px;
+    cursor: pointer;
+    display: block;
+}
+
+.form-group .label-content .label-text {
+    font-weight: 600;
+    color: var(--label-color);
+    display: block;
+}
+
+.form-group .text-label {
+    font-weight: 600;
+    color: var(--label-color);
+    margin-bottom: 0;
+    cursor: pointer;
+    flex: 1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--label-color);
+}
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--input-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--input-border-focus);
+}
+
+.save-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.save-button:hover {
+  background-color: #2980b9;
+}
+
+/* Charming Toggle Switch Styling */
+.form-group input[type="checkbox"] {
+    display: none; /* Hide the actual checkbox */
+}
+
+.form-group .switch-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.form-group .switch-label::before {
+    content: '';
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 24px;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.form-group .switch-label::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-group input[type="checkbox"]:checked + label.switch-label::before,
+.form-group input[type="checkbox"]:checked ~ label.switch-label::before {
+    background-color: var(--button-primary-bg);
+}
+
+.form-group input[type="checkbox"]:checked + label.switch-label::after,
+.form-group input[type="checkbox"]:checked ~ label.switch-label::after {
+    transform: translateX(26px);
+}
+
+.form-group label:has(input[type="checkbox"]) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.form-group label:has(input[type="checkbox"])::before {
+    content: '';
+    position: relative;
+    width: 52px;
+    height: 32px;
+    background-color: #ccc;
+    border-radius: 32px;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.form-group label:has(input[type="checkbox"])::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    transform: translate3d(4px, 4px, 0);
+}
+
+.form-group label:has(input[type="checkbox"]:checked)::before {
+    background-color: var(--button-primary-bg);
+}
+
+.form-group label:has(input[type="checkbox"]:checked)::after {
+    transform: translate3d(24px, 4px, 0);
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* Charming Preset Selector */
+.preset-selector {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 4px;
+    margin-left: -4px;
+}
+
+.preset-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    text-align: center;
+}
+
+.preset-option input[type="radio"] {
+    display: none;
+}
+
+.preset-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.preset-option label .svg-preview-container {
+    border: 3px solid black;
+    border-radius: 8px;
+    transition: box-shadow 250ms;
+    display: flex;
+    pointer-events: none;
+    overflow: hidden;
+    background-color: black;
+}
+
+.preset-option label .svg-preview-container svg {
+    width: 50px;
+    height: 58px;
+}
+
+.preset-option label span {
+    font-size: 10px;
+    color: var(--text-color);
+    margin-top: 5px;
+    text-align: center;
+}
+
+.preset-option input[type="radio"]:checked + label {
+    /* background-color: var(--button-primary-bg); */
+}
+
+.preset-option input[type="radio"]:checked + label span {
+    /* color: var(--button-primary-text); */
+}
+
+.preset-option input[type="radio"]:checked + label .svg-preview-container,
+.preset-option input[type="radio"]:checked + label div {
+    box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--button-primary-bg);
+}
+
+.preset-custom-preview {
+    width: 50px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    pointer-events: none;
+}
+
+/* Preset Selector Styles */
+.preset-selector {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.preset-label {
+  font-weight: 600;
+  color: #2c3e50;
+  min-width: 120px;
+}
+
+.preset-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  flex: 1;
+  max-width: 200px;
+}
+
+.preset-select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.preset-selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.night-theme-toggle {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.night-theme-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* Color Picker Styles */
+.color-picker {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background: white;
+}
+
+.color-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.color-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.color-display:hover {
+  background: #e9ecef;
+}
+
+.color-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.color-hex {
+  font-family: monospace;
+  font-size: 13px;
+  color: #555;
+  min-width: 80px;
+}
+
+.color-name {
+  font-size: 13px;
+  color: #666;
+  flex: 1;
+}
+
+.color-group {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.color-group h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+/* Color Modal Styles */
+.color-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.color-modal {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  padding: 5px;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal-search {
+  margin-bottom: 15px;
+}
+
+.modal-search input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.color-grid-modal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 8px;
+}
+
+.color-swatch-modal {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-swatch-modal:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-swatch-modal.selected {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px white;
+}
+
+.color-swatch-modal span {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* Charming SVG Preview Styling */
+#svg-preview-container,
+#svg-night-preview-container {
+    max-width: 144px;
+    height: auto;
+    display: flex;
+    border: 6px solid black;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: black;
+}
+
+/* Night theme toggle */
+#night-preview-container {
+    transition: opacity 0.3s ease;
+}
+
+#night-preview-container.hidden {
+    opacity: 0.3;
+}
+
+/* SVG Preview Styles */
+.svg-preview-container {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.preview-title {
+  color: #2c3e50;
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.svg-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.watchface-preview {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.preview-controls {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.preview-controls .night-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f0f0;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.preview-loading,
+.svg-preview-loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+/* Loading states */
+.preset-selector-loading,
+.color-picker-loading,
+.settings-loading {
+  padding: 10px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .config-content {
+    grid-template-columns: 1fr;
+  }
+
+  .preset-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .preset-label {
+    min-width: auto;
+  }
+}
+
+/* Charming Description and Grid Styles */
+.description {
+    font-size: 0.9rem;
+    color: var(--description-color);
+    margin-top: 0px;
+    font-weight: normal;
+    margin-bottom: 0;
+    font-style: italic;
+}
+
+.custom-colors h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: var(--custom-heading-color);
+}
+
+.color-grid .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.color-grid .form-group label {
+    margin-bottom: 0;
+    flex: 1;
+    margin-right: 10px;
+    font-weight: normal;
+}
+
+/* Charming Buttons */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--button-group-bg);
+    z-index: 200;
+}
+
+.btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    flex: 1;
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+}
+
+.btn-primary:hover {
+    background-color: var(--button-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+}
+
+.btn-secondary:hover {
+    background-color: var(--button-secondary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(149, 165, 166, 0.3);
+}

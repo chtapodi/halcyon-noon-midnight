@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Test - Pebble Halcyon Config</title>
+    <style>
+        /* Import the compiled CSS */
+        @import url('dist/assets/main-Cmw0WFgV.css');
+    </style>
+</head>
+<body>
+    <div class="config-container">
+        <h1>Pebble Halcyon Config - Style Test</h1>
+        
+        <!-- Test Preview Section -->
+        <div class="preview-section">
+            <h2>Preview Section</h2>
+            <div class="preview-container">
+                <div class="preview-item">
+                    <h3>Day Theme</h3>
+                    <div id="svg-preview-container">
+                        <svg width="144" height="168" viewBox="0 0 144 168" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="144" height="168" fill="#000"/>
+                            <text x="72" y="84" text-anchor="middle" fill="#fff" font-size="16">Watch Preview</text>
+                        </svg>
+                    </div>
+                </div>
+                <div class="preview-item">
+                    <h3>Night Theme</h3>
+                    <div id="svg-night-preview-container">
+                        <svg width="144" height="168" viewBox="0 0 144 168" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="144" height="168" fill="#000"/>
+                            <text x="72" y="84" text-anchor="middle" fill="#fff" font-size="16">Night Preview</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Form Groups -->
+        <div class="config-section">
+            <h2>Form Groups</h2>
+            
+            <div class="form-group">
+                <label class="text-label">Toggle Switch</label>
+                <label class="switch-label">
+                    <input type="checkbox">
+                    Toggle Me
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label class="text-label">Color Selector</label>
+                <select>
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Test Color Picker -->
+        <div class="config-section">
+            <h2>Color Picker</h2>
+            <div class="color-picker">
+                <div class="color-swatch" style="background-color: #FF5500;"></div>
+                <span class="color-hex">#FF5500</span>
+                <span class="color-name">Orange</span>
+            </div>
+        </div>
+        
+        <!-- Test Buttons -->
+        <div class="button-group">
+            <button class="btn btn-primary">Save Settings</button>
+            <button class="btn btn-secondary">Cancel</button>
+        </div>
+        
+        <!-- Test Description -->
+        <div class="form-group">
+            <p class="description">This is a charming description with italic styling</p>
+        </div>
+    </div>
+    
+    <script>
+        // Test dark mode toggle
+        const toggleDarkMode = document.createElement('button');
+        toggleDarkMode.textContent = 'Toggle Dark Mode';
+        toggleDarkMode.style.position = 'fixed';
+        toggleDarkMode.style.top = '10px';
+        toggleDarkMode.style.right = '10px';
+        toggleDarkMode.style.zIndex = '1000';
+        toggleDarkMode.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+        document.body.appendChild(toggleDarkMode);
+    </script>
+</body>
+</html>

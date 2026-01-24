@@ -7,7 +7,7 @@ import {
   ThemeChangeEvent,
   StoreSubscriber,
   StoreState,
-} from '../types';
+} from '../types/index';
 
 export class ThemeManager {
   private themes: Themes = {};
@@ -32,17 +32,9 @@ export class ThemeManager {
 
   async loadThemes(): Promise<void> {
     try {
-      // Try both possible locations for themes.json
-      let response;
-      try {
-        response = await fetch('/themes.json');
-      } catch (e) {
-        // Fallback to data/themes/themes.json
-        response = await fetch('/src/data/themes/themes.json');
-      }
+      const response = await fetch('themes.json');
       const data = await response.json();
       this.themes = data.sharedThemes;
-      console.log('Loaded themes:', Object.keys(this.themes));
     } catch (error) {
       console.error('Error loading themes:', error);
       throw new Error('Failed to load themes');

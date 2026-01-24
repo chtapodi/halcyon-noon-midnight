@@ -1,4 +1,4 @@
-import { ThemeType, PreviewConfig } from '../types';
+import { ThemeType, PreviewConfig } from '../types/index';
 
 export class PreviewRenderer {
   private previews: Map<string, PreviewConfig> = new Map();

@@ -6,7 +6,7 @@ import {
   ValidationResult,
   SettingsValidator,
   PlatformConfig,
-} from '../types';
+} from '../types/index';
 
 export class SettingsStore {
   private settings: Settings = {};

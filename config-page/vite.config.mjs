@@ -5,19 +5,18 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: 'src/config.ts'
+      input: 'src/main.tsx'
     }
-  },
-  esbuild: {
-    // Use esbuild for TypeScript compilation
-    loader: 'ts',
-    include: /\.(ts|tsx|js|jsx)$/,
   },
   server: {
     port: 3000,
     open: '/config.html'
   },
+  esbuild: {
+    jsx: 'automatic',
+    loader: 'tsx'
+  },
   optimizeDeps: {
-    include: ['src/**/*']
+    include: ['react', 'react-dom']
   }
 });

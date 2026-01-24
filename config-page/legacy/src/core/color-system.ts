@@ -4,7 +4,7 @@ import {
   PebbleColor,
   PlatformConfig,
   StoreSubscriber,
-} from '../types';
+} from '../types/index';
 
 export class ColorPicker {
   public input: HTMLInputElement;
