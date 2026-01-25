@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { pebbleColors, colorOrder } from '../color-data';
 
@@ -9,58 +9,60 @@ interface ColorPickerProps {
   onColorChange?: (color: string) => void;
 }
 
-export const ColorPicker: React.FC<ColorPickerProps> = ({ 
+export const ColorPicker: React.FC<ColorPickerProps> = React.memo(({ 
   colorKey, 
   themeType, 
   label, 
   onColorChange 
 }) => {
-  const { themeManager, isLoading } = useTheme();
+  const { getColor, updateColor, subscribe, unsubscribe, isLoading } = useTheme();
   const [color, setColor] = useState<string>('#FFFFFF');
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (isLoading || !themeManager) return;
+    if (isLoading) return;
 
-    // Load current color from theme manager
-    const currentColor = themeManager.getColor(colorKey, themeType);
+    // Load current color using context method
+    const currentColor = getColor(colorKey, themeType);
     if (currentColor) {
       setColor(currentColor.startsWith('#') ? currentColor : `#${currentColor}`);
     }
 
-    // Subscribe to theme changes
+    // Subscribe to theme changes using context method
     const subscriber = () => {
-      const updatedColor = themeManager.getColor(colorKey, themeType);
+      const updatedColor = getColor(colorKey, themeType);
       if (updatedColor) {
         setColor(updatedColor.startsWith('#') ? updatedColor : `#${updatedColor}`);
       }
     };
-    themeManager.subscribe(subscriber);
+    subscribe(subscriber);
 
     return () => {
-      // Clean up subscription
-      if (themeManager) {
-        themeManager.unsubscribe(subscriber);
-      }
+      // Clean up subscription using context method
+      unsubscribe(subscriber);
     };
-  }, [themeManager, isLoading, colorKey, themeType]);
+  }, [getColor, subscribe, unsubscribe, isLoading, colorKey, themeType]);
 
-  const handleColorChange = (newColor: string) => {
+  // Memoized color change handler
+  const handleColorChange = useCallback((newColor: string) => {
     // Ensure color starts with #
     const formattedColor = newColor.startsWith('#') ? newColor : `#${newColor}`;
     setColor(formattedColor);
 
-    if (themeManager) {
-      themeManager.updateColor(colorKey, formattedColor.replace('#', ''), themeType);
-      onColorChange?.(formattedColor);
-    }
-  };
+    // Update color using context method
+    updateColor(colorKey, formattedColor.replace('#', ''), themeType);
+    onColorChange?.(formattedColor);
+  }, [updateColor, colorKey, themeType, onColorChange]);
 
-  const getColorName = (hex: string) => {
+  // Memoized color name getter
+  const getColorName = useCallback((hex: string) => {
     const cleanHex = hex.replace('#', '').toUpperCase();
     // Check both formats: with and without #
     return pebbleColors[`#${cleanHex}`]?.name || pebbleColors[cleanHex]?.name || 'Custom Color';
-  };
+  }, []);
+
+  // Memoized color name to prevent unnecessary recalculations
+  const colorName = useMemo(() => getColorName(color), [color, getColorName]);
 
   if (isLoading) {
     return <div className="color-picker-loading">Loading...</div>;
@@ -70,14 +72,31 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     <div className="color-picker">
       <label className="color-label">
         {label}:
-        <div className="color-display" onClick={() => setShowModal(true)}>
+        <div 
+          className="color-display" 
+          onClick={() => setShowModal(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setShowModal(true);
+            }
+          }}
+          aria-label={`Change ${label} color, current value ${color.toUpperCase()}`}
+        >
           <div 
             className="color-swatch" 
             style={{ backgroundColor: color }}
             title={`Click to change ${label}`}
+            aria-hidden="true"
           />
-          <span className="color-hex">{color.toUpperCase()}</span>
-          <span className="color-name">{getColorName(color)}</span>
+          <span className="color-hex" aria-label={`Color hex value ${color.toUpperCase()}`}>
+            {color.toUpperCase()}
+          </span>
+          <span className="color-name" aria-label={`Color name ${colorName}`}>
+            {colorName}
+          </span>
         </div>
       </label>
 
@@ -86,11 +105,14 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           currentColor={color}
           onSelect={handleColorChange}
           onClose={() => setShowModal(false)}
+          aria-label="Color selection modal"
         />
       )}
     </div>
   );
-};
+});
+
+ColorPicker.displayName = 'ColorPicker';
 
 // ColorModal component for color selection
 interface ColorModalProps {
@@ -116,26 +138,49 @@ const ColorModal: React.FC<ColorModalProps> = ({ currentColor, onSelect, onClose
   });
 
   return (
-    <div className="color-modal-overlay" onClick={onClose}>
-      <div className="color-modal" onClick={(e) => e.stopPropagation()}>
+    <div 
+      className="color-modal-overlay" 
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Color selection dialog"
+    >
+      <div 
+        className="color-modal" 
+        onClick={(e) => e.stopPropagation()}
+        role="document"
+      >
         <div className="modal-header">
-          <h3>Select Color</h3>
-          <button className="modal-close" onClick={onClose}>×</button>
+          <h3 id="color-modal-title">Select Color</h3>
+          <button 
+            className="modal-close" 
+            onClick={onClose} 
+            aria-label="Close color selection dialog"
+          >
+            ×
+          </button>
         </div>
         
         <div className="modal-search">
+          <label htmlFor="color-search" className="visually-hidden">Search colors</label>
           <input
+            id="color-search"
             type="text"
             placeholder="Search colors..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Search colors"
           />
         </div>
 
-        <div className="color-grid-modal">
+        <div 
+          className="color-grid-modal"
+          role="grid"
+          aria-labelledby="color-modal-title"
+        >
           {filteredColors.map((color, index) => {
             if (color === null) {
-              return <div key={`blank-${index}`} className="color-swatch-modal blank" />;
+              return <div key={`blank-${index}`} className="color-swatch-modal blank" aria-hidden="true" />;
             }
             
             const cleanColor = color.replace('#', '');
@@ -151,8 +196,10 @@ const ColorModal: React.FC<ColorModalProps> = ({ currentColor, onSelect, onClose
                 style={{ backgroundColor: displayColor }}
                 title={`${colorInfo?.name || 'Unknown'} (${cleanColor.toUpperCase()})`}
                 onClick={() => onSelect(displayColor)}
+                aria-label={`${colorInfo?.name || 'Unknown'} color, hex value ${cleanColor.toUpperCase()}${isSelected ? ', currently selected' : ''}`}
+                role="gridcell"
               >
-                {isSelected && <span>✓</span>}
+                {isSelected && <span aria-hidden="true">✓</span>}
               </button>
             );
           })}

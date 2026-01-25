@@ -24,17 +24,16 @@ export class ReactSettingsManager {
       // Return to Pebble app with settings
       const returnTo = this.getQueryParam('return_to', 'pebblejs://close#');
       const settingsString = encodeURIComponent(JSON.stringify(settings));
-      
+
       // For React environment, we'll simulate the return
       console.log('Settings saved, ready to return to Pebble:', settings);
       console.log('Return URL:', returnTo + settingsString);
-      
+
       // In a real Pebble config page, this would redirect:
       // document.location.href = returnTo + settingsString;
-      
+
       // For development, show success
       alert('Settings saved successfully! Ready to return to Pebble app.');
-      
     } catch (error) {
       console.error('Failed to save settings:', error);
       throw error;
@@ -77,14 +76,14 @@ export class ReactSettingsManager {
   private getQueryParam(variable: string, defaultValue: string): string {
     const query = window.location.search.substring(1);
     const vars = query.split('&');
-    
+
     for (let i = 0; i < vars.length; i++) {
       const pair = vars[i].split('=');
       if (pair[0] === variable) {
         return decodeURIComponent(pair[1]);
       }
     }
-    
+
     return defaultValue;
   }
 

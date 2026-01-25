@@ -34,7 +34,9 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
     <div 
       className={`form-group toggle-switch-container ${className}`}
       onClick={handleContainerClick}
-      role="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -44,12 +46,14 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       }}
     >
       <div className="toggle-content">
-        <label className="text-label">
+        <label className="text-label" id={id ? `${id}-label` : undefined}>
           {label}
         </label>
         <label 
           className="switch-label"
           onClick={handleSwitchClick}
+          htmlFor={id}
+          aria-labelledby={id ? `${id}-label` : undefined}
         >
           <input
             type="checkbox"
@@ -57,11 +61,14 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
             checked={checked}
             onChange={handleChange}
             tabIndex={-1} // Make input not focusable since container handles it
+            aria-hidden="true"
           />
         </label>
       </div>
       {description && (
-        <p className="description">{description}</p>
+        <p className="description" id={id ? `${id}-description` : undefined}>
+          {description}
+        </p>
       )}
     </div>
   );

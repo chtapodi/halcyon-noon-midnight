@@ -109,7 +109,7 @@ export class ThemeManager {
     return config.colors.get(colorKey) || '';
   }
 
-  getThemeColor(themeName: string, colorKey: string, themeType: ThemeType): string {
+  getThemeColor(themeName: string, colorKey: string, _themeType: ThemeType): string {
     const theme = this.getTheme(themeName);
     if (!theme) {
       console.warn(`Theme not found: ${themeName}`);
