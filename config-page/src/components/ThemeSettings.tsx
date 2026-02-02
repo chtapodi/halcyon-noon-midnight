@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import useThemeManagement from '../hooks/useThemeManagement';
-import PresetSelector from './PresetSelector';
+import { useTheme } from '../context/ConfigContext';
+import { PresetSelector } from './PresetSelector';
 import ColorSettings from './ColorSettings';
 import ToggleSwitch from './ToggleSwitch';
 import { ThemeType } from '../types';
@@ -20,24 +20,21 @@ export const ThemeSettings: React.FC<ThemeSettingsProps> = React.memo(({
   onToggleChange,
   isEnabled = true,
 }) => {
-  const { getCurrentPreset, applyPreset, isLoading } = useThemeManagement();
-  const [preset, setPreset] = useState<string>('default');
+  const { getCurrentPreset, applyPreset, isLoading } = useTheme();
+  const currentPreset = getCurrentPreset(themeType);
   const [showColors, setShowColors] = useState(false);
 
-  // Load current preset
+  // Load current preset and show colors if custom
   useEffect(() => {
     if (isLoading) return;
 
-    const currentPreset = getCurrentPreset(themeType);
-    setPreset(currentPreset);
     setShowColors(currentPreset === 'custom');
-  }, [getCurrentPreset, isLoading, themeType]);
+  }, [currentPreset, isLoading]);
 
   // Memoized preset change handler
   const handlePresetChange = useCallback((newPreset: string) => {
-    setPreset(newPreset);
-    setShowColors(newPreset === 'custom');
     applyPreset(newPreset, themeType);
+    setShowColors(newPreset === 'custom');
   }, [applyPreset, themeType]);
 
   if (isLoading) {

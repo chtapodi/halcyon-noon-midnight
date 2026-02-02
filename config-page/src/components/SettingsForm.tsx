@@ -1,39 +1,39 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ThemeSettings from './ThemeSettings';
 import AdditionalSettings from './AdditionalSettings';
-import useThemeManagement from '../hooks/useThemeManagement';
-import { useSettings } from '../context/SettingsContext';
+import { useTheme, useSettings } from '../context/ConfigContext';
 
 const SettingsForm: React.FC = () => {
-  const { getCurrentPreset, getThemeState, isLoading: themeLoading } = useThemeManagement();
-  const { saveSettings, isLoading: settingsLoading } = useSettings();
+  const { getCurrentPreset, getThemeState, isLoading: themeLoading, isNightThemeEnabled, setNightThemeEnabled } = useTheme();
+  const { saveToStorage, isLoading: settingsLoading } = useSettings();
   const [useNightTheme, setUseNightTheme] = useState(false);
 
   // Load initial night theme setting
   useEffect(() => {
     if (!themeLoading) {
-      const nightPreset = getCurrentPreset('night');
-      setUseNightTheme(!!nightPreset && nightPreset !== 'default');
+      const nightEnabled = isNightThemeEnabled();
+      setUseNightTheme(nightEnabled);
     }
-  }, [getCurrentPreset, themeLoading]);
+  }, [themeLoading, isNightThemeEnabled]);
+
+  // Handle night theme toggle
+  const handleNightThemeToggle = useCallback((enabled: boolean) => {
+    setUseNightTheme(enabled);
+    setNightThemeEnabled(enabled);
+  }, [setNightThemeEnabled]);
 
   // Memoized submit handler
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      // Save settings through the settings store
-      await saveSettings();
-      
-      // Also save theme settings to localStorage for persistence
-      const themeState = getThemeState();
-      localStorage.setItem('halcyonThemeState', JSON.stringify(themeState));
-      
+      // Save settings through the unified store
+      await saveToStorage();
       console.log('Settings saved successfully!');
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
-  }, [saveSettings, getThemeState]);
+  }, [saveToStorage]);
 
   if (themeLoading || settingsLoading) {
     return <div className="settings-loading">Loading settings...</div>;
@@ -57,7 +57,7 @@ const SettingsForm: React.FC = () => {
             themeType="night"
             title="Night Theme"
             showToggle={true}
-            onToggleChange={setUseNightTheme}
+            onToggleChange={handleNightThemeToggle}
             isEnabled={useNightTheme}
           />
         </div>

@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useTheme } from '../context/ThemeContext';
+import React, { useState, useCallback, useMemo } from 'react';
+import { useConfig } from '../context/ConfigContext';
 import { pebbleColors, colorOrder } from '../color-data';
+import { ThemeType } from '../types';
 
 interface ColorPickerProps {
   colorKey: string;
-  themeType: 'day' | 'night';
+  themeType: ThemeType;
   label: string;
   onColorChange?: (color: string) => void;
 }
@@ -15,58 +16,44 @@ export const ColorPicker: React.FC<ColorPickerProps> = React.memo(({
   label, 
   onColorChange 
 }) => {
-  const { getColor, updateColor, subscribe, unsubscribe, isLoading } = useTheme();
-  const [color, setColor] = useState<string>('#FFFFFF');
+  const { state, updateColor, getColorName, getAvailableColors, openColorPicker, closeColorPicker } = useConfig();
+  
+  // Get current color value
+  const currentColor = state.theme[themeType].colors[colorKey] || '#FFFFFF';
+  
+  // Check if this color picker is active
+  const pickerId = `${themeType}-${colorKey}`;
+  const isActive = state.ui.activeColorPicker === pickerId;
+  
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    if (isLoading) return;
-
-    // Load current color using context method
-    const currentColor = getColor(colorKey, themeType);
-    if (currentColor) {
-      setColor(currentColor.startsWith('#') ? currentColor : `#${currentColor}`);
-    }
-
-    // Subscribe to theme changes using context method
-    const subscriber = () => {
-      const updatedColor = getColor(colorKey, themeType);
-      if (updatedColor) {
-        setColor(updatedColor.startsWith('#') ? updatedColor : `#${updatedColor}`);
-      }
-    };
-    subscribe(subscriber);
-
-    return () => {
-      // Clean up subscription using context method
-      unsubscribe(subscriber);
-    };
-  }, [getColor, subscribe, unsubscribe, isLoading, colorKey, themeType]);
-
-  // Memoized color change handler
+// Handle color change
   const handleColorChange = useCallback((newColor: string) => {
     // Ensure color starts with #
     const formattedColor = newColor.startsWith('#') ? newColor : `#${newColor}`;
-    setColor(formattedColor);
-
-    // Update color using context method
-    updateColor(colorKey, formattedColor.replace('#', ''), themeType);
+    
+    // Update color using context
+    updateColor(themeType, colorKey, formattedColor);
     onColorChange?.(formattedColor);
-  }, [updateColor, colorKey, themeType, onColorChange]);
+    
+    // Close modal after selection
+    setShowModal(false);
+  }, [updateColor, themeType, colorKey, onColorChange]);
 
-  // Memoized color name getter
-  const getColorName = useCallback((hex: string) => {
-    const cleanHex = hex.replace('#', '').toUpperCase();
-    // Check both formats: with and without #
-    return pebbleColors[`#${cleanHex}`]?.name || pebbleColors[cleanHex]?.name || 'Custom Color';
-  }, []);
+  // Handle opening color picker modal
+  const handleOpenPicker = useCallback(() => {
+    openColorPicker(colorKey, themeType);
+    setShowModal(true);
+  }, [openColorPicker, colorKey, themeType]);
 
-  // Memoized color name to prevent unnecessary recalculations
-  const colorName = useMemo(() => getColorName(color), [color, getColorName]);
+  // Handle closing modal
+  const handleCloseModal = useCallback(() => {
+    closeColorPicker();
+    setShowModal(false);
+  }, [closeColorPicker]);
 
-  if (isLoading) {
-    return <div className="color-picker-loading">Loading...</div>;
-  }
+  // Get color name from context
+  const displayName = getColorName(currentColor);
 
   return (
     <div className="color-picker">
@@ -74,37 +61,37 @@ export const ColorPicker: React.FC<ColorPickerProps> = React.memo(({
         {label}:
         <div 
           className="color-display" 
-          onClick={() => setShowModal(true)}
+          onClick={handleOpenPicker}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              setShowModal(true);
+              handleOpenPicker();
             }
           }}
-          aria-label={`Change ${label} color, current value ${color.toUpperCase()}`}
+          aria-label={`Change ${label} color, current value ${currentColor.toUpperCase()}`}
         >
           <div 
             className="color-swatch" 
-            style={{ backgroundColor: color }}
+            style={{ backgroundColor: currentColor }}
             title={`Click to change ${label}`}
             aria-hidden="true"
           />
-          <span className="color-hex" aria-label={`Color hex value ${color.toUpperCase()}`}>
-            {color.toUpperCase()}
+          <span className="color-hex" aria-label={`Color hex value ${currentColor.toUpperCase()}`}>
+            {currentColor.toUpperCase()}
           </span>
-          <span className="color-name" aria-label={`Color name ${colorName}`}>
-            {colorName}
+          <span className="color-name" aria-label={`Color name ${displayName}`}>
+            {displayName}
           </span>
         </div>
       </label>
 
       {showModal && (
         <ColorModal
-          currentColor={color}
+          currentColor={currentColor}
           onSelect={handleColorChange}
-          onClose={() => setShowModal(false)}
+          onClose={handleCloseModal}
           aria-label="Color selection modal"
         />
       )}
@@ -122,20 +109,8 @@ interface ColorModalProps {
 }
 
 const ColorModal: React.FC<ColorModalProps> = ({ currentColor, onSelect, onClose }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  // Use the original visually pleasing color order
-  const filteredColors = colorOrder.filter(color => {
-    if (color === null) return true; // Keep null values for spacing
-    
-    const cleanColor = color.replace('#', '');
-    const colorInfo = pebbleColors[color] || pebbleColors[cleanColor];
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      cleanColor.toLowerCase().includes(searchLower) ||
-      (colorInfo?.name.toLowerCase().includes(searchLower) || false)
-    );
-  });
+  // Use the full color order without filtering
+  const colors = useMemo(() => colorOrder, []);
 
   return (
     <div 
@@ -160,32 +135,22 @@ const ColorModal: React.FC<ColorModalProps> = ({ currentColor, onSelect, onClose
             ×
           </button>
         </div>
-        
-        <div className="modal-search">
-          <label htmlFor="color-search" className="visually-hidden">Search colors</label>
-          <input
-            id="color-search"
-            type="text"
-            placeholder="Search colors..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            aria-label="Search colors"
-          />
-        </div>
 
         <div 
           className="color-grid-modal"
           role="grid"
           aria-labelledby="color-modal-title"
         >
-          {filteredColors.map((color, index) => {
+          {colors.map((color, index) => {
             if (color === null) {
               return <div key={`blank-${index}`} className="color-swatch-modal blank" aria-hidden="true" />;
             }
             
-            const cleanColor = color.replace('#', '');
-            const colorInfo = pebbleColors[color] || pebbleColors[cleanColor];
-            const displayColor = color.startsWith('#') ? color : `#${color}`;
+            // Safely handle color processing
+            const colorStr = color || '';
+            const cleanColor = colorStr.replace('#', '');
+            const colorInfo = pebbleColors[colorStr] || pebbleColors[cleanColor];
+            const displayColor = colorStr.startsWith('#') ? colorStr : `#${colorStr}`;
             const isSelected = displayColor.toUpperCase() === currentColor.toUpperCase();
             
             return (

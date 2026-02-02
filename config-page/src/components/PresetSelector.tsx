@@ -1,45 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '../context/ThemeContext';
+import { useConfig } from '../context/ConfigContext';
 import ThemePreview from './ThemePreview';
+import { ThemeType } from '../types';
 
 interface PresetSelectorProps {
-  themeType: 'day' | 'night';
+  themeType: ThemeType;
   onPresetChange?: (preset: string) => void;
 }
 
 export const PresetSelector: React.FC<PresetSelectorProps> = ({ themeType, onPresetChange }) => {
-  const { themeManager, isLoading } = useTheme();
-  const [preset, setPreset] = useState<string>('default');
-  const [themes, setThemes] = useState<string[]>([]);
+  const { isLoading, state, setPreset } = useConfig();
+  const currentPreset = state.theme[themeType]?.preset || 'custom';
+  
+  // Get theme names directly from state
+  const themeNames = state.themesData?.sharedThemes 
+    ? Object.keys(state.themesData.sharedThemes).sort((a, b) => {
+        if (a === 'default') return -1;
+        if (b === 'default') return 1;
+        return a.localeCompare(b);
+      })
+    : [];
 
-  useEffect(() => {
-    if (isLoading || !themeManager) return;
-
-    // Load available themes
-    const availableThemes = themeManager.getAvailableThemes();
-    setThemes(availableThemes);
-
-    // Load current preset
-    const currentPreset = themeManager.getCurrentPreset(themeType);
-    setPreset(currentPreset);
-  }, [themeManager, isLoading, themeType]);
-
-  const handlePresetChange = (newPreset: string) => {
-    setPreset(newPreset);
-
-    if (themeManager) {
-      themeManager.applyPreset(newPreset, themeType);
-      onPresetChange?.(newPreset);
-    }
+  const handlePresetSelect = (presetName: string) => {
+    setPreset(themeType, presetName);
+    if (onPresetChange) onPresetChange(presetName);
   };
-
-  const handleCustomSelect = () => {
-    handlePresetChange('custom');
-  };
-
-  if (isLoading) {
-    return <div className="preset-selector-loading">Loading themes...</div>;
-  }
 
   return (
     <div className="preset-selectors">
@@ -53,8 +38,8 @@ export const PresetSelector: React.FC<PresetSelectorProps> = ({ themeType, onPre
             type="radio"
             id={`${themeType}-custom`}
             name={`${themeType}-theme`}
-            checked={preset === 'custom'}
-            onChange={handleCustomSelect}
+            checked={currentPreset === 'custom'}
+            onChange={() => handlePresetSelect('custom')}
             className="preset-radio"
           />
           <label htmlFor={`${themeType}-custom`} className="preset-label">
@@ -64,18 +49,16 @@ export const PresetSelector: React.FC<PresetSelectorProps> = ({ themeType, onPre
         </div>
 
         {/* Theme previews */}
-        {themes.map((themeName) => (
+        {themeNames.map((themeName) => (
           <ThemePreview
             key={themeName}
             themeName={themeName}
             themeType={themeType}
-            isSelected={preset === themeName}
-            onClick={() => handlePresetChange(themeName)}
+            isSelected={currentPreset === themeName}
+            onClick={() => handlePresetSelect(themeName)}
           />
         ))}
       </div>
     </div>
   );
 };
-
-export default PresetSelector;
