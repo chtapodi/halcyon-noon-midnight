@@ -388,7 +388,6 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 60px;
     text-align: center;
 }
 
@@ -414,8 +413,8 @@ h1 {
 }
 
 .preset-option label .svg-preview-container svg {
-    width: 50px;
-    height: 58px;
+    width: 72px;
+    height: 84px;
 }
 
 .preset-option label span {
@@ -462,7 +461,6 @@ h1 {
 .preset-label {
   font-weight: 600;
   color: #2c3e50;
-  min-width: 120px;
 }
 
 .preset-select {

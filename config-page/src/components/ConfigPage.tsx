@@ -15,7 +15,7 @@ const ConfigPage: React.FC = () => {
       <div className="error-state">
         <h3>Error Loading Themes</h3>
         <p>There was an error loading the theme configuration.</p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="reload-button"
         >

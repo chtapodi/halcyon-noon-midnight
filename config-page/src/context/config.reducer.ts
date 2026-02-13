@@ -48,8 +48,8 @@ const DEFAULT_COLORS = {
 // Initial state
 export const initialState: ConfigState = {
   theme: {
-    day: { preset: 'default', colors: DEFAULT_COLORS, isCustom: false },
-    night: { preset: 'default', colors: DEFAULT_COLORS, isCustom: false },
+    day: { preset: 'default', colors: Object.assign({}, DEFAULT_COLORS), isCustom: false },
+    night: { preset: 'default', colors: Object.assign({}, DEFAULT_COLORS), isCustom: false },
     isNightThemeEnabled: false,
   },
   settings: {
@@ -107,7 +107,6 @@ export function configReducer(state: ConfigState, action: ConfigAction): ConfigS
       };
 
     case 'SET_PRESET': {
-      const presetColors = action.colors || {};
       return {
         ...state,
         theme: {
@@ -120,7 +119,7 @@ export function configReducer(state: ConfigState, action: ConfigAction): ConfigS
               : {
                   ...state.theme[action.themeType].colors,
                   ...Object.fromEntries(
-                    Object.entries(presetColors).map(([key, value]) => [
+                    Object.entries(action.colors || {}).map(([key, value]) => [
                       key,
                       value.startsWith('#') ? value : `#${value}`
                     ])

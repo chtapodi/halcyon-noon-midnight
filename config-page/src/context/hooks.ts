@@ -55,7 +55,7 @@ export const useSettings = () => {
     saveToStorage: config.saveToStorage,
     exportSettings: config.exportSettings,
     importSettings: config.importSettings,
-    prepareReturnURL: (settings?: Record<string, any>) => {
+    prepareReturnURL: (settings?: Record<string, string | number>) => {
       const settingsToUse = settings || state.settings;
       const params = new URLSearchParams(window.location.search);
       const returnTo = params.get('return_to') || 'pebblejs://close#';

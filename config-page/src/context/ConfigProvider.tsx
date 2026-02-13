@@ -185,10 +185,10 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
 
         // Apply default theme colors if available
         if (data.sharedThemes?.default) {
-          Object.entries(data.sharedThemes.default).forEach(([key, value]) => {
-            actions.updateColor('day', key, value as string);
-          });
-        }
+                      Object.entries(data.sharedThemes.default).forEach(([key, value]) => {
+                        actions.updateColor('day', key, value as string);
+                        actions.updateColor('night', key, value as string);
+                      });        }
       } catch (error) {
         console.error('Error loading themes:', error);
         dispatch({ type: 'SET_ERROR', error: error instanceof Error ? error : new Error('Theme load failed') });
