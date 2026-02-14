@@ -50,13 +50,13 @@ export const ThemePreview: React.FC<ThemePreviewProps> = ({
     <div className="preset-option">
       <input
         type="radio"
-        id={themeName}
-        name="theme-preset"
+        id={`${themeType}-${themeName}`}
+        name={`${themeType}-theme`}
         checked={isSelected}
         onChange={onClick}
         className="preset-radio"
       />
-      <label htmlFor={themeName} className="preset-label">
+      <label htmlFor={`${themeType}-${themeName}`} className="preset-label">
         <div className="svg-preview-container">
           <ClockFaceSVG colors={previewColors} />
         </div>

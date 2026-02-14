@@ -33,16 +33,19 @@ export type ConfigAction =
 
 // Default colors
 const DEFAULT_COLORS = {
-  RING_COLOR: '#00AAFF',
-  RING_NIGHT_COLOR: '#0055AA',
-  SUN_FILL_COLOR: '#FFFF00',
-  SUN_STROKE_COLOR: '#000000',
-  RING_SUNRISE_COLOR: '#FFAAAA',
-  RING_SUNSET_COLOR: '#FFAA00',
-  BG_COLOR: '#FFFFFF',
-  PIP_COLOR_SECONDARY: '#AAAAAA',
-  PIP_COLOR_PRIMARY: '#000000',
-  RING_STROKE_COLOR: '#000000',
+  SETTING_TIME_COLOR: '#000000',
+  SETTING_SUBTEXT_PRIMARY_COLOR: '#000000',
+  SETTING_SUBTEXT_SECONDARY_COLOR: '#555555',
+  SETTING_BG_COLOR: '#FFFFFF',
+  SETTING_PIP_COLOR_PRIMARY: '#000000',
+  SETTING_PIP_COLOR_SECONDARY: '#AAAAAA',
+  SETTING_RING_STROKE_COLOR: '#000000',
+  SETTING_RING_NIGHT_COLOR: '#0055AA',
+  SETTING_RING_DAY_COLOR: '#00AAFF',
+  SETTING_RING_SUNRISE_COLOR: '#FFAAAA',
+  SETTING_RING_SUNSET_COLOR: '#FFAA00',
+  SETTING_SUN_STROKE_COLOR: '#000000',
+  SETTING_SUN_FILL_COLOR: '#FFFF00',
 };
 
 // Initial state
@@ -107,6 +110,12 @@ export function configReducer(state: ConfigState, action: ConfigAction): ConfigS
       };
 
     case 'SET_PRESET': {
+      const presetColors = action.colors || (
+        action.preset !== 'custom' && state.themesData?.sharedThemes?.[action.preset]
+          ? state.themesData.sharedThemes[action.preset]
+          : {}
+      );
+
       return {
         ...state,
         theme: {
@@ -119,9 +128,9 @@ export function configReducer(state: ConfigState, action: ConfigAction): ConfigS
               : {
                   ...state.theme[action.themeType].colors,
                   ...Object.fromEntries(
-                    Object.entries(action.colors || {}).map(([key, value]) => [
+                    Object.entries(presetColors).map(([key, value]) => [
                       key,
-                      value.startsWith('#') ? value : `#${value}`
+                      (value as string).startsWith('#') ? (value as string) : `#${value}`
                     ])
                   )
                 },

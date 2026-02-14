@@ -22,8 +22,8 @@ export const useTheme = () => {
     getColor: (colorKey: string, themeType: ThemeType) => state.theme[themeType].colors[colorKey] || '',
     updateColor: (colorKey: string, colorValue: string, themeType: ThemeType) =>
       config.updateColor(themeType, colorKey, colorValue),
-    getThemeState: () => state.theme,
-    isNightThemeEnabled: () => state.theme.isNightThemeEnabled,
+    themeState: state.theme,
+    isNightThemeEnabled: state.theme.isNightThemeEnabled,
     setNightThemeEnabled: config.setNightThemeEnabled,
     isThemeCustom: (themeType: ThemeType) => state.theme[themeType].isCustom,
     getThemeColors: (themeType: ThemeType) => state.theme[themeType].colors,
@@ -35,8 +35,6 @@ export const useTheme = () => {
       isPreviewVisible: (themeType: ThemeType) => state.ui.previewVisibility[themeType],
       getPreviewColors: (themeType: ThemeType) => state.theme[themeType].colors,
     },
-    subscribe: config.subscribe,
-    unsubscribe: config.unsubscribe,
   };
 };
 
@@ -47,9 +45,9 @@ export const useSettings = () => {
     isLoading: state.ui.isLoading,
     error: state.ui.error,
     settings: state.settings,
-    getSetting: config.getSetting,
+    getSetting: (key: string) => state.settings[key],
     updateSetting: config.updateSetting,
-    getAllSettings: config.getAllSettings,
+    getAllSettings: () => state.settings,
     saveSettings: config.saveToStorage,
     loadSettings: config.loadFromStorage,
     saveToStorage: config.saveToStorage,
@@ -62,11 +60,11 @@ export const useSettings = () => {
       return returnTo + encodeURIComponent(JSON.stringify(settingsToUse));
     },
     toggleCheckbox: (key: string) => {
-      const currentValue = config.getSetting(key);
+      const currentValue = state.settings[key];
       config.updateSetting(key, currentValue === 1 ? 0 : 1);
     },
     incrementValue: (key: string, max?: number) => {
-      const currentValue = Number(config.getSetting(key) || 0);
+      const currentValue = Number(state.settings[key] || 0);
       const newValue = max !== undefined ? (currentValue + 1) % (max + 1) : currentValue + 1;
       config.updateSetting(key, newValue);
     },
@@ -82,8 +80,8 @@ export const useSettings = () => {
     settingsManager: {
       saveSettings: config.saveToStorage,
       loadSettings: config.loadFromStorage,
-      getAllSettings: config.getAllSettings,
-      getSetting: config.getSetting,
+      getAllSettings: () => state.settings,
+      getSetting: (key: string) => state.settings[key],
       updateSetting: config.updateSetting,
     },
   };

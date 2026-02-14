@@ -27,7 +27,7 @@ const PreviewSection: React.FC = () => {
             </div>
           </div>
         </div>
-        {isNightThemeEnabled() && (
+        {isNightThemeEnabled && (
           <div className="preview-item night-preview">
             <div className="svg-preview-container">
               <h4 className="preview-title">Night Theme Preview</h4>

@@ -1,24 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ThemeSettings from './ThemeSettings';
 import AdditionalSettings from './AdditionalSettings';
+import ToggleSwitch from './ToggleSwitch';
 import { useTheme, useSettings } from '../context/hooks';
 
 const SettingsForm: React.FC = () => {
-  const { getCurrentPreset, getThemeState, isLoading: themeLoading, isNightThemeEnabled, setNightThemeEnabled } = useTheme();
+  const { isLoading: themeLoading, isNightThemeEnabled, setNightThemeEnabled } = useTheme();
   const { saveToStorage, isLoading: settingsLoading } = useSettings();
-  const [useNightTheme, setUseNightTheme] = useState(false);
 
-  // Load initial night theme setting
-  useEffect(() => {
-    if (!themeLoading) {
-      const nightEnabled = isNightThemeEnabled();
-      setUseNightTheme(nightEnabled);
-    }
-  }, [themeLoading, isNightThemeEnabled]);
+  const useNightTheme = isNightThemeEnabled;
 
   // Handle night theme toggle
   const handleNightThemeToggle = useCallback((enabled: boolean) => {
-    setUseNightTheme(enabled);
     setNightThemeEnabled(enabled);
   }, [setNightThemeEnabled]);
 
@@ -29,9 +22,9 @@ const SettingsForm: React.FC = () => {
     try {
       // Save settings through the unified store
       await saveToStorage();
-      console.log('Settings saved successfully!');
+      console.log("Settings saved successfully!");
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      console.error("Failed to save settings:", error);
     }
   }, [saveToStorage]);
 
@@ -53,13 +46,19 @@ const SettingsForm: React.FC = () => {
           />
 
           {/* Night Theme Section */}
-          <ThemeSettings
-            themeType="night"
-            title="Night Theme"
-            showToggle={true}
-            onToggleChange={handleNightThemeToggle}
-            isEnabled={useNightTheme}
+          <ToggleSwitch
+            checked={useNightTheme}
+            onChange={handleNightThemeToggle}
+            label={`Enable Night Theme`}
+            id={`night-theme-toggle`}
+            description={`Enable a separate theme for night hours`}
           />
+          {useNightTheme && (
+            <ThemeSettings
+              themeType="night"
+              title="Night Theme"
+            />
+          )}
         </div>
 
         <AdditionalSettings themeType="day" />

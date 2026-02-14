@@ -61,13 +61,8 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
     }, []),
 
     setPreset: useCallback((themeType: ThemeType, preset: string) => {
-      // Get theme colors if not custom preset
-      const presetColors = preset !== 'custom' && state.themesData?.sharedThemes?.[preset]
-        ? state.themesData.sharedThemes[preset]
-        : {};
-
-      dispatch({ type: 'SET_PRESET', themeType, preset, colors: presetColors });
-    }, [state.themesData]),
+      dispatch({ type: 'SET_PRESET', themeType, preset });
+    }, []),
 
     setNightThemeEnabled: useCallback((enabled: boolean) => {
       dispatch({ type: 'SET_NIGHT_THEME', enabled });
@@ -182,13 +177,6 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
 
         const data = await response.json();
         dispatch({ type: 'LOAD_THEMES', data });
-
-        // Apply default theme colors if available
-        if (data.sharedThemes?.default) {
-                      Object.entries(data.sharedThemes.default).forEach(([key, value]) => {
-                        actions.updateColor('day', key, value as string);
-                        actions.updateColor('night', key, value as string);
-                      });        }
       } catch (error) {
         console.error('Error loading themes:', error);
         dispatch({ type: 'SET_ERROR', error: error instanceof Error ? error : new Error('Theme load failed') });
@@ -198,7 +186,7 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
     };
 
     loadThemes();
-  }, [actions.updateColor]);
+  }, []);
 
   // Load storage data on mount
   useEffect(() => {

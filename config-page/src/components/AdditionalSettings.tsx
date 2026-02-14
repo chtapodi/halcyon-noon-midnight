@@ -3,6 +3,10 @@ import { useSettings } from '../context/hooks';
 import ToggleSwitch from './ToggleSwitch';
 import { ThemeType } from '../types';
 
+interface AdditionalSettingsProps {
+  themeType: ThemeType;
+}
+
 export const AdditionalSettings: React.FC<AdditionalSettingsProps> = ({ themeType }) => {
   const { settings, updateSetting, toggleCheckbox } = useSettings();
   
