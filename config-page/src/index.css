@@ -1,0 +1,184 @@
+:root {
+  --pebble-orange: #ff4700;
+  --pebble-dark: #2c3e50;
+  --pebble-light: #ecf0f1;
+  --pebble-white: #ffffff;
+  --pebble-gray: #bdc3c7;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: var(--pebble-dark);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+}
+
+.pebble-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.pebble-header {
+  background-color: var(--pebble-orange);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.pebble-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.pebble-content {
+  flex: 1;
+  padding-bottom: 80px;
+}
+
+.pebble-section {
+  border-bottom: 1px solid #eee;
+}
+
+.pebble-section-title {
+  background-color: #f8f8f8;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.pebble-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.pebble-item label {
+  font-weight: 500;
+}
+
+.pebble-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.pebble-save-button {
+  background-color: var(--pebble-orange);
+  color: white;
+  border: none;
+  padding: 0.8rem 3rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.pebble-save-button:active {
+  background-color: #e03e00;
+}
+
+/* Specific item styles */
+.pebble-color-picker-v2 {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.pebble-color-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pebble-color-preview {
+  border: 1px solid #ccc;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: white;
+  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+  min-width: 80px;
+  text-align: center;
+}
+
+.pebble-color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  margin-top: 1rem;
+  padding: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.pebble-color-swatch {
+  aspect-ratio: 1;
+  cursor: pointer;
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.pebble-color-swatch:hover {
+  transform: scale(1.1);
+  z-index: 1;
+}
+
+.pebble-color-swatch.active {
+  outline: 2px solid var(--pebble-orange);
+  outline-offset: 1px;
+}
+
+select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+.pebble-slider {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.pebble-slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.pebble-slider-value {
+  font-weight: bold;
+  color: var(--pebble-orange);
+}
+
+.pebble-slider input[type="range"] {
+  width: 100%;
+}
