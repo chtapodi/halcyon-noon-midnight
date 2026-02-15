@@ -1,7 +1,10 @@
 import React from 'react';
 import { useConfig } from '../context/PebbleConfigContext';
 
-export const ThemePicker: React.FC<{ label: string; themes: Record<string, Record<string, string>> }> = ({ label, themes }) => {
+export const ThemePicker: React.FC<{
+  label: string;
+  themes: Record<string, Record<string, string>>;
+}> = ({ label, themes }) => {
   const { updateSetting } = useConfig();
 
   const handleThemeChange = (themeName: string) => {
