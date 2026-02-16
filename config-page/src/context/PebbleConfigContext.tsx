@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface ConfigContextType {
   settings: Record<string, any>;
@@ -10,41 +10,31 @@ const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 
 export const useConfig = () => {
   const context = useContext(ConfigContext);
-  if (!context) {
-    throw new Error('useConfig must be used within a PebbleConfigProvider');
-  }
+  if (!context) throw new Error('useConfig must be used within a PebbleConfigProvider');
   return context;
 };
 
 export const PebbleConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState<Record<string, any>>({});
-
-  useEffect(() => {
-    // Load initial settings from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialSettings: Record<string, any> = {};
-    
-    // Most Pebble configs pass initial state as a JSON string in a 'return_to' or similar,
-    // or just as individual query params. Let's support both.
-    urlParams.forEach((value, key) => {
-      try {
-        initialSettings[key] = JSON.parse(value);
-      } catch (e) {
-        initialSettings[key] = value;
-      }
-    });
-
-    setSettings(initialSettings);
-  }, []);
+  // Initialize settings directly from the 'settings' URL parameter
+  const [settings, setSettings] = useState<Record<string, any>>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return JSON.parse(params.get('settings') || '{}');
+    } catch {
+      return {};
+    }
+  });
 
   const updateSetting = (key: string, value: any) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const save = () => {
-    const returnUrl = new URLSearchParams(window.location.search).get('return_to') || 'pebblejs://close#';
-    const result = encodeURIComponent(JSON.stringify(settings));
-    window.location.href = returnUrl + result;
+    const params = new URLSearchParams(window.location.search);
+    const returnTo = params.get('return_to') || 'pebblejs://close#';
+    
+    // Pebble expects the response to be appended to the return_to URL
+    window.location.href = returnTo + encodeURIComponent(JSON.stringify(settings));
   };
 
   return (

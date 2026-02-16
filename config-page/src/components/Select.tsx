@@ -8,7 +8,14 @@ export const Select: React.FC<{ label: string; messageKey: string; options: { la
   return (
     <div className="pebble-item pebble-select">
       <label>{label}</label>
-      <select value={value} onChange={(e) => updateSetting(messageKey, e.target.value)}>
+      <select 
+        value={value} 
+        onChange={(e) => {
+          const val = e.target.value;
+          const num = parseInt(val, 10);
+          updateSetting(messageKey, isNaN(num) ? val : num);
+        }}
+      >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}

@@ -16,8 +16,6 @@ void messaging_init(void (*processed_callback)(void)) {
   app_message_register_outbox_sent(outbox_sent_callback);
 
   app_message_open(512, 8);
-
-  app_message_register_inbox_received(inbox_received_callback);
 }
 
 void inbox_received_callback(DictionaryIterator *iterator, void *context) {
@@ -253,7 +251,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (pipVisibility_tuple != NULL) {
     APP_LOG(APP_LOG_LEVEL_INFO, "Received pipVisibility: %d",
             (int)pipVisibility_tuple->value->int8);
-    globalSettings.pipVisibility = (PipVisibilityType)(pipVisibility_tuple->value->int8 - 48);
+    globalSettings.pipVisibility = (PipVisibilityType)pipVisibility_tuple->value->int8;
   }
 
   if(showLeadingZero_tuple != NULL) {
