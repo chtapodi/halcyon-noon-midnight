@@ -1,5 +1,5 @@
 import React from 'react';
-import { PebbleConfigProvider, useConfig } from '../context/PebbleConfigContext';
+import { useConfig } from '../context/PebbleConfigContext';
 import { Page, Section, Toggle, ColorPicker, Select, ThemePicker } from '../components';
 import themes from '../data/themes.json';
 import nightThemes from '../data/themes-night.json';
@@ -44,7 +44,7 @@ export const SettingsPage: React.FC = () => {
         )}
       </Section>
 
-      {!!settings.SETTING_USE_NIGHT_THEME && (
+      {settings.SETTING_USE_NIGHT_THEME === 1 && (
         <Section title="Night Theme">
           <ThemePicker
             label="Night Theme Preset"
