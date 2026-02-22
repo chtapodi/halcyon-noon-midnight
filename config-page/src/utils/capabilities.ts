@@ -1,45 +1,23 @@
 import { WatchInfo, Capabilities } from '../context/types';
 
-interface CapabilityDefinition {
-  platforms: string[];
-  minFwMajor: number;
-  minFwMinor: number;
-}
-
-const CAPABILITY_MAP: Record<keyof Capabilities, CapabilityDefinition> = {
-  APLITE: { platforms: ['aplite'], minFwMajor: 0, minFwMinor: 0 },
-  BASALT: { platforms: ['basalt'], minFwMajor: 0, minFwMinor: 0 },
-  CHALK: { platforms: ['chalk'], minFwMajor: 0, minFwMinor: 0 },
-  DIORITE: { platforms: ['diorite'], minFwMajor: 0, minFwMinor: 0 },
-  EMERY: { platforms: ['emery'], minFwMajor: 0, minFwMinor: 0 },
-  FLINT: { platforms: ['flint'], minFwMajor: 0, minFwMinor: 0 },
-  BW: { platforms: ['aplite', 'diorite', 'flint'], minFwMajor: 0, minFwMinor: 0 },
-  COLOR: { platforms: ['basalt', 'chalk', 'emery'], minFwMajor: 0, minFwMinor: 0 },
-  ROUND: { platforms: ['chalk'], minFwMajor: 0, minFwMinor: 0 },
-  RECT: {
-    platforms: ['aplite', 'basalt', 'diorite', 'emery', 'flint'],
-    minFwMajor: 0,
-    minFwMinor: 0,
-  },
-  DISPLAY_144x168: {
-    platforms: ['aplite', 'basalt', 'diorite', 'flint'],
-    minFwMajor: 0,
-    minFwMinor: 0,
-  },
-  DISPLAY_180x180_ROUND: { platforms: ['chalk'], minFwMajor: 0, minFwMinor: 0 },
-  DISPLAY_200x228: { platforms: ['emery'], minFwMajor: 0, minFwMinor: 0 },
-  MICROPHONE: {
-    platforms: ['basalt', 'chalk', 'diorite', 'emery', 'flint'],
-    minFwMajor: 0,
-    minFwMinor: 0,
-  },
-  SMARTSTRAP: { platforms: ['basalt', 'chalk', 'diorite', 'emery'], minFwMajor: 3, minFwMinor: 4 },
-  SMARTSTRAP_POWER: { platforms: ['basalt', 'chalk', 'emery'], minFwMajor: 3, minFwMinor: 4 },
-  HEALTH: {
-    platforms: ['basalt', 'chalk', 'diorite', 'emery', 'flint'],
-    minFwMajor: 3,
-    minFwMinor: 10,
-  },
+const CAPABILITY_MAP: Record<keyof Capabilities, string[]> = {
+  APLITE: ['aplite'],
+  BASALT: ['basalt'],
+  CHALK: ['chalk'],
+  DIORITE: ['diorite'],
+  EMERY: ['emery'],
+  FLINT: ['flint'],
+  BW: ['aplite', 'diorite', 'flint'],
+  COLOR: ['basalt', 'chalk', 'emery'],
+  ROUND: ['chalk'],
+  RECT: ['aplite', 'basalt', 'diorite', 'emery', 'flint'],
+  DISPLAY_144x168: ['aplite', 'basalt', 'diorite', 'flint'],
+  DISPLAY_180x180_ROUND: ['chalk'],
+  DISPLAY_200x228: ['emery'],
+  MICROPHONE: ['basalt', 'chalk', 'diorite', 'emery', 'flint'],
+  SMARTSTRAP: ['basalt', 'chalk', 'diorite', 'emery'],
+  SMARTSTRAP_POWER: ['basalt', 'chalk', 'emery'],
+  HEALTH: ['basalt', 'chalk', 'diorite', 'emery', 'flint'],
 };
 
 export const evaluateCapabilities = (watchInfo: WatchInfo | null): Capabilities => {
@@ -52,15 +30,10 @@ export const evaluateCapabilities = (watchInfo: WatchInfo | null): Capabilities 
     return capabilities;
   }
 
-  const { platform, firmware } = watchInfo;
+  const { platform } = watchInfo;
 
-  Object.entries(CAPABILITY_MAP).forEach(([key, def]) => {
-    const platformMatch = def.platforms.includes(platform);
-    const fwMajorOk = firmware.major > def.minFwMajor;
-    const fwMinorOk = firmware.major === def.minFwMajor ? firmware.minor >= def.minFwMinor : true;
-    const fwOk = fwMajorOk || fwMinorOk;
-
-    capabilities[key as keyof Capabilities] = platformMatch && fwOk;
+  Object.entries(CAPABILITY_MAP).forEach(([key, platforms]) => {
+    capabilities[key as keyof Capabilities] = platforms.includes(platform);
   });
 
   return capabilities;

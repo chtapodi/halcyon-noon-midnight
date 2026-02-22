@@ -1,5 +1,7 @@
 export interface WatchInfo {
   platform: string;
+  model: string;
+  language: string;
   firmware: {
     major: number;
     minor: number;

@@ -72,6 +72,8 @@ Pebble.addEventListener('showConfiguration', function () {
   var watchInfo = Pebble.getActiveWatchInfo();
   url += (url.indexOf('?') === -1 ? '?' : '&') + 'watchInfo=' + encodeURIComponent(JSON.stringify({
     platform: watchInfo.platform,
+    model: watchInfo.model,
+    language: watchInfo.language,
     firmware: {
       major: watchInfo.firmware.major,
       minor: watchInfo.firmware.minor
