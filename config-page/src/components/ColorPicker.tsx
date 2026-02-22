@@ -1,5 +1,5 @@
 import React from 'react';
-import { useConfig } from '../context/PebbleConfigContext';
+import { useConfig, useCapabilities } from '../context/PebbleConfigContext';
 import { Settings } from '../context/types';
 
 export const PEBBLE_COLORS = [
@@ -21,11 +21,29 @@ export const PEBBLE_COLORS = [
   'FFFF00', 'FFFF55', 'FFFFAA', 'FFFFFF'
 ];
 
-export const ColorPicker: React.FC<{ label: string; messageKey: keyof Settings }> = ({ label, messageKey }) => {
+export type ColorMode = 'color' | 'bw' | 'bw-grey';
+
+export const COLOR_PALETTES: Record<ColorMode, string[]> = {
+  'color': PEBBLE_COLORS,
+  'bw': ['000000', 'FFFFFF'],
+  'bw-grey': ['000000', 'FFFFFF', 'AAAAAA'],
+};
+
+interface ColorPickerProps {
+  label: string;
+  messageKey: keyof Settings;
+  mode?: ColorMode;
+}
+
+export const ColorPicker: React.FC<ColorPickerProps> = ({ label, messageKey, mode }) => {
   const { settings, updateSetting } = useConfig();
+  const capabilities = useCapabilities();
   const [isOpen, setIsOpen] = React.useState(false);
   const rawValue = settings[messageKey];
   const value = (typeof rawValue === 'string' ? rawValue : '000000').toUpperCase().replace('#', '');
+
+  const resolvedMode: ColorMode = mode ?? (capabilities.COLOR ? 'color' : 'bw-grey');
+  const palette = COLOR_PALETTES[resolvedMode];
 
   return (
     <div className="pebble-item pebble-color-picker-v2">
@@ -40,8 +58,10 @@ export const ColorPicker: React.FC<{ label: string; messageKey: keyof Settings }
         </button>
       </div>
       {isOpen && (
-        <div className="pebble-color-grid">
-          {PEBBLE_COLORS.map((color) => (
+        <div
+          className="pebble-color-grid"
+        >
+          {palette.map((color) => (
             <div
               key={color}
               className={`pebble-color-swatch ${value === color ? 'active' : ''}`}
