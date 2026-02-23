@@ -140,7 +140,7 @@ button {
   color: #666;
 }
 
-.pebble-color-value > .pebble-color-swatch {
+.pebble-color-value>.pebble-color-swatch {
   width: 48px;
 }
 
@@ -150,19 +150,49 @@ button {
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
 }
 
+.pebble-color-modal-overlay[data-entering],
+.pebble-color-modal[data-entering] {
+  animation: modal-fade 200ms ease-out;
+}
+
+.pebble-color-modal-overlay[data-exiting],
+.pebble-color-modal[data-exiting] {
+  animation: modal-fade 150ms ease-in reverse;
+}
+
 .pebble-color-modal {
-  width: 100%;
-  max-width: 480px;
-  max-height: 98vh;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   background-color: white;
+  outline: none;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.pebble-color-dialog {
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .pebble-color-modal-header {

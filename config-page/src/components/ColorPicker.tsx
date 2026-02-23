@@ -1,4 +1,5 @@
 import React from 'react';
+import { Modal, ModalOverlay, Dialog, Button } from 'react-aria-components';
 import { useConfig, useCapabilities } from '../context/PebbleConfigContext';
 import { Settings } from '../context/types';
 import { PEBBLE_COLORS, getColorName } from '../data/colors';
@@ -169,45 +170,49 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         <span className="pebble-color-name">{getColorName(value)}</span>
         <div className="pebble-color-swatch" style={{ backgroundColor: `#${value}` }} />
       </div>
-      {isOpen && (
-        <div
-          className="pebble-color-modal-overlay"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsOpen(false);
-          }}
-        >
-          <div className="pebble-color-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="pebble-color-modal-header">
-              <span>{label}</span>
-              <button className="pebble-color-modal-close" onClick={() => setIsOpen(false)}>
-                ×
-              </button>
-            </div>
-            <div className="pebble-color-modal-grid">
-              {colorGrid.map((color, index) => {
-                if (color === null) {
-                  return <div key={`blank-${index}`} className="pebble-color-swatch-blank" />;
-                }
-                const colorHex = color.replace('#', '');
-                return (
-                  <div
-                    key={colorHex}
-                    className={`pebble-color-swatch ${value === colorHex ? 'active' : ''}`}
-                    style={{ backgroundColor: color }}
-                    title={getColorName(colorHex)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      updateSetting(messageKey, colorHex);
-                      setIsOpen(false);
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+
+      <ModalOverlay
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        className="pebble-color-modal-overlay"
+        isDismissable
+      >
+        <Modal className="pebble-color-modal">
+          <Dialog className="pebble-color-dialog">
+            {({ close }) => (
+              <>
+                <div className="pebble-color-modal-header">
+                  <span>{label}</span>
+                  <Button className="pebble-color-modal-close" onPress={close}>
+                    ×
+                  </Button>
+                </div>
+                <div className="pebble-color-modal-grid">
+                  {colorGrid.map((color, index) => {
+                    if (color === null) {
+                      return <div key={`blank-${index}`} className="pebble-color-swatch-blank" />;
+                    }
+                    const colorHex = color.replace('#', '');
+                    return (
+                      <div
+                        key={colorHex}
+                        className={`pebble-color-swatch ${value === colorHex ? 'active' : ''}`}
+                        style={{ backgroundColor: color }}
+                        title={getColorName(colorHex)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateSetting(messageKey, colorHex);
+                          close();
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </Dialog>
+        </Modal>
+      </ModalOverlay>
     </FormItem>
   );
 };
