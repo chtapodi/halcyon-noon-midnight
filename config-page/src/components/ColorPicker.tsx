@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, ModalOverlay, Dialog, Button } from 'react-aria-components';
+import { Modal, ModalOverlay, Dialog, Button, Heading } from 'react-aria-components';
 import { useConfig, useCapabilities } from '../context/PebbleConfigContext';
 import { Settings } from '../context/types';
 import { PEBBLE_COLORS, getColorName } from '../data/colors';
@@ -182,7 +182,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             {({ close }) => (
               <>
                 <div className="pebble-color-modal-header">
-                  <span>{label}</span>
+                  <Heading slot="title">{label}</Heading>
                   <Button className="pebble-color-modal-close" onPress={close}>
                     ×
                   </Button>
@@ -194,13 +194,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     }
                     const colorHex = color.replace('#', '');
                     return (
-                      <div
+                      <Button
                         key={colorHex}
                         className={`pebble-color-swatch ${value === colorHex ? 'active' : ''}`}
                         style={{ backgroundColor: color }}
-                        title={getColorName(colorHex)}
-                        onClick={(e) => {
-                          e.stopPropagation();
+                        aria-label={getColorName(colorHex)}
+                        onPress={() => {
                           updateSetting(messageKey, colorHex);
                           close();
                         }}
