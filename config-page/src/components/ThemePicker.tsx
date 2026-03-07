@@ -56,7 +56,7 @@ export const ThemePicker: React.FC<{
   ], [themes, savedThemes]);
 
   return (
-    <FormItem className="pebble-theme-picker">
+    <FormItem className="halite-theme-picker">
       <GridList
         items={themeList}
         selectionMode="single"
@@ -67,20 +67,20 @@ export const ThemePicker: React.FC<{
         }}
         layout='grid'
         aria-label={label}
-        className="pebble-theme-grid"
+        className="halite-theme-grid"
       >
         {(item) => (
-          <GridListItem id={item.id} className="pebble-theme-card" textValue={item.name}>
-            <div className="pebble-theme-card-preview">
+          <GridListItem id={item.id} className="halite-theme-card" textValue={item.name}>
+            <div className="halite-theme-card-preview">
               {item.id === 'custom' ? (
-                <div className="pebble-custom-icon">
+                <div className="halite-custom-icon">
                   <img src={customIconUrl} alt="" width={40} height={38} />
                 </div>
               ) : (
                 <WatchPreview overrideSettings={item.settings} {...watchPreviewProps} />
               )}
             </div>
-            <Text className="pebble-theme-card-label">
+            <Text className="halite-theme-card-label">
               {item.name}
             </Text>
           </GridListItem>

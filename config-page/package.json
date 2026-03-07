@@ -1,5 +1,5 @@
 {
-  "name": "pebble-config-page",
+  "name": "halcyon-config-page",
   "version": "1.0.0",
   "description": "Configuration page for Halcyon Pebble watchface",
   "scripts": {

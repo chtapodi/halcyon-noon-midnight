@@ -17,11 +17,11 @@ export const Toggle: React.FC<{
     <Switch
       isSelected={isSelected}
       onChange={(selected) => updateSetting(messageKey, selected ? 1 : 0)}
-      className="pebble-item pebble-toggle"
+      className="halite-item halite-toggle"
     >
       <FormItemLabel label={label} description={description} />
-      <div className="pebble-switch">
-        <div className="pebble-switch-thumb" />
+      <div className="halite-switch">
+        <div className="halite-switch-thumb" />
       </div>
     </Switch>
   );

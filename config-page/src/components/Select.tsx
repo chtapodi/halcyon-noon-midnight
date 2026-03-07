@@ -14,7 +14,7 @@ export const Select: React.FC<{
   const selectId = React.useId();
 
   return (
-    <FormItem label={label} description={description} className="pebble-select" htmlFor={selectId}>
+    <FormItem label={label} description={description} className="halite-select" htmlFor={selectId}>
       <select
         id={selectId}
         value={value}

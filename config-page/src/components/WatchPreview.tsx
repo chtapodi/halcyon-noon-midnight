@@ -18,15 +18,15 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
     };
 
     return (
-        <div className="pebble-watch-preview-container">
-            <div className="pebble-watch-face">
+        <div className="halite-watch-preview-container">
+            <div className="halite-watch-face">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="144"
                     height="168"
                     viewBox="0 0 144 168"
                     fill="none"
-                    className="pebble-watch-preview"
+                    className="halite-watch-preview"
                 >
                     <path
                         id="SETTING_RING_NIGHT_COLOR"
@@ -82,22 +82,22 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
                         clipRule="evenodd"
                     />
                 </svg>
-                <div className="pebble-watch-preview-content">
-                    <div className="pebble-watch-preview-widget secondary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR) }}>
+                <div className="halite-watch-preview-content">
+                    <div className="halite-watch-preview-widget secondary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR) }}>
                         Upper Text 1
                     </div>
-                    <div className="pebble-watch-preview-widget primary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR) }}>
+                    <div className="halite-watch-preview-widget primary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR) }}>
                         2000 Steps
                     </div>
-                    <div className="pebble-watch-time" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_TIME_COLOR : effectiveSettings.SETTING_NIGHT_TIME_COLOR) }}>
+                    <div className="halite-watch-time" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_TIME_COLOR : effectiveSettings.SETTING_NIGHT_TIME_COLOR) }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="22" viewBox="0 0 80 22" fill="currentColor">
                             <path d="M0 4.48V0h8.96v17.92h4.48v4.48H0v-4.48h4.48V4.48zM16.493 22.4V0h15.68v22.4zm4.48-17.92v13.44h6.72V4.48zM36.329 22.4v-4.48h4.48v4.48zm0-13.44V4.48h4.48v4.48zM60.658 0v22.4h-15.68v-4.48h11.2v-4.48h-8.96V8.96h8.96V4.48h-11.2V0zM64.814 22.4V0h15.68v22.4zm11.2-8.96h-6.72v4.48h6.72zm-6.72-4.48h6.72V4.48h-6.72z" />
                         </svg>
                     </div>
-                    <div className="pebble-watch-preview-widget primary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR) }}>
+                    <div className="halite-watch-preview-widget primary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR) }}>
                         Mon, Jan 01
                     </div>
-                    <div className="pebble-watch-preview-widget secondary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR) }}>
+                    <div className="halite-watch-preview-widget secondary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR) }}>
                         Lower Text 2
                     </div>
                 </div>

@@ -163,45 +163,45 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     <FormItem
       label={label}
       description={description}
-      className="pebble-color-picker-v2"
+      className="halite-color-picker-v2"
     >
       <Button
         onPress={() => setIsOpen(true)}
-        className="pebble-color-trigger"
+        className="halite-color-trigger"
         aria-label={`Select ${label} color`}
       >
-        <div className="pebble-color-value">
-          <span className="pebble-color-name">{getColorName(value)}</span>
-          <div className="pebble-color-swatch" style={{ backgroundColor: `#${value}` }} />
+        <div className="halite-color-value">
+          <span className="halite-color-name">{getColorName(value)}</span>
+          <div className="halite-color-swatch" style={{ backgroundColor: `#${value}` }} />
         </div>
       </Button>
 
       <ModalOverlay
         isOpen={isOpen}
         onOpenChange={setIsOpen}
-        className="pebble-color-modal-overlay"
+        className="halite-color-modal-overlay"
         isDismissable
       >
-        <Modal className="pebble-color-modal">
-          <Dialog className="pebble-color-dialog">
+        <Modal className="halite-color-modal">
+          <Dialog className="halite-color-dialog">
             {({ close }) => (
               <>
-                <div className="pebble-color-modal-header">
+                <div className="halite-color-modal-header">
                   <Heading slot="title">{label}</Heading>
-                  <Button className="pebble-color-modal-close" onPress={close}>
+                  <Button className="halite-color-modal-close" onPress={close}>
                     ×
                   </Button>
                 </div>
-                <div className="pebble-color-modal-grid">
+                <div className="halite-color-modal-grid">
                   {colorGrid.map((color, index) => {
                     if (color === null) {
-                      return <div key={`blank-${index}`} className="pebble-color-swatch-blank" />;
+                      return <div key={`blank-${index}`} className="halite-color-swatch-blank" />;
                     }
                     const colorHex = color.replace('#', '');
                     return (
                       <Button
                         key={colorHex}
-                        className={`pebble-color-swatch ${value === colorHex ? 'active' : ''}`}
+                        className={`halite-color-swatch ${value === colorHex ? 'active' : ''}`}
                         style={{ backgroundColor: color }}
                         aria-label={getColorName(colorHex)}
                         onPress={() => {

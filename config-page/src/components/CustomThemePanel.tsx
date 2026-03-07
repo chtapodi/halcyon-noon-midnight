@@ -107,25 +107,25 @@ export const CustomThemePanel: React.FC<CustomThemePanelProps> = ({
     };
 
     return (
-        <div className="pebble-custom-panel">
-            <div className="pebble-custom-panel-preview">
+        <div className="halite-custom-panel">
+            <div className="halite-custom-panel-preview">
                 <WatchPreview
                     overrideSettings={isSaved ? savedTheme!.settings : undefined}
                     {...watchPreviewProps}
                 />
             </div>
-            <div className="pebble-custom-actions">
+            <div className="halite-custom-actions">
                 {isCustom && (
                     <>
-                        <Button className="pebble-custom-action-btn pebble-custom-action-btn--primary" onPress={handleSave}>
+                        <Button className="halite-custom-action-btn halite-custom-action-btn--primary" onPress={handleSave}>
                             <Icon path={ICONS.SAVE} />
                             Save
                         </Button>
-                        <Button className="pebble-custom-action-btn" onPress={handleShare}>
+                        <Button className="halite-custom-action-btn" onPress={handleShare}>
                             <Icon path={ICONS.SHARE} />
                             {copyFeedback ? 'Copied!' : 'Share'}
                         </Button>
-                        <Button className="pebble-custom-action-btn" onPress={() => setImportOpen(true)}>
+                        <Button className="halite-custom-action-btn" onPress={() => setImportOpen(true)}>
                             <Icon path={ICONS.IMPORT} />
                             Import
                         </Button>
@@ -133,11 +133,11 @@ export const CustomThemePanel: React.FC<CustomThemePanelProps> = ({
                 )}
                 {isSaved && (
                     <>
-                        <Button className="pebble-custom-action-btn" onPress={handleShare}>
+                        <Button className="halite-custom-action-btn" onPress={handleShare}>
                             <Icon path={ICONS.SHARE} />
                             {copyFeedback ? 'Copied!' : 'Share'}
                         </Button>
-                        <Button className="pebble-custom-action-btn pebble-custom-action-btn--danger" onPress={handleDelete}>
+                        <Button className="halite-custom-action-btn halite-custom-action-btn--danger" onPress={handleDelete}>
                             <Icon path={ICONS.DELETE} />
                             Delete
                         </Button>

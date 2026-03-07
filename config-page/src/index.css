@@ -2,8 +2,8 @@
   color-scheme: light dark;
 
   /* Brand Colors */
-  --pebble-orange: #FF5500;
-  --pebble-orange-active: #e03e00;
+  --halite-orange: #FF5500;
+  --halite-orange-active: #e03e00;
 
   /* Light Theme Variables */
   --bg-color: #f0f2f5;
@@ -65,7 +65,7 @@ button {
   cursor: pointer;
 }
 
-.pebble-page {
+.halite-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -75,7 +75,7 @@ button {
   padding-block-end: 16px;
 }
 
-.pebble-header {
+.halite-header {
   background-color: var(--bg-surface-elevated);
   color: var(--text-main);
   padding: 0.75rem 1rem;
@@ -89,27 +89,27 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
-.pebble-header h1 {
+.halite-header h1 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
 }
 
-.pebble-content {
+.halite-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.pebble-section {
+.halite-section {
   background-color: var(--bg-surface-elevated);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.pebble-section-title {
+.halite-section-title {
   background-color: transparent;
   padding: 1rem 1rem 0;
   margin: 0;
@@ -120,11 +120,11 @@ button {
   transition: color 0.3s ease;
 }
 
-.pebble-section-content {
+.halite-section-content {
   word-break: break-word;
 }
 
-.pebble-item {
+.halite-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,20 +133,20 @@ button {
   transition: background-color 0.2s ease;
 }
 
-.pebble-item:last-child {
+.halite-item:last-child {
   border-bottom: none;
 }
 
-.pebble-toggle {
+.halite-toggle {
   cursor: pointer;
 }
 
-.pebble-item label {
+.halite-item label {
   font-weight: 600;
   font-size: 1rem;
 }
 
-.pebble-label-group {
+.halite-label-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -154,15 +154,15 @@ button {
   padding-right: 16px;
 }
 
-.pebble-description {
+.halite-description {
   font-size: 0.85rem;
   color: var(--text-muted);
   font-weight: 400;
   line-height: 1.4;
 }
 
-.pebble-save-button {
-  background-color: var(--pebble-orange);
+.halite-save-button {
+  background-color: var(--halite-orange);
   color: white;
   border: none;
   padding: 0.8rem 1.25rem;
@@ -172,12 +172,12 @@ button {
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.pebble-save-button:active {
-  background-color: var(--pebble-orange-active);
+.halite-save-button:active {
+  background-color: var(--halite-orange-active);
 }
 
 /* Color Trigger Components */
-.pebble-color-trigger {
+.halite-color-trigger {
   background: none;
   border: 1.5px solid transparent;
   padding: 6px 0 6px 12px;
@@ -188,23 +188,23 @@ button {
   width: 170px;
 }
 
-.pebble-color-trigger:focus {
+.halite-color-trigger:focus {
   outline: none;
 }
 
-.pebble-color-trigger[data-focus-visible] {
-  border-color: var(--pebble-orange);
+.halite-color-trigger[data-focus-visible] {
+  border-color: var(--halite-orange);
   box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.pebble-color-value {
+.halite-color-value {
   display: flex;
   align-items: center;
   gap: 12px;
   justify-content: space-between;
 }
 
-.pebble-color-name {
+.halite-color-name {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
@@ -212,7 +212,7 @@ button {
   text-align: right;
 }
 
-.pebble-color-value>.pebble-color-swatch {
+.halite-color-value>.halite-color-swatch {
   width: 44px;
   height: 28px;
   border-radius: 6px;
@@ -221,7 +221,7 @@ button {
 }
 
 /* Modal styles */
-.pebble-color-modal-overlay {
+.halite-color-modal-overlay {
   position: fixed;
   inset: 0;
   background: var(--modal-overlay);
@@ -232,23 +232,23 @@ button {
   backdrop-filter: blur(3px);
 }
 
-.pebble-color-modal-overlay[data-entering] {
+.halite-color-modal-overlay[data-entering] {
   animation: modal-overlay-fade 200ms ease-out;
 }
 
-.pebble-color-modal[data-entering] {
+.halite-color-modal[data-entering] {
   animation: modal-dialog-fade 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pebble-color-modal-overlay[data-exiting] {
+.halite-color-modal-overlay[data-exiting] {
   animation: modal-overlay-fade 150ms ease-in reverse;
 }
 
-.pebble-color-modal[data-exiting] {
+.halite-color-modal[data-exiting] {
   animation: modal-dialog-fade 150ms cubic-bezier(0.4, 0, 1, 1) reverse;
 }
 
-.pebble-color-modal {
+.halite-color-modal {
   width: 90%;
   max-width: 400px;
   max-height: 90vh;
@@ -261,7 +261,7 @@ button {
   box-shadow: var(--shadow-lg);
 }
 
-.pebble-color-dialog {
+.halite-color-dialog {
   outline: none;
   display: flex;
   flex-direction: column;
@@ -291,7 +291,7 @@ button {
   }
 }
 
-.pebble-color-modal-header {
+.halite-color-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -300,13 +300,13 @@ button {
   padding-left: 20px;
 }
 
-.pebble-color-modal-header h2[slot='title'] {
+.halite-color-modal-header h2[slot='title'] {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
-.pebble-color-modal-close {
+.halite-color-modal-close {
   background: none;
   border: none;
   font-size: 32px;
@@ -317,7 +317,7 @@ button {
   height: 54px;
 }
 
-.pebble-color-modal-grid {
+.halite-color-modal-grid {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -327,11 +327,11 @@ button {
   overflow-y: auto;
 }
 
-.pebble-color-swatch-blank {
+.halite-color-swatch-blank {
   aspect-ratio: 1.618;
 }
 
-.pebble-color-swatch {
+.halite-color-swatch {
   cursor: pointer;
   aspect-ratio: 1.618;
   border: 0 none;
@@ -342,14 +342,14 @@ button {
   appearance: none;
 }
 
-.pebble-color-swatch:focus-visible {
-  outline: 2px solid var(--pebble-orange);
+.halite-color-swatch:focus-visible {
+  outline: 2px solid var(--halite-orange);
   outline-offset: 2px;
   z-index: 1;
 }
 
-.pebble-color-swatch.active {
-  outline: 2px solid var(--pebble-orange);
+.halite-color-swatch.active {
+  outline: 2px solid var(--halite-orange);
   outline-offset: 1px;
 }
 
@@ -387,7 +387,7 @@ select:hover:not(:disabled) {
 
 select:focus {
   outline: none;
-  border-color: var(--pebble-orange);
+  border-color: var(--halite-orange);
   box-shadow: 0 0 0 3px var(--border-focus);
 }
 
@@ -402,10 +402,10 @@ select:disabled {
 input[type='checkbox'] {
   width: 20px;
   height: 20px;
-  accent-color: var(--pebble-orange);
+  accent-color: var(--halite-orange);
 }
 
-.pebble-switch {
+.halite-switch {
   width: 50px;
   height: 30px;
   border-radius: 15px;
@@ -417,16 +417,16 @@ input[type='checkbox'] {
   outline: none;
 }
 
-.pebble-toggle[data-selected] .pebble-switch {
-  background-color: var(--pebble-orange);
+.halite-toggle[data-selected] .halite-switch {
+  background-color: var(--halite-orange);
 }
 
-.pebble-toggle[data-focus-visible] .pebble-switch {
+.halite-toggle[data-focus-visible] .halite-switch {
   border-color: var(--text-main);
   box-shadow: 0 0 0 2px var(--border-focus);
 }
 
-.pebble-switch-thumb {
+.halite-switch-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -438,46 +438,46 @@ input[type='checkbox'] {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.pebble-toggle[data-selected] .pebble-switch-thumb {
+.halite-toggle[data-selected] .halite-switch-thumb {
   transform: translateX(20px);
 }
 
-.pebble-slider {
+.halite-slider {
   flex-direction: column;
   align-items: stretch;
 }
 
-.pebble-slider-label-row {
+.halite-slider-label-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
 
-.pebble-slider-value {
+.halite-slider-value {
   font-weight: 600;
-  color: var(--pebble-orange);
+  color: var(--halite-orange);
 }
 
-.pebble-slider input[type='range'] {
+.halite-slider input[type='range'] {
   width: 100%;
-  accent-color: var(--pebble-orange);
+  accent-color: var(--halite-orange);
 }
 
 /* Watch Preview Component */
-.pebble-watch-preview {
+.halite-watch-preview {
   width: 144px;
   height: 168px;
   background-color: #000;
 }
 
-.pebble-watch-face {
+.halite-watch-face {
   position: relative;
   width: 144px;
   height: 168px;
   overflow: hidden;
 }
 
-.pebble-watch-preview-content {
+.halite-watch-preview-content {
   position: absolute;
   inset: 0;
   padding: 28px 22px;
@@ -490,7 +490,7 @@ input[type='checkbox'] {
   z-index: 10;
 }
 
-.pebble-watch-preview-widget {
+.halite-watch-preview-widget {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: -0.5px;
@@ -498,35 +498,35 @@ input[type='checkbox'] {
   white-space: nowrap;
 }
 
-.pebble-watch-preview-widget.primary.lower {
+.halite-watch-preview-widget.primary.lower {
   font-weight: bold;
 }
 
-.pebble-watch-preview-widget.primary {
+.halite-watch-preview-widget.primary {
   font-size: 14px;
 }
 
-.pebble-watch-time {
+.halite-watch-time {
   margin: 6px 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.pebble-watch-time svg {
+.halite-watch-time svg {
   width: 80px;
   height: auto;
 }
 
 /* Theme Picker Grid Styles */
-.pebble-theme-picker {
+.halite-theme-picker {
   padding-inline: 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
 }
 
-.pebble-theme-grid {
+.halite-theme-grid {
   display: flex;
   flex-direction: row;
   overflow-x: auto;
@@ -539,16 +539,16 @@ input[type='checkbox'] {
   scrollbar-color: var(--border-strong) transparent;
 }
 
-.pebble-theme-grid::-webkit-scrollbar {
+.halite-theme-grid::-webkit-scrollbar {
   height: 6px;
 }
 
-.pebble-theme-grid::-webkit-scrollbar-thumb {
+.halite-theme-grid::-webkit-scrollbar-thumb {
   background-color: var(--border-strong);
   border-radius: 3px;
 }
 
-.pebble-theme-card {
+.halite-theme-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -563,15 +563,15 @@ input[type='checkbox'] {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.pebble-theme-card[data-selected="true"] .pebble-theme-card-preview {
-  box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--pebble-orange);
+.halite-theme-card[data-selected="true"] .halite-theme-card-preview {
+  box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--halite-orange);
 }
 
-.pebble-theme-card[data-focus-visible="true"] .pebble-theme-card-preview {
+.halite-theme-card[data-focus-visible="true"] .halite-theme-card-preview {
   box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.pebble-theme-card-preview {
+.halite-theme-card-preview {
   border-radius: 6px;
   overflow: hidden;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -582,12 +582,12 @@ input[type='checkbox'] {
   border: 2px solid black;
 }
 
-.pebble-theme-card-preview .pebble-watch-face {
+.halite-theme-card-preview .halite-watch-face {
   transform: scale(0.5);
   margin: -42px -36px;
 }
 
-.pebble-theme-card-label {
+.halite-theme-card-label {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-muted);
@@ -595,11 +595,11 @@ input[type='checkbox'] {
   text-align: center;
 }
 
-.pebble-theme-card[data-selected="true"] .pebble-theme-card-label {
-  color: var(--pebble-orange);
+.halite-theme-card[data-selected="true"] .halite-theme-card-label {
+  color: var(--halite-orange);
 }
 
-.pebble-custom-icon {
+.halite-custom-icon {
   width: 72px;
   height: 84px;
   display: flex;
@@ -610,7 +610,7 @@ input[type='checkbox'] {
   color: var(--text-muted);
 }
 
-.pebble-custom-panel {
+.halite-custom-panel {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -621,14 +621,14 @@ input[type='checkbox'] {
   flex-wrap: wrap;
 }
 
-.pebble-custom-panel-preview {
+.halite-custom-panel-preview {
   border-radius: 8px;
   overflow: hidden;
   border: 5px solid black;
   box-shadow: var(--shadow-md);
 }
 
-.pebble-custom-actions {
+.halite-custom-actions {
   display: flex;
   gap: 8px;
   justify-content: center;
@@ -637,7 +637,7 @@ input[type='checkbox'] {
   flex-direction: column;
 }
 
-.pebble-custom-action-btn {
+.halite-custom-action-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -653,40 +653,40 @@ input[type='checkbox'] {
   box-shadow: 0px 1px 3px var(--border-color);
 }
 
-.pebble-custom-action-btn:active {
+.halite-custom-action-btn:active {
   background-color: var(--bg-surface-hover);
 }
 
-.pebble-custom-action-btn[data-focus-visible] {
+.halite-custom-action-btn[data-focus-visible] {
   outline: none;
-  border-color: var(--pebble-orange);
+  border-color: var(--halite-orange);
   box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.pebble-custom-action-btn--danger {
+.halite-custom-action-btn--danger {
   color: #e74c3c;
   border-color: rgba(231, 76, 60, 0.3);
 }
 
-.pebble-custom-action-btn--danger:hover {
+.halite-custom-action-btn--danger:hover {
   background-color: rgba(231, 76, 60, 0.08);
   border-color: rgba(231, 76, 60, 0.5);
 }
 
 /* Import Modal */
-.pebble-import-modal {
+.halite-import-modal {
   width: 90%;
   max-width: 440px;
 }
 
-.pebble-import-content {
+.halite-import-content {
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.pebble-import-textarea {
+.halite-import-textarea {
   width: 100%;
   min-height: 160px;
   padding: 12px;
@@ -701,29 +701,29 @@ input[type='checkbox'] {
   transition: border-color 0.2s ease;
 }
 
-.pebble-import-textarea::placeholder {
+.halite-import-textarea::placeholder {
   color: var(--text-subtle);
 }
 
-.pebble-import-textarea:focus {
+.halite-import-textarea:focus {
   outline: none;
-  border-color: var(--pebble-orange);
+  border-color: var(--halite-orange);
   box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.pebble-import-error {
+.halite-import-error {
   margin: 0;
   color: #e74c3c;
   font-size: 13px;
   font-weight: 500;
 }
 
-.pebble-import-button {
+.halite-import-button {
   align-self: flex-end;
   padding: 10px 24px;
   border: none;
   border-radius: 10px;
-  background-color: var(--pebble-orange);
+  background-color: var(--halite-orange);
   color: white;
   font-size: 15px;
   font-weight: 600;
@@ -731,15 +731,15 @@ input[type='checkbox'] {
   transition: all 0.2s ease;
 }
 
-.pebble-import-button:hover:not([disabled]) {
-  background-color: var(--pebble-orange-active);
+.halite-import-button:hover:not([disabled]) {
+  background-color: var(--halite-orange-active);
 }
 
-.pebble-import-button:active:not([disabled]) {
+.halite-import-button:active:not([disabled]) {
   transform: scale(0.97);
 }
 
-.pebble-import-button[disabled] {
+.halite-import-button[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }

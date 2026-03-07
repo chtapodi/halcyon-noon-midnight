@@ -22,9 +22,9 @@ export const FormItemLabel: React.FC<FormItemLabelProps> = ({
 }) => {
   const Component = htmlFor ? 'label' : 'div';
   return (
-    <Component className="pebble-label-group" htmlFor={htmlFor}>
+    <Component className="halite-label-group" htmlFor={htmlFor}>
       <span>{label}</span>
-      {description && <span className="pebble-description">{description}</span>}
+      {description && <span className="halite-description">{description}</span>}
     </Component>
   );
 };
@@ -37,7 +37,7 @@ export const FormItem: React.FC<FormItemProps> = ({
   onClick,
   htmlFor,
 }) => (
-  <div className={`pebble-item ${className}`} onClick={onClick}>
+  <div className={`halite-item ${className}`} onClick={onClick}>
     {label && <FormItemLabel label={label} description={description} htmlFor={htmlFor} />}
     {children}
   </div>

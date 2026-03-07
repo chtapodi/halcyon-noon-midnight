@@ -5,12 +5,12 @@ export const Page: React.FC<{ title: string; children: React.ReactNode }> = ({ t
   const { save } = useConfig();
 
   return (
-    <div className="pebble-page">
-      <header className="pebble-header">
+    <div className="halite-page">
+      <header className="halite-header">
         <h1>{title}</h1>
-        <button className="pebble-save-button" onClick={save}>SAVE</button>
+        <button className="halite-save-button" onClick={save}>SAVE</button>
       </header>
-      <main className="pebble-content">
+      <main className="halite-content">
         {children}
       </main>
     </div>

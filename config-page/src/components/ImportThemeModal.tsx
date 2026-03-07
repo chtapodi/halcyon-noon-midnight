@@ -38,22 +38,22 @@ export const ImportThemeModal: React.FC<ImportThemeModalProps> = ({
         <ModalOverlay
             isOpen={isOpen}
             onOpenChange={handleOpenChange}
-            className="pebble-color-modal-overlay"
+            className="halite-color-modal-overlay"
             isDismissable
         >
-            <Modal className="pebble-color-modal pebble-import-modal">
-                <Dialog className="pebble-color-dialog">
+            <Modal className="halite-color-modal halite-import-modal">
+                <Dialog className="halite-color-dialog">
                     {({ close }) => (
                         <>
-                            <div className="pebble-color-modal-header">
+                            <div className="halite-color-modal-header">
                                 <Heading slot="title">Import Theme</Heading>
-                                <Button className="pebble-color-modal-close" onPress={close}>
+                                <Button className="halite-color-modal-close" onPress={close}>
                                     ×
                                 </Button>
                             </div>
-                            <div className="pebble-import-content">
+                            <div className="halite-import-content">
                                 <textarea
-                                    className="pebble-import-textarea"
+                                    className="halite-import-textarea"
                                     placeholder="Paste theme JSON here…"
                                     value={jsonText}
                                     onChange={(e) => {
@@ -62,9 +62,9 @@ export const ImportThemeModal: React.FC<ImportThemeModalProps> = ({
                                     }}
                                     rows={8}
                                 />
-                                {error && <p className="pebble-import-error">{error}</p>}
+                                {error && <p className="halite-import-error">{error}</p>}
                                 <Button
-                                    className="pebble-import-button"
+                                    className="halite-import-button"
                                     onPress={handleImport}
                                     isDisabled={!jsonText.trim()}
                                 >
