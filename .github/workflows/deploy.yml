@@ -2,7 +2,7 @@ name: Deploy Config Page
 
 on:
   push:
-    branches: ["main", "master"]
+    branches: ["master"]
     paths:
       - 'config-page/**'
       - '.github/workflows/deploy.yml'
