@@ -1,6 +1,6 @@
 
 const USE_LOCAL_CONFIG = false;
-const configDataUri = 'https://freakified.github.io/halcyon';
+const configDataUri = 'https://halcyon.freakified.net/';
 const configLocalUri = 'http://localhost:3000/config.html';
 
 function locationError(err) {
