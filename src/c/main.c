@@ -61,17 +61,32 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   int time_offset =
       useLargeFont ? FONT_TIME_LARGE_OFFSET : FONT_TIME_STANDARD_OFFSET;
 
-  GFont upper_primary_font = fonts_get_system_font(FONT_WIDGET_UPPER_PRIMARY);
-  int upper_primary_height = FONT_WIDGET_UPPER_PRIMARY_HEIGHT;
-  int upper_primary_offset = FONT_WIDGET_UPPER_PRIMARY_OFFSET;
+  GFont upper_primary_font =
+      fonts_get_system_font(useLargeFont ? FONT_WIDGET_UPPER_PRIMARY_LARGE
+                                         : FONT_WIDGET_UPPER_PRIMARY);
+  int upper_primary_height = useLargeFont
+                                 ? FONT_WIDGET_UPPER_PRIMARY_LARGE_HEIGHT
+                                 : FONT_WIDGET_UPPER_PRIMARY_HEIGHT;
+  int upper_primary_offset = useLargeFont
+                                 ? FONT_WIDGET_UPPER_PRIMARY_LARGE_OFFSET
+                                 : FONT_WIDGET_UPPER_PRIMARY_OFFSET;
 
-  GFont lower_primary_font = fonts_get_system_font(FONT_WIDGET_LOWER_PRIMARY);
-  int lower_primary_height = FONT_WIDGET_LOWER_PRIMARY_HEIGHT;
-  int lower_primary_offset = FONT_WIDGET_LOWER_PRIMARY_OFFSET;
+  GFont lower_primary_font =
+      fonts_get_system_font(useLargeFont ? FONT_WIDGET_LOWER_PRIMARY_LARGE
+                                         : FONT_WIDGET_LOWER_PRIMARY);
+  int lower_primary_height = useLargeFont
+                                 ? FONT_WIDGET_LOWER_PRIMARY_LARGE_HEIGHT
+                                 : FONT_WIDGET_LOWER_PRIMARY_HEIGHT;
+  int lower_primary_offset = useLargeFont
+                                 ? FONT_WIDGET_LOWER_PRIMARY_LARGE_OFFSET
+                                 : FONT_WIDGET_LOWER_PRIMARY_OFFSET;
 
-  GFont secondary_font = fonts_get_system_font(FONT_WIDGET_SECONDARY);
-  int secondary_height = FONT_WIDGET_SECONDARY_HEIGHT;
-  int secondary_offset = FONT_WIDGET_SECONDARY_OFFSET;
+  GFont secondary_font = fonts_get_system_font(
+      useLargeFont ? FONT_WIDGET_SECONDARY_LARGE : FONT_WIDGET_SECONDARY);
+  int secondary_height = useLargeFont ? FONT_WIDGET_SECONDARY_LARGE_HEIGHT
+                                      : FONT_WIDGET_SECONDARY_HEIGHT;
+  int secondary_offset = useLargeFont ? FONT_WIDGET_SECONDARY_LARGE_OFFSET
+                                      : FONT_WIDGET_SECONDARY_OFFSET;
 
   // ---- Color selection ----
   GColor timeColor =
