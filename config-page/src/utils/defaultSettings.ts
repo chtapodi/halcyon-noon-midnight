@@ -35,7 +35,7 @@ export const getDefaultSettings = (capabilities: Capabilities): Settings => ({
   SETTING_SHOW_LEADING_ZERO: 0,
   // Widget slots: 0 = None, 1 = Date, 2 = Steps, 3 = Distance, 4 = Battery
   SETTING_WIDGET_UPPER_SECONDARY: 0,
-  SETTING_WIDGET_UPPER_PRIMARY: 0,
+  SETTING_WIDGET_UPPER_PRIMARY: 2,   // Steps by default
   SETTING_WIDGET_LOWER_PRIMARY: 1,   // Date by default
   SETTING_WIDGET_LOWER_SECONDARY: 0,
 });

@@ -50,9 +50,9 @@ void Settings_loadFromStorage() {
   globalSettings.showLeadingZero = false;
   globalSettings.pipVisibility = PIP_SHOW_ALL;
 
-  // widget slot defaults — match the original layout (time + date below)
+  // widget slot defaults
   globalSettings.widgetUpperSecondary = WIDGET_NONE;
-  globalSettings.widgetUpperPrimary = WIDGET_NONE;
+  globalSettings.widgetUpperPrimary = WIDGET_STEPS;
   globalSettings.widgetLowerPrimary = WIDGET_DATE;
   globalSettings.widgetLowerSecondary = WIDGET_NONE;
 
