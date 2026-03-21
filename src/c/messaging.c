@@ -15,7 +15,7 @@ void messaging_init(void (*processed_callback)(void)) {
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
 
-  app_message_open(640, 8);
+  app_message_open(768, 8);
 }
 
 void inbox_received_callback(DictionaryIterator *iterator, void *context) {
@@ -119,6 +119,13 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
       dict_find(iterator, MESSAGE_KEY_SETTING_WIDGET_LOWER_PRIMARY);
   Tuple *widgetLowerSecondary_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_WIDGET_LOWER_SECONDARY);
+
+  Tuple *weatherSunriseMinute_tuple =
+      dict_find(iterator, MESSAGE_KEY_WEATHER_SUNRISE_MINUTE);
+  Tuple *weatherSunsetMinute_tuple =
+      dict_find(iterator, MESSAGE_KEY_WEATHER_SUNSET_MINUTE);
+  Tuple *tempUnit_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TEMP_UNIT);
 
   if (timeColor_tuple != NULL) {
     globalSettings.timeColor = GColorFromHEX(timeColor_tuple->value->int32);
@@ -269,20 +276,40 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   }
 
   if (widgetUpperSecondary_tuple != NULL) {
-    globalSettings.widgetUpperSecondary =
-        (uint8_t)widgetUpperSecondary_tuple->value->int8;
+    strncpy(globalSettings.widgetUpperSecondary,
+            widgetUpperSecondary_tuple->value->cstring, WIDGET_TEXT_LEN);
+    globalSettings.widgetUpperSecondary[WIDGET_TEXT_LEN - 1] = '\0';
   }
   if (widgetUpperPrimary_tuple != NULL) {
-    globalSettings.widgetUpperPrimary =
-        (uint8_t)widgetUpperPrimary_tuple->value->int8;
+    strncpy(globalSettings.widgetUpperPrimary,
+            widgetUpperPrimary_tuple->value->cstring, WIDGET_TEXT_LEN);
+    globalSettings.widgetUpperPrimary[WIDGET_TEXT_LEN - 1] = '\0';
   }
   if (widgetLowerPrimary_tuple != NULL) {
-    globalSettings.widgetLowerPrimary =
-        (uint8_t)widgetLowerPrimary_tuple->value->int8;
+    strncpy(globalSettings.widgetLowerPrimary,
+            widgetLowerPrimary_tuple->value->cstring, WIDGET_TEXT_LEN);
+    globalSettings.widgetLowerPrimary[WIDGET_TEXT_LEN - 1] = '\0';
   }
   if (widgetLowerSecondary_tuple != NULL) {
-    globalSettings.widgetLowerSecondary =
-        (uint8_t)widgetLowerSecondary_tuple->value->int8;
+    strncpy(globalSettings.widgetLowerSecondary,
+            widgetLowerSecondary_tuple->value->cstring, WIDGET_TEXT_LEN);
+    globalSettings.widgetLowerSecondary[WIDGET_TEXT_LEN - 1] = '\0';
+  }
+
+  if (weatherSunriseMinute_tuple != NULL) {
+    SolarInfo updated = currentSolarInfo;
+    updated.sunriseMinute = (int)weatherSunriseMinute_tuple->value->int32;
+    currentSolarInfo = updated;
+  }
+
+  if (weatherSunsetMinute_tuple != NULL) {
+    SolarInfo updated = currentSolarInfo;
+    updated.sunsetMinute = (int)weatherSunsetMinute_tuple->value->int32;
+    currentSolarInfo = updated;
+  }
+
+  if (tempUnit_tuple != NULL) {
+    globalSettings.tempUnit = (TempUnitType)tempUnit_tuple->value->int8;
   }
 
   Settings_saveToStorage();

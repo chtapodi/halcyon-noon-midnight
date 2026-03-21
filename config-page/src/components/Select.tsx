@@ -8,9 +8,11 @@ export const Select: React.FC<{
   description?: string;
   messageKey: keyof Settings;
   options: { label: string; value: string | number }[];
-}> = ({ label, description, messageKey, options }) => {
+  value?: string | number;
+  onChange?: (val: string | number) => void;
+}> = ({ label, description, messageKey, options, value: overrideValue, onChange: overrideOnChange }) => {
   const { settings, updateSetting } = useConfig();
-  const value = settings[messageKey];
+  const value = overrideValue !== undefined ? overrideValue : settings[messageKey];
   const selectId = React.useId();
 
   return (
@@ -21,7 +23,12 @@ export const Select: React.FC<{
         onChange={(e) => {
           const val = e.target.value;
           const num = parseInt(val, 10);
-          updateSetting(messageKey, isNaN(num) ? val : num);
+          const finalVal = isNaN(num) || val.includes('{') ? val : num;
+          if (overrideOnChange) {
+            overrideOnChange(finalVal);
+          } else {
+            updateSetting(messageKey, finalVal);
+          }
         }}
       >
         {options.map((opt) => (

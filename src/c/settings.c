@@ -1,6 +1,7 @@
 #include "settings.h"
 #include "solarUtils.h"
 #include "utils.h"
+#include "widgets.h"
 #include <pebble.h>
 
 Settings globalSettings;
@@ -49,12 +50,13 @@ void Settings_loadFromStorage() {
   globalSettings.useLargeFonts = false;
   globalSettings.showLeadingZero = false;
   globalSettings.pipVisibility = PIP_SHOW_ALL;
+  globalSettings.tempUnit = TEMP_UNIT_CELSIUS;
 
   // widget slot defaults
-  globalSettings.widgetUpperSecondary = WIDGET_NONE;
-  globalSettings.widgetUpperPrimary = WIDGET_STEPS;
-  globalSettings.widgetLowerPrimary = WIDGET_DATE;
-  globalSettings.widgetLowerSecondary = WIDGET_NONE;
+  strncpy(globalSettings.widgetUpperSecondary, "{dist} KM", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetUpperPrimary, "{steps} STEPS", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetLowerPrimary, "{date}", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetLowerSecondary, "{batt}%", WIDGET_TEXT_LEN);
 
   if (persist_exists(SETTINGS_PERSIST_KEY)) {
     StoredSettings storedSettings;

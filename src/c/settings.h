@@ -76,6 +76,11 @@ typedef enum {
   PIP_HIDDEN = 2
 } PipVisibilityType;
 
+typedef enum {
+  TEMP_UNIT_CELSIUS = 0,
+  TEMP_UNIT_FAHRENHEIT = 1
+} TempUnitType;
+
 // typedef enum {
 //   NO_VIBE = 0,
 //   VIBE_EVERY_HOUR = 1,
@@ -136,12 +141,13 @@ typedef struct {
   bool useLargeFonts;
   bool showLeadingZero;
   PipVisibilityType pipVisibility;
+  TempUnitType tempUnit;
 
-  // Widget slots (stored as WidgetType enum values)
-  uint8_t widgetUpperSecondary; // WidgetType for upper secondary slot
-  uint8_t widgetUpperPrimary;   // WidgetType for upper primary slot
-  uint8_t widgetLowerPrimary;   // WidgetType for lower primary slot
-  uint8_t widgetLowerSecondary; // WidgetType for lower secondary slot
+  // Widget slots (stored as format strings)
+  char widgetUpperSecondary[WIDGET_TEXT_LEN];
+  char widgetUpperPrimary[WIDGET_TEXT_LEN];
+  char widgetLowerPrimary[WIDGET_TEXT_LEN];
+  char widgetLowerSecondary[WIDGET_TEXT_LEN];
 } Settings;
 
 typedef struct {
@@ -182,12 +188,13 @@ typedef struct {
   bool showLeadingZero;
 
   PipVisibilityType pipVisibility;
+  TempUnitType tempUnit;
 
-  // Widget slots
-  uint8_t widgetUpperSecondary;
-  uint8_t widgetUpperPrimary;
-  uint8_t widgetLowerPrimary;
-  uint8_t widgetLowerSecondary;
+  // Widget slots (stored as format strings)
+  char widgetUpperSecondary[WIDGET_TEXT_LEN];
+  char widgetUpperPrimary[WIDGET_TEXT_LEN];
+  char widgetLowerPrimary[WIDGET_TEXT_LEN];
+  char widgetLowerSecondary[WIDGET_TEXT_LEN];
 } StoredSettings;
 
 extern Settings globalSettings;

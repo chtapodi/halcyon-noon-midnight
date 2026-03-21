@@ -399,6 +399,25 @@ select:disabled {
   opacity: 0.7;
 }
 
+.halite-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 10px;
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.halite-input:focus {
+  outline: none;
+  border-color: var(--halite-orange);
+  box-shadow: 0 0 0 3px var(--border-focus);
+}
+
 input[type='checkbox'] {
   width: 20px;
   height: 20px;

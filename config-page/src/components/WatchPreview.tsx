@@ -84,12 +84,12 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
                     />
                 </svg>
                 <div className="halite-watch-preview-content">
-                    {effectiveSettings.SETTING_WIDGET_UPPER_SECONDARY > 0 && (
+                    {effectiveSettings.SETTING_WIDGET_UPPER_SECONDARY && (
                         <div className="halite-watch-preview-widget secondary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR) }}>
                             {WIDGET_OPTIONS.find(o => o.value === effectiveSettings.SETTING_WIDGET_UPPER_SECONDARY)?.preview}
                         </div>
                     )}
-                    {effectiveSettings.SETTING_WIDGET_UPPER_PRIMARY > 0 && (
+                    {effectiveSettings.SETTING_WIDGET_UPPER_PRIMARY && (
                         <div className="halite-watch-preview-widget primary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR) }}>
                             {WIDGET_OPTIONS.find(o => o.value === effectiveSettings.SETTING_WIDGET_UPPER_PRIMARY)?.preview}
                         </div>
@@ -99,12 +99,12 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
                             <path d="M0 4.48V0h8.96v17.92h4.48v4.48H0v-4.48h4.48V4.48zM16.493 22.4V0h15.68v22.4zm4.48-17.92v13.44h6.72V4.48zM36.329 22.4v-4.48h4.48v4.48zm0-13.44V4.48h4.48v4.48zM60.658 0v22.4h-15.68v-4.48h11.2v-4.48h-8.96V8.96h8.96V4.48h-11.2V0zM64.814 22.4V0h15.68v22.4zm11.2-8.96h-6.72v4.48h6.72zm-6.72-4.48h6.72V4.48h-6.72z" />
                         </svg>
                     </div>
-                    {effectiveSettings.SETTING_WIDGET_LOWER_PRIMARY > 0 && (
+                    {effectiveSettings.SETTING_WIDGET_LOWER_PRIMARY && (
                         <div className="halite-watch-preview-widget primary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR) }}>
                             {WIDGET_OPTIONS.find(o => o.value === effectiveSettings.SETTING_WIDGET_LOWER_PRIMARY)?.preview}
                         </div>
                     )}
-                    {effectiveSettings.SETTING_WIDGET_LOWER_SECONDARY > 0 && (
+                    {effectiveSettings.SETTING_WIDGET_LOWER_SECONDARY && (
                         <div className="halite-watch-preview-widget secondary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR) }}>
                             {WIDGET_OPTIONS.find(o => o.value === effectiveSettings.SETTING_WIDGET_LOWER_SECONDARY)?.preview}
                         </div>

@@ -33,9 +33,10 @@ export const getDefaultSettings = (capabilities: Capabilities): Settings => ({
   SETTING_USE_NIGHT_THEME: 1,
   SETTING_PIP_VISIBILITY: 0,
   SETTING_SHOW_LEADING_ZERO: 0,
-  // Widget slots: 0 = None, 1 = Date, 2 = Steps, 3 = Distance, 4 = Battery
-  SETTING_WIDGET_UPPER_SECONDARY: 0,
-  SETTING_WIDGET_UPPER_PRIMARY: 2,   // Steps by default
-  SETTING_WIDGET_LOWER_PRIMARY: 1,   // Date by default
-  SETTING_WIDGET_LOWER_SECONDARY: 0,
+  // Widget slots default to format strings
+  SETTING_WIDGET_UPPER_SECONDARY: '{dist} KM',
+  SETTING_WIDGET_UPPER_PRIMARY: '{steps} STEPS',   // Steps by default
+  SETTING_WIDGET_LOWER_PRIMARY: '{date}',    // Date by default
+  SETTING_WIDGET_LOWER_SECONDARY: '{batt}%',
+  SETTING_TEMP_UNIT: 0,
 });

@@ -28,6 +28,46 @@ export const SettingsPage: React.FC = () => {
   // Use health-gated widget options based on platform capability
   const widgetOptions = capabilities.HEALTH ? WIDGET_OPTIONS : WIDGET_OPTIONS_NO_HEALTH;
 
+  const WidgetSlot: React.FC<{
+    label: string,
+    description: string,
+    messageKey: 'SETTING_WIDGET_UPPER_SECONDARY' | 'SETTING_WIDGET_UPPER_PRIMARY' | 'SETTING_WIDGET_LOWER_PRIMARY' | 'SETTING_WIDGET_LOWER_SECONDARY'
+  }> = ({ label, description, messageKey }) => {
+    const value = settings[messageKey];
+    const isCustom = !widgetOptions.find(o => o.value === value);
+
+    return (
+      <>
+        <Select
+          label={label}
+          description={description}
+          messageKey={messageKey}
+          options={widgetOptions}
+          value={isCustom ? '__custom__' : value}
+          onChange={(val) => {
+            if (val === '__custom__') {
+              updateSetting(messageKey, value || '{temp}°'); // default to something if switching to custom
+            } else {
+              updateSetting(messageKey, val as string);
+            }
+          }}
+        />
+        {isCustom && (
+          <div style={{ padding: '0 1rem 1.25rem', marginTop: '-1rem' }}>
+            <input
+              type="text"
+              className="halite-input"
+              value={value}
+              onChange={(e) => updateSetting(messageKey, e.target.value)}
+              placeholder="Format string, e.g. {temp}° {cond}"
+              maxLength={47}
+            />
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <Page title="Halcyon Settings">
       <Section title="Theme">
@@ -204,33 +244,53 @@ export const SettingsPage: React.FC = () => {
       </Section>
 
       <Section title="Widgets">
-        <Select
+        <WidgetSlot
           label="Upper text 2"
           description="Smaller text shown above everything else"
           messageKey="SETTING_WIDGET_UPPER_SECONDARY"
-          options={widgetOptions}
         />
-        <Select
+        <WidgetSlot
           label="Upper text 1"
           description="Text shown directly above the time"
           messageKey="SETTING_WIDGET_UPPER_PRIMARY"
-          options={widgetOptions}
         />
-        <Select
+        <WidgetSlot
           label="Lower text 1"
           description="Text shown directly below the time"
           messageKey="SETTING_WIDGET_LOWER_PRIMARY"
-          options={widgetOptions}
         />
-        <Select
+        <WidgetSlot
           label="Lower text 2"
           description="Smaller text shown below everything else"
           messageKey="SETTING_WIDGET_LOWER_SECONDARY"
-          options={widgetOptions}
         />
+
+        <div style={{ padding: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border-color)' }}>
+          <strong>Available tokens:</strong>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', marginTop: '8px' }}>
+            <span><code>{'{temp}'}</code> Temp</span>
+            <span><code>{'{steps}'}</code> Steps</span>
+            <span><code>{'{thi}'}</code> High</span>
+            <span><code>{'{dist}'}</code> Distance</span>
+            <span><code>{'{tlo}'}</code> Low</span>
+            <span><code>{'{batt}'}</code> Battery</span>
+            <span><code>{'{cond}'}</code> Condition</span>
+            <span><code>{'{date}'}</code> Date</span>
+            <span><code>{'{sunrise}'}</code> Sunrise</span>
+            <span><code>{'{sunset}'}</code> Sunset</span>
+          </div>
+        </div>
       </Section>
 
       <Section title="General">
+        <Select
+          label="Temperature Unit"
+          messageKey="SETTING_TEMP_UNIT"
+          options={[
+            { label: 'Celsius (°C)', value: 0 },
+            { label: 'Fahrenheit (°F)', value: 1 },
+          ]}
+        />
         <Toggle
           label="Use larger fonts"
           messageKey="SETTING_USE_LARGE_FONTS"

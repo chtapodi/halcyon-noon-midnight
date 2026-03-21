@@ -1,109 +1,34 @@
 #include "solarUtils.h"
-#include "settings.h"
-#include "sun_calc.h"
-#include "utils.h"
 #include <pebble.h>
 
-SolarInfo currentSolarInfo;
+SolarInfo currentSolarInfo = {
+  .sunriseMinute = DEFAULT_SUNRISE_TIME,
+  .sunsetMinute  = DEFAULT_SUNSET_TIME
+};
 
 void solarUtils_updateLocation(LocationInfo loc) {
-  // APP_LOG(APP_LOG_LEVEL_DEBUG,
-  //         "Got a location! %d, Lng: %d, TZ: %d ",
-  //         (int)loc.lat, (int)loc.lng, (int)loc.tzOffset);
-
-  // if the location is zero, it's not real; ignore it
+  // Location is used by JS to compute solar data; persist it for reference
   if (loc.lat != 0 && loc.lng != 0) {
     persist_write_data(LOCATION_DATA_KEY, &loc, sizeof(LocationInfo));
   }
-
-  // either way, recalculate with the new information
-  solarUtils_recalculateSolarData();
+  // Sunrise/sunset calculations are now performed on the JS side.
+  // The minutes are pushed back via WEATHER_SUNRISE_MINUTE / WEATHER_SUNSET_MINUTE
+  // message keys and set directly into currentSolarInfo in messaging.c.
 }
-
-// Using the stored location OR the defaults, returns the sunrise and sunset
-#ifdef USE_FAKE_TIME
-SolarInfo priv_recalculateSolarData() {
-  SolarInfo solarInfo = {
-    sunsetMinute : DEFAULT_SUNSET_TIME,
-    sunriseMinute : DEFAULT_SUNRISE_TIME
-  };
-
-  return solarInfo;
-}
-#else
-SolarInfo priv_recalculateSolarData() {
-  if (persist_exists(LOCATION_DATA_KEY)) {
-    LocationInfo loc;
-    persist_read_data(LOCATION_DATA_KEY, &loc, sizeof(LocationInfo));
-
-    // APP_LOG(APP_LOG_LEVEL_DEBUG,
-    //         "Calculating with location: Lat: %d, Lng: %d, TZ: %d ",
-    //         (int)(loc.lat * 100), (int)(loc.lng * 100),
-    //         (int)(loc.tzOffset * 100));
-
-    // determine what day it is, since we'll need this
-    time_t rawTime;
-    struct tm *timeInfo;
-    time(&rawTime);
-    timeInfo = localtime(&rawTime);
-
-    // get the sunrise/sunset data
-    float sunRiseTime, sunSetTime;
-    int sunRiseMin, sunSetMin;
-
-    // APP_LOG(APP_LOG_LEVEL_DEBUG,
-    //         "Params 1: Year: %d, Month: %d, Day: %d, Z: %d",
-    //         (int)timeInfo->tm_year, (int)timeInfo->tm_mon,
-    //         (int)timeInfo->tm_mday, (int)ZENITH_OFFICIAL);
-
-    sunRiseTime =
-        calcSunRise(timeInfo->tm_year, timeInfo->tm_mon + 1, timeInfo->tm_mday,
-                    loc.lat, loc.lng, ZENITH_OFFICIAL);
-    sunSetTime =
-        calcSunSet(timeInfo->tm_year, timeInfo->tm_mon + 1, timeInfo->tm_mday,
-                   loc.lat, loc.lng, ZENITH_OFFICIAL);
-
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise Time Initial R: %d, S: %d",
-            (int)(sunRiseTime * 100), (int)(sunSetTime * 100));
-
-    sunRiseTime = adjustTimezone(sunRiseTime, loc.tzOffset);
-    sunSetTime = adjustTimezone(sunSetTime, loc.tzOffset);
-
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "After timezone adjustment R: %d, S: %d",
-            (int)(sunRiseTime * 100), (int)(sunSetTime * 100));
-
-    // for some reason, we have to add/subtract 12 hours (720 minutes)
-    sunRiseMin = (int)(sunRiseTime * 60) - 720;
-    sunSetMin = (int)(sunSetTime * 60) + 720;
-
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Sunrise recalculated! R: %d, S: %d",
-            sunRiseMin, sunSetMin);
-
-    SolarInfo solarInfo = {.sunsetMinute = sunSetMin,
-                           .sunriseMinute = sunRiseMin};
-
-    return solarInfo;
-  } else {
-    // otherwise, just use the default data
-    SolarInfo solarInfo = {.sunsetMinute = DEFAULT_SUNSET_TIME,
-                           .sunriseMinute = DEFAULT_SUNRISE_TIME};
-
-    return solarInfo;
-  }
-}
-#endif
 
 void solarUtils_recalculateSolarData() {
-  currentSolarInfo = priv_recalculateSolarData();
+  // No-op: solar data now comes from JS.
+  // Retained so call sites in main.c don't need changes.
 }
 
 bool isNightTime(int currentMinutes) {
-  // Check if current time is between sunset and sunrise
   bool result = (currentMinutes >= currentSolarInfo.sunsetMinute ||
-          currentMinutes < currentSolarInfo.sunriseMinute);
-  
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "isNightTime: current=%d, sunrise=%d, sunset=%d, result=%d", 
-          currentMinutes, currentSolarInfo.sunriseMinute, currentSolarInfo.sunsetMinute, result);
-  
+                 currentMinutes <  currentSolarInfo.sunriseMinute);
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG,
+          "isNightTime: current=%d, sunrise=%d, sunset=%d, result=%d",
+          currentMinutes, currentSolarInfo.sunriseMinute,
+          currentSolarInfo.sunsetMinute, result);
+
   return result;
 }

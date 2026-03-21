@@ -115,9 +115,9 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   } while (0)
 
   // Upper secondary (topmost)
-  if (globalSettings.widgetUpperSecondary != WIDGET_NONE) {
-    widget_get_text((WidgetType)globalSettings.widgetUpperSecondary,
-                    widgetTextUS, WIDGET_TEXT_LEN);
+  if (globalSettings.widgetUpperSecondary[0] != '\0') {
+    widget_get_text(globalSettings.widgetUpperSecondary, widgetTextUS,
+                    WIDGET_TEXT_LEN);
     if (widgetTextUS[0] != '\0') {
       PUSH_SLOT(widgetTextUS, secondary_font, secondary_height,
                 secondary_offset, secondaryColor);
@@ -125,8 +125,8 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   }
 
   // Upper primary
-  if (globalSettings.widgetUpperPrimary != WIDGET_NONE) {
-    widget_get_text((WidgetType)globalSettings.widgetUpperPrimary, widgetTextUP,
+  if (globalSettings.widgetUpperPrimary[0] != '\0') {
+    widget_get_text(globalSettings.widgetUpperPrimary, widgetTextUP,
                     WIDGET_TEXT_LEN);
     if (widgetTextUP[0] != '\0') {
       PUSH_SLOT(widgetTextUP, upper_primary_font, upper_primary_height,
@@ -138,8 +138,8 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   PUSH_SLOT(timeText, time_font, time_height, time_offset, timeColor);
 
   // Lower primary
-  if (globalSettings.widgetLowerPrimary != WIDGET_NONE) {
-    widget_get_text((WidgetType)globalSettings.widgetLowerPrimary, widgetTextLP,
+  if (globalSettings.widgetLowerPrimary[0] != '\0') {
+    widget_get_text(globalSettings.widgetLowerPrimary, widgetTextLP,
                     WIDGET_TEXT_LEN);
     if (widgetTextLP[0] != '\0') {
       PUSH_SLOT(widgetTextLP, lower_primary_font, lower_primary_height,
@@ -148,9 +148,9 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   }
 
   // Lower secondary (bottommost)
-  if (globalSettings.widgetLowerSecondary != WIDGET_NONE) {
-    widget_get_text((WidgetType)globalSettings.widgetLowerSecondary,
-                    widgetTextLS, WIDGET_TEXT_LEN);
+  if (globalSettings.widgetLowerSecondary[0] != '\0') {
+    widget_get_text(globalSettings.widgetLowerSecondary, widgetTextLS,
+                    WIDGET_TEXT_LEN);
     if (widgetTextLS[0] != '\0') {
       PUSH_SLOT(widgetTextLS, secondary_font, secondary_height,
                 secondary_offset, secondaryColor);
