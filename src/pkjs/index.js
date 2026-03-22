@@ -9,7 +9,7 @@
 
 var USE_LOCAL_CONFIG = true;
 var configDataUri = 'https://halcyon.freakified.net/';
-var configLocalUri = 'http://10.25.219.3:3000/index.html';
+var configLocalUri = 'http://10.25.219.9:3000/index.html';
 
 var SunCalc = require('./suncalc');
 var Weather = require('./weather');
@@ -19,7 +19,7 @@ var WEATHER_REFRESH_MS = 30 * 60 * 1000;
 
 // Cached data (in-memory; also persisted to localStorage)
 var cachedWeather = null;
-var cachedSolar   = null;
+var cachedSolar = null;
 var cachedSettings = null;
 
 // ---- Time helpers ----
@@ -51,34 +51,39 @@ function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h) {
   // Solar tokens
   if (solar) {
     result = result.replace('{sunrise}', formatMinutes(solar.sunriseMinute, use24h));
-    result = result.replace('{sunset}',  formatMinutes(solar.sunsetMinute,  use24h));
+    result = result.replace('{sunset}', formatMinutes(solar.sunsetMinute, use24h));
   } else {
     result = result.replace('{sunrise}', '--:--');
-    result = result.replace('{sunset}',  '--:--');
+    result = result.replace('{sunset}', '--:--');
   }
 
   // Weather tokens
   if (weather) {
-    var temp    = useFahrenheit ? Weather.toF(weather.temp)  : Math.round(weather.temp);
-    var tempHi  = useFahrenheit ? Weather.toF(weather.tempHi) : Math.round(weather.tempHi);
-    var tempLo  = useFahrenheit ? Weather.toF(weather.tempLo) : Math.round(weather.tempLo);
-    var dew     = useFahrenheit ? Weather.toF(weather.dew)    : Math.round(weather.dew);
+    var temp = useFahrenheit ? Weather.toF(weather.temp) : Math.round(weather.temp);
+    var tempHi = useFahrenheit ? Weather.toF(weather.tempHi) : Math.round(weather.tempHi);
+    var tempLo = useFahrenheit ? Weather.toF(weather.tempLo) : Math.round(weather.tempLo);
+    var dew = useFahrenheit ? Weather.toF(weather.dew) : Math.round(weather.dew);
+    var wind = useFahrenheit ? Weather.toMPH(weather.wind) : Math.round(weather.wind);
+    var rain = useFahrenheit ? Weather.toInch(weather.rain) : weather.rain.toFixed(1);
 
-    result = result.replace('{temp}',     String(temp));
-    result = result.replace('{thi}',      String(tempHi));
-    result = result.replace('{tlo}',      String(tempLo));
-    result = result.replace('{cond}',     weather.cond     || '--');
+    result = result.replace('{temp}', String(temp));
+    result = result.replace('{thi}', String(tempHi));
+    result = result.replace('{tlo}', String(tempLo));
+    result = result.replace('{cond}', weather.cond || '--');
     result = result.replace('{cond_day}', weather.cond_day || '--');
-    result = result.replace('{hum}',      String(Math.round(weather.hum)));
-    result = result.replace('{wind}',     String(Math.round(weather.wind)));
-    result = result.replace('{uv}',       String(Math.round(weather.uv)));
-    result = result.replace('{rain}',     String(weather.rain.toFixed(1)));
-    result = result.replace('{pop}',      String(Math.round(weather.pop)));
-    result = result.replace('{dew}',      String(dew));
+    result = result.replace('{hum}', String(Math.round(weather.hum)));
+    result = result.replace('{wind}', String(wind));
+    result = result.replace('{uv}', String(Math.round(weather.uv)));
+    result = result.replace('{rain}', String(rain));
+    result = result.replace('{pop}', String(Math.round(weather.pop)));
+    result = result.replace('{dew}', String(dew));
+    result = result.replace('{temp_unit}', useFahrenheit ? '°F' : '°C');
+    result = result.replace('{wind_unit}', useFahrenheit ? 'MPH' : 'KM/H');
+    result = result.replace('{wind_dir}', Weather.getCardinal(weather.wind_dir));
   } else {
     // No weather data yet — replace with placeholders so the watch shows something
     var dash = '--';
-    ['temp','thi','tlo','cond','cond_day','hum','wind','uv','rain','pop','dew'].forEach(function(t) {
+    ['temp', 'thi', 'tlo', 'cond', 'cond_day', 'hum', 'wind', 'uv', 'rain', 'pop', 'dew', 'temp_unit', 'wind_unit', 'wind_dir'].forEach(function (t) {
       result = result.replace('{' + t + '}', dash);
     });
   }
@@ -108,7 +113,7 @@ function sendDataToWatch() {
 
   var msg = {};
 
-  slotKeys.forEach(function(key) {
+  slotKeys.forEach(function (key) {
     var fmt = settings[key];
     if (fmt !== undefined && fmt !== null) {
       // Apply JS tokens; C tokens pass through untouched
@@ -120,7 +125,7 @@ function sendDataToWatch() {
   // Send solar minutes for the ring
   if (cachedSolar) {
     msg['WEATHER_SUNRISE_MINUTE'] = cachedSolar.sunriseMinute;
-    msg['WEATHER_SUNSET_MINUTE']  = cachedSolar.sunsetMinute;
+    msg['WEATHER_SUNSET_MINUTE'] = cachedSolar.sunsetMinute;
   }
 
   // Send temp unit setting
@@ -129,8 +134,8 @@ function sendDataToWatch() {
   console.log('Sending to watch: ' + JSON.stringify(msg));
 
   Pebble.sendAppMessage(msg,
-    function() { console.log('Data sent to watch successfully'); },
-    function(e) { console.log('Error sending data to watch: ' + JSON.stringify(e)); }
+    function () { console.log('Data sent to watch successfully'); },
+    function (e) { console.log('Error sending data to watch: ' + JSON.stringify(e)); }
   );
 }
 
@@ -147,16 +152,16 @@ function locationSuccess(pos) {
 
   // Send location to watch (for legacy compat / future use)
   Pebble.sendAppMessage({
-    'LOCATION_LAT':        Math.round(lat * 1000000),
-    'LOCATION_LNG':        Math.round(lng * 1000000),
+    'LOCATION_LAT': Math.round(lat * 1000000),
+    'LOCATION_LNG': Math.round(lng * 1000000),
     'LOCATION_GMT_OFFSET': tzOffsetMinutes
-  }, function() {}, function() {});
+  }, function () { }, function () { });
 
   // Calculate sunrise/sunset on the JS side
   var times = SunCalc.getTimes(new Date(), lat, lng);
   var solar = {
     sunriseMinute: times.sunrise.getHours() * 60 + times.sunrise.getMinutes(),
-    sunsetMinute:  times.sunset.getHours() * 60 + times.sunset.getMinutes()
+    sunsetMinute: times.sunset.getHours() * 60 + times.sunset.getMinutes()
   };
   cachedSolar = solar;
   localStorage.setItem('halcyonSolar', JSON.stringify(solar));
@@ -166,13 +171,13 @@ function locationSuccess(pos) {
   sendDataToWatch();
 
   // Fetch weather
-  Weather.fetch(lat, lng, function(data) {
+  Weather.fetch(lat, lng, function (data) {
     cachedWeather = data;
     sendDataToWatch();
   });
 
   // Schedule periodic refresh
-  setInterval(function() {
+  setInterval(function () {
     navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
       timeout: 15000,
       maximumAge: 60000
@@ -190,20 +195,20 @@ function getLocation() {
 
 // ---- App lifecycle ----
 
-Pebble.addEventListener('ready', function(e) {
+Pebble.addEventListener('ready', function (e) {
   console.log('PebbleKit JS ready');
 
   // Restore cached weather/solar from previous session
   cachedWeather = Weather.restore();
-  var savedSolar   = localStorage.getItem('halcyonSolar');
+  var savedSolar = localStorage.getItem('halcyonSolar');
   if (savedSolar) {
-    try { cachedSolar = JSON.parse(savedSolar); } catch(e) {}
+    try { cachedSolar = JSON.parse(savedSolar); } catch (e) { }
   }
 
   // Restore settings
   var savedSettings = localStorage.getItem('halcyonSettings');
   if (savedSettings) {
-    try { cachedSettings = JSON.parse(savedSettings); } catch(e) {}
+    try { cachedSettings = JSON.parse(savedSettings); } catch (e) { }
   }
 
   // If we have cached data, send it immediately so the watch has something
@@ -215,7 +220,7 @@ Pebble.addEventListener('ready', function(e) {
   getLocation();
 });
 
-Pebble.addEventListener('showConfiguration', function() {
+Pebble.addEventListener('showConfiguration', function () {
   var url = USE_LOCAL_CONFIG ? configLocalUri : configDataUri;
 
   var watchInfo = Pebble.getActiveWatchInfo();
@@ -243,7 +248,7 @@ Pebble.addEventListener('showConfiguration', function() {
   Pebble.openURL(url);
 });
 
-Pebble.addEventListener('webviewclosed', function(e) {
+Pebble.addEventListener('webviewclosed', function (e) {
   console.log('Configuration window closed');
 
   if (!e.response || e.response === 'CANCELLED' || e.response === 'null' || e.response === '{}') {
@@ -307,7 +312,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   }
 
   // Process non-color, non-widget settings
-  Object.keys(configData).forEach(function(key) {
+  Object.keys(configData).forEach(function (key) {
     if (colorKeys.indexOf(key) === -1 && widgetKeys.indexOf(key) === -1) {
       var value = configData[key];
       if (typeof value === 'boolean') {
@@ -323,8 +328,8 @@ Pebble.addEventListener('webviewclosed', function(e) {
   console.log('Sending non-widget config to Pebble: ' + JSON.stringify(dict));
 
   Pebble.sendAppMessage(dict,
-    function() { console.log('Config sent successfully!'); },
-    function(e) { console.log('Error sending config: ' + JSON.stringify(e)); }
+    function () { console.log('Config sent successfully!'); },
+    function (e) { console.log('Error sending config: ' + JSON.stringify(e)); }
   );
 
   // Now apply Pass 1 to widget strings and send them with current weather/solar data

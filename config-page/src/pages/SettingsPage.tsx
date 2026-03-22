@@ -205,6 +205,14 @@ export const SettingsPage: React.FC = () => {
       </Section>
 
       <Section title="General">
+        <Select
+          label="Weather Units"
+          messageKey="SETTING_TEMP_UNIT"
+          options={[
+            { label: 'Metric (Celsius, KM/H)', value: 0 },
+            { label: 'Imperial (Fahrenheit, MPH)', value: 1 },
+          ]}
+        />
         <Toggle
           label="Use larger fonts"
           messageKey="SETTING_USE_LARGE_FONTS"

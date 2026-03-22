@@ -14,27 +14,27 @@ export const WIDGET_OPTIONS: WidgetOption[] = [
     // Date/time
     { value: '{date:%a, %b %e}', label: 'Date', preview: 'MON, JAN 01', category: 'Date & Time' },
     { value: '{date:%Y-%m-%d}', label: 'Numeric Date', preview: '2026-03-22', category: 'Date & Time' },
+    { value: 'DAY {date:%j}', label: 'Day Number', preview: 'DAY 81', category: 'Date & Time' },
     { value: 'WEEK {date:%V}', label: 'Week Number', preview: 'WEEK 23', category: 'Date & Time' },
     { value: '{date:%Y}', label: 'Year', preview: '2026', category: 'Date & Time' },
-    { value: 'DAY {date:%-j}', label: 'Day Number', preview: 'DAY 81', category: 'Date & Time' },
     // Solar
-    { value: '{sunrise}', label: 'Sunrise Time', preview: '6:42 AM', category: 'Solar' },
-    { value: '{sunset}', label: 'Sunset Time', preview: '6:18 PM', category: 'Solar' },
+    { value: 'RISE {sunrise}', label: 'Sunrise Time', preview: 'RISE 6:42 AM', category: 'Solar' },
+    { value: 'SET {sunset}', label: 'Sunset Time', preview: 'SET 6:18 PM', category: 'Solar' },
     // Health
     { value: '{steps} STEPS', label: 'Steps', preview: '1,234 STEPS', category: 'Health' },
     { value: '{dist} {dist_unit}', label: 'Distance Walked', preview: '0.8 KM', category: 'Health' },
     // Device
-    { value: '{batt}%', label: 'Battery %', preview: '85%', category: 'Device' },
+    { value: 'BATTERY {batt}%', label: 'Battery %', preview: 'BATTERY 85%', category: 'Device' },
     // Today's Forecast
-    { value: '{temp}° {cond}', label: 'Current Conditions', preview: '18° CLOUDY', category: 'Weather' },
-    { value: '{thi}°/{tlo}°', label: 'Today\'s High & Low', preview: '22°/14°', category: 'Weather' },
-    { value: 'RAIN {pop}%', label: 'Today\'s Chance of Rain', preview: 'RAIN 30%', category: 'Weather' },
+    { value: 'H: {thi}° L: {tlo}°', label: 'Today\'s High & Low', preview: 'H: 22° L: 14°', category: 'Weather: Today\s Forecast' },
+    { value: '{cond_day}', label: 'Today\'s Forecast Condition', preview: 'PARTLY CLOUDY', category: 'Weather: Today\s Forecast' },
+    { value: 'RAIN {pop}%', label: 'Today\'s Chance of Rain', preview: 'RAIN 30%', category: 'Weather: Today\s Forecast' },
     // Current Conditions
-    { value: '{hum}% HUM', label: 'Humidity', preview: '65% HUM', category: 'Advanced Weather' },
-    { value: '{wind} KM/H', label: 'Wind Speed', preview: '12 KM/H', category: 'Advanced Weather' },
-    { value: 'UV {uv}', label: 'UV Index', preview: 'UV 6', category: 'Advanced Weather' },
-    { value: '{dew}° DEW', label: 'Dew Point', preview: '12° DEW', category: 'Advanced Weather' },
-    { value: '{cond_day}', label: 'Today\'s Forecast Condition', preview: 'PARTLY CLOUDY', category: 'Advanced Weather' },
+    { value: '{temp}° {cond}', label: 'Current Temp & Condition', preview: '18° CLOUDY', category: 'Weather: Current' },
+    { value: '{hum}% HUMIDITY', label: 'Humidity', preview: '65% HUMIDITY', category: 'Weather: Current' },
+    { value: '{wind} {wind_unit} {wind_dir}', label: 'Wind', preview: '12 KM/H NW', category: 'Weather: Current' },
+    { value: 'UVI {uv}', label: 'UV Index', preview: 'UVI 6', category: 'Weather: Current' },
+    { value: '{dew}° DEW', label: 'Dew Point', preview: 'DEWPOINT 12°', category: 'Weather: Current' },
     // Custom
     { value: '__custom__', label: 'Custom…', preview: '', category: 'Custom' },
 ];
