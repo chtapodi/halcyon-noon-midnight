@@ -62,19 +62,23 @@ function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h) {
     var temp    = useFahrenheit ? Weather.toF(weather.temp)  : Math.round(weather.temp);
     var tempHi  = useFahrenheit ? Weather.toF(weather.tempHi) : Math.round(weather.tempHi);
     var tempLo  = useFahrenheit ? Weather.toF(weather.tempLo) : Math.round(weather.tempLo);
+    var dew     = useFahrenheit ? Weather.toF(weather.dew)    : Math.round(weather.dew);
 
-    result = result.replace('{temp}',  String(temp));
-    result = result.replace('{thi}',   String(tempHi));
-    result = result.replace('{tlo}',   String(tempLo));
-    result = result.replace('{cond}',  weather.cond  || '--');
-    result = result.replace('{hum}',   String(Math.round(weather.hum)));
-    result = result.replace('{wind}',  String(Math.round(weather.wind)));
-    result = result.replace('{uv}',    String(Math.round(weather.uv)));
-    result = result.replace('{rain}',  String(weather.rain.toFixed(1)));
+    result = result.replace('{temp}',     String(temp));
+    result = result.replace('{thi}',      String(tempHi));
+    result = result.replace('{tlo}',      String(tempLo));
+    result = result.replace('{cond}',     weather.cond     || '--');
+    result = result.replace('{cond_day}', weather.cond_day || '--');
+    result = result.replace('{hum}',      String(Math.round(weather.hum)));
+    result = result.replace('{wind}',     String(Math.round(weather.wind)));
+    result = result.replace('{uv}',       String(Math.round(weather.uv)));
+    result = result.replace('{rain}',     String(weather.rain.toFixed(1)));
+    result = result.replace('{pop}',      String(Math.round(weather.pop)));
+    result = result.replace('{dew}',      String(dew));
   } else {
     // No weather data yet — replace with placeholders so the watch shows something
     var dash = '--';
-    ['temp','thi','tlo','cond','hum','wind','uv','rain'].forEach(function(t) {
+    ['temp','thi','tlo','cond','cond_day','hum','wind','uv','rain','pop','dew'].forEach(function(t) {
       result = result.replace('{' + t + '}', dash);
     });
   }

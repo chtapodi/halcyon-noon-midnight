@@ -27,11 +27,17 @@ void widget_get_text(const char *format_string, char *buf, int buf_len) {
         char temp[32] = {0};
         bool matched = false;
 
-        if (strncmp(token, "date", token_len) == 0 && token_len == 4) {
-          struct tm *t = getCurrentTime();
-          strftime(temp, sizeof(temp), "%a, %b %e", t);
-          to_uppercase(temp);
-          matched = true;
+        if (strncmp(token, "date:", (token_len > 5 ? 5 : token_len)) == 0 && token_len > 5) {
+          const char *fmt_start = token + 5;
+          int fmt_len = token_len - 5;
+          char fmt[32] = {0};
+          if (fmt_len < (int)sizeof(fmt)) {
+            memcpy(fmt, fmt_start, fmt_len);
+            struct tm *t = getCurrentTime();
+            strftime(temp, sizeof(temp), fmt, t);
+            to_uppercase(temp);
+            matched = true;
+          }
         } else if (strncmp(token, "steps", token_len) == 0 && token_len == 5) {
 #if defined(PBL_HEALTH)
           HealthServiceAccessibilityMask mask =
