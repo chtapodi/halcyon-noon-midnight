@@ -22,7 +22,7 @@ export const WIDGET_OPTIONS: WidgetOption[] = [
     { value: '{sunset}', label: 'Sunset Time', preview: '6:18 PM', category: 'Solar' },
     // Health
     { value: '{steps} STEPS', label: 'Steps', preview: '1,234 STEPS', category: 'Health' },
-    { value: '{dist} KM', label: 'Distance Walked', preview: '0.8 KM', category: 'Health' },
+    { value: '{dist} {dist_unit}', label: 'Distance Walked', preview: '0.8 KM', category: 'Health' },
     // Device
     { value: '{batt}%', label: 'Battery %', preview: '85%', category: 'Device' },
     // Today's Forecast
@@ -41,5 +41,5 @@ export const WIDGET_OPTIONS: WidgetOption[] = [
 
 // Options without health-related widgets (for non-health platforms)
 export const WIDGET_OPTIONS_NO_HEALTH: WidgetOption[] = WIDGET_OPTIONS.filter(
-    (o) => o.value !== '{steps} STEPS' && o.value !== '{dist} KM'
+    (o) => o.value !== '{steps} STEPS' && o.value !== '{dist} {dist_unit}'
 );
