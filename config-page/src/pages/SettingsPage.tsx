@@ -2,10 +2,11 @@ import React from 'react';
 import { useConfig, useCapabilities, useWatchInfo } from '../context/PebbleConfigContext';
 import { Page, Section, Toggle, ColorPicker, Select, ThemePicker, CustomThemePanel, WidgetSelector } from '../components';
 import { useSavedThemes } from '../hooks/useSavedThemes';
-import themes from '../data/themes.json';
-import nightThemes from '../data/themes-night.json';
-import themesBw from '../data/themes-bw.json';
-import themesBwNight from '../data/themes-bw-night.json';
+import lightThemes from '../data/light-themes.json';
+import darkThemes from '../data/dark-themes.json';
+import lightThemesBw from '../data/light-themes-bw.json';
+import darkThemesBw from '../data/dark-themes-bw.json';
+import { prepareThemes } from '../utils/themeUtils';
 
 
 export const SettingsPage: React.FC = () => {
@@ -13,8 +14,19 @@ export const SettingsPage: React.FC = () => {
   const capabilities = useCapabilities();
   const watchInfo = useWatchInfo();
 
-  const activeThemes = capabilities.BW ? themesBw : themes;
-  const activeNightThemes = capabilities.BW ? themesBwNight : nightThemes;
+  const activeThemes = React.useMemo(() =>
+    capabilities.BW
+      ? prepareThemes(lightThemesBw, darkThemesBw, false)
+      : prepareThemes(lightThemes, darkThemes, false),
+    [capabilities.BW]
+  );
+
+  const activeNightThemes = React.useMemo(() =>
+    capabilities.BW
+      ? prepareThemes(darkThemesBw, lightThemesBw, true)
+      : prepareThemes(darkThemes, lightThemes, true),
+    [capabilities.BW]
+  );
 
   const daySavedThemes = useSavedThemes(false);
   const nightSavedThemes = useSavedThemes(true);
