@@ -1,6 +1,5 @@
 #include <pebble.h>
 
-#define USE_FAKE_TIME
 // #define FORCE_BACKLIGHT
 
 #include "drawUtils.h"
@@ -61,25 +60,15 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   int time_offset =
       useLargeFont ? FONT_TIME_LARGE_OFFSET : FONT_TIME_STANDARD_OFFSET;
 
-  GFont upper_primary_font =
-      fonts_get_system_font(useLargeFont ? FONT_WIDGET_UPPER_PRIMARY_LARGE
-                                         : FONT_WIDGET_UPPER_PRIMARY);
-  int upper_primary_height = useLargeFont
-                                 ? FONT_WIDGET_UPPER_PRIMARY_LARGE_HEIGHT
-                                 : FONT_WIDGET_UPPER_PRIMARY_HEIGHT;
-  int upper_primary_offset = useLargeFont
-                                 ? FONT_WIDGET_UPPER_PRIMARY_LARGE_OFFSET
-                                 : FONT_WIDGET_UPPER_PRIMARY_OFFSET;
-
-  GFont lower_primary_font =
-      fonts_get_system_font(useLargeFont ? FONT_WIDGET_LOWER_PRIMARY_LARGE
-                                         : FONT_WIDGET_LOWER_PRIMARY);
-  int lower_primary_height = useLargeFont
-                                 ? FONT_WIDGET_LOWER_PRIMARY_LARGE_HEIGHT
-                                 : FONT_WIDGET_LOWER_PRIMARY_HEIGHT;
-  int lower_primary_offset = useLargeFont
-                                 ? FONT_WIDGET_LOWER_PRIMARY_LARGE_OFFSET
-                                 : FONT_WIDGET_LOWER_PRIMARY_OFFSET;
+  GFont primary_font =
+      fonts_get_system_font(useLargeFont ? FONT_WIDGET_PRIMARY_LARGE
+                                         : FONT_WIDGET_PRIMARY);
+  int primary_height = useLargeFont
+                                 ? FONT_WIDGET_PRIMARY_LARGE_HEIGHT
+                                 : FONT_WIDGET_PRIMARY_HEIGHT;
+  int primary_offset = useLargeFont
+                                 ? FONT_WIDGET_PRIMARY_LARGE_OFFSET
+                                 : FONT_WIDGET_PRIMARY_OFFSET;
 
   GFont secondary_font = fonts_get_system_font(
       useLargeFont ? FONT_WIDGET_SECONDARY_LARGE : FONT_WIDGET_SECONDARY);
@@ -129,8 +118,8 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
     widget_get_text(globalSettings.widgetUpperPrimary, widgetTextUP,
                     WIDGET_TEXT_LEN);
     if (widgetTextUP[0] != '\0') {
-      PUSH_SLOT(widgetTextUP, upper_primary_font, upper_primary_height,
-                upper_primary_offset, primaryColor);
+      PUSH_SLOT(widgetTextUP, primary_font, primary_height,
+                primary_offset, primaryColor);
     }
   }
 
@@ -142,10 +131,11 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
     widget_get_text(globalSettings.widgetLowerPrimary, widgetTextLP,
                     WIDGET_TEXT_LEN);
     if (widgetTextLP[0] != '\0') {
-      PUSH_SLOT(widgetTextLP, lower_primary_font, lower_primary_height,
-                lower_primary_offset, primaryColor);
+      PUSH_SLOT(widgetTextLP, primary_font, primary_height,
+                primary_offset, primaryColor);
     }
   }
+
 
   // Lower secondary (bottommost)
   if (globalSettings.widgetLowerSecondary[0] != '\0') {
@@ -310,6 +300,9 @@ static void main_window_unload(Window *window) {
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+#ifdef USE_FAKE_TIME
+  tick_fake_time();
+#endif
   update_clock();
 }
 
@@ -338,7 +331,11 @@ static void init() {
   window_stack_push(mainWindow, true);
 
   // Register with TickTimerService
+#ifdef USE_FAKE_TIME
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+#else
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+#endif
 }
 
 static void deinit() { window_destroy(mainWindow); }

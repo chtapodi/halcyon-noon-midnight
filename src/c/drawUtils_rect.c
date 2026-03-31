@@ -2,8 +2,8 @@
 
 #include "drawUtils.h"
 #include "settings.h"
-#include "utils.h"
 #include "solarUtils.h"
+#include "utils.h"
 
 static ColorTheme currentTheme;
 
@@ -35,32 +35,32 @@ GPoint getPipPosition(int id, int numPips, GRect bounds) {
 }
 
 GRect snap_to_edges(GRect rect, GRect bounds, int thickness) {
-    // vertical snapping
-    if (rect.origin.y + rect.size.h > bounds.size.h - thickness) {
-        rect.size.h = bounds.size.h - rect.origin.y;
-    }
-    if (rect.origin.y < thickness) {
-        rect.size.h += rect.origin.y;
-        rect.origin.y = 0;
-    }
+  // vertical snapping
+  if (rect.origin.y + rect.size.h > bounds.size.h - thickness) {
+    rect.size.h = bounds.size.h - rect.origin.y;
+  }
+  if (rect.origin.y < thickness) {
+    rect.size.h += rect.origin.y;
+    rect.origin.y = 0;
+  }
 
-    // horizontal snapping
-    if (rect.origin.x + rect.size.w > bounds.size.w - thickness) {
-        rect.size.w = bounds.size.w - rect.origin.x;
-    }
-    if (rect.origin.x < thickness) {
-        rect.size.w += rect.origin.x;
-        rect.origin.x = 0;
-    }
+  // horizontal snapping
+  if (rect.origin.x + rect.size.w > bounds.size.w - thickness) {
+    rect.size.w = bounds.size.w - rect.origin.x;
+  }
+  if (rect.origin.x < thickness) {
+    rect.size.w += rect.origin.x;
+    rect.origin.x = 0;
+  }
 
-    return rect;
+  return rect;
 }
 
 void draw_center_layer(Layer *layer, GContext *ctx) {
   currentTheme = getCurrentColorTheme();
   GRect bounds = layer_get_bounds(layer);
-   graphics_context_set_fill_color(ctx, currentTheme.bgColor);
-  
+  graphics_context_set_fill_color(ctx, currentTheme.bgColor);
+
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
   int innerPadding = 0;
@@ -80,23 +80,25 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
     // Check pip visibility setting
     bool should_draw_pip = false;
     switch (globalSettings.pipVisibility) {
-      case PIP_SHOW_ALL:
-        should_draw_pip = true;
-        break;
-      case PIP_SHOW_MAJOR:
-        should_draw_pip = is_main_pip;
-        break;
-      case PIP_HIDDEN:
-        should_draw_pip = false;
-        break;
+    case PIP_SHOW_ALL:
+      should_draw_pip = true;
+      break;
+    case PIP_SHOW_MAJOR:
+      should_draw_pip = is_main_pip;
+      break;
+    case PIP_HIDDEN:
+      should_draw_pip = false;
+      break;
     }
 
-    if (!should_draw_pip) continue;
+    if (!should_draw_pip)
+      continue;
 
     int length = is_main_pip ? long_pip_length : pip_length;
 
-      graphics_context_set_stroke_color(ctx, is_main_pip ? currentTheme.pipColorPrimary
-                                                         : currentTheme.pipColorSecondary);
+    graphics_context_set_stroke_color(
+        ctx, is_main_pip ? currentTheme.pipColorPrimary
+                         : currentTheme.pipColorSecondary);
     graphics_context_set_stroke_width(ctx, 3);
 
     GPoint start = getPipPosition(i, numPips, bounds);
@@ -125,8 +127,8 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   int width = bounds.size.w;
   int height = bounds.size.h;
 
-   // Draw outer rectangular ring
-    graphics_context_set_fill_color(ctx, currentTheme.ringNightColor);
+  // Draw outer rectangular ring
+  graphics_context_set_fill_color(ctx, currentTheme.ringNightColor);
 
   // Top bar
   graphics_fill_rect(ctx, GRect(0, 0, width, thickness), 0, GCornerNone);
@@ -154,58 +156,62 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   GPoint sunPos = getPipPosition(pos, numPositions, innerBounds);
 
   // Apply the same 15-hour shift to the sunrise and sunset times
-  int shiftedSunriseMinute = (currentSolarInfo.sunriseMinute + 15 * 60) % (24 * 60);
-  int shiftedSunsetMinute = (currentSolarInfo.sunsetMinute + 15 * 60) % (24 * 60);
+  int shiftedSunriseMinute =
+      (currentSolarInfo.sunriseMinute + 15 * 60) % (24 * 60);
+  int shiftedSunsetMinute =
+      (currentSolarInfo.sunsetMinute + 15 * 60) % (24 * 60);
 
   // Calculate sunrise and sunset positions on the ring using getPipPosition
-  int dayStartPos = (int)(((shiftedSunriseMinute / 1440.0f) * numPositions) + 0.5);
+  int dayStartPos =
+      (int)(((shiftedSunriseMinute / 1440.0f) * numPositions) + 0.5);
   int dayEndPos = (int)(((shiftedSunsetMinute / 1440.0f) * numPositions) + 0.5);
 
   GPoint dayStart = getPipPosition(dayStartPos, numPositions, innerBounds);
   GPoint dayEnd = getPipPosition(dayEndPos, numPositions, innerBounds);
 
-   // Fill the day section
-    graphics_context_set_fill_color(ctx, currentTheme.ringDayColor);
+  // Fill the day section
+  graphics_context_set_fill_color(ctx, currentTheme.ringDayColor);
   for (int i = dayStartPos; i != dayEndPos; i = (i + 1) % numPositions) {
     GPoint pipPos = getPipPosition(i, numPositions, innerBounds);
-    graphics_fill_rect(ctx, GRect(pipPos.x - thickness / 2, pipPos.y - thickness / 2, thickness, thickness), 0, GCornerNone);
+    graphics_fill_rect(ctx,
+                       GRect(pipPos.x - thickness / 2, pipPos.y - thickness / 2,
+                             thickness, thickness),
+                       0, GCornerNone);
   }
 
   // Calculate positioning of twilight interface blocks
   int boxSize = thickness;
-    graphics_context_set_stroke_color(ctx, currentTheme.ringStrokeColor);
+  graphics_context_set_stroke_color(ctx, currentTheme.ringStrokeColor);
   graphics_context_set_stroke_width(ctx, strokeWidth);
 
-  GRect twilightStartRect = GRect(dayStart.x - boxSize / 2, dayStart.y - boxSize / 2, boxSize, boxSize);
-  GRect twilightEndRect = GRect(dayEnd.x - boxSize / 2, dayEnd.y - boxSize / 2, boxSize, boxSize);
+  GRect twilightStartRect = GRect(dayStart.x - boxSize / 2,
+                                  dayStart.y - boxSize / 2, boxSize, boxSize);
+  GRect twilightEndRect =
+      GRect(dayEnd.x - boxSize / 2, dayEnd.y - boxSize / 2, boxSize, boxSize);
 
   // Correct boundaries of the twilight blocks, if necessary
   // (this ensures that the ring doesn't "break" if a block is on an edge)
   twilightStartRect = snap_to_edges(twilightStartRect, bounds, thickness);
   twilightEndRect = snap_to_edges(twilightEndRect, bounds, thickness);
 
-   // draw sunrise block
-    graphics_context_set_fill_color(ctx, currentTheme.ringSunriseColor);
+  // draw sunrise block
+  graphics_context_set_fill_color(ctx, currentTheme.ringSunriseColor);
   graphics_fill_rect(ctx, twilightStartRect, 0, GCornerNone);
-  graphics_draw_rect(ctx,GRect(twilightStartRect.origin.x - 2,
-                                twilightStartRect.origin.y - 2,
-                                twilightStartRect.size.w + 4,
-                                twilightStartRect.size.h  + 4)
-                    );
+  graphics_draw_rect(
+      ctx, GRect(twilightStartRect.origin.x - 2, twilightStartRect.origin.y - 2,
+                 twilightStartRect.size.w + 4, twilightStartRect.size.h + 4));
 
-   // draw sunset block
-    graphics_context_set_fill_color(ctx, currentTheme.ringSunsetColor);
+  // draw sunset block
+  graphics_context_set_fill_color(ctx, currentTheme.ringSunsetColor);
   graphics_fill_rect(ctx, twilightEndRect, 0, GCornerNone);
-  graphics_draw_rect(ctx,GRect(twilightEndRect.origin.x - 2,
-                                twilightEndRect.origin.y - 2,
-                                twilightEndRect.size.w + 4,
-                                twilightEndRect.size.h  + 4)
-                    );
+  graphics_draw_rect(
+      ctx, GRect(twilightEndRect.origin.x - 2, twilightEndRect.origin.y - 2,
+                 twilightEndRect.size.w + 4, twilightEndRect.size.h + 4));
 
-   // cue the sun!
-    graphics_context_set_fill_color(ctx, currentTheme.sunFillColor);
-    graphics_context_set_stroke_color(ctx, currentTheme.sunStrokeColor);
-  graphics_fill_circle(ctx, sunPos, 7);
-  graphics_draw_circle(ctx, sunPos, 7);
+  // cue the sun!
+  graphics_context_set_fill_color(ctx, currentTheme.sunFillColor);
+  graphics_context_set_stroke_color(ctx, currentTheme.sunStrokeColor);
+  graphics_fill_circle(ctx, sunPos, SUN_DIAMETER);
+  graphics_draw_circle(ctx, sunPos, SUN_DIAMETER);
 }
 #endif

@@ -2,8 +2,20 @@
 #include <pebble.h>
 
 // various metrics
-#define RING_THICKNESS_RECT 
-#define RING_THICKNESS PBL_IF_ROUND_ELSE(16, ACTION_BAR_WIDTH / 2 + 1)
+#if defined(PBL_PLATFORM_GABBRO)
+#define RING_THICKNESS 20
+#define SUN_DIAMETER 8
+#elif defined(PBL_PLATFORM_EMERY)
+#define RING_THICKNESS 20
+#define SUN_DIAMETER 8
+#elif defined(PBL_PLATFORM_CHALK)
+#define RING_THICKNESS 16
+#define SUN_DIAMETER 6
+#else
+#define RING_THICKNESS 16
+#define SUN_DIAMETER 7
+#endif
+
 #define RING_STROKE_WIDTH 3
 #define EDGE_THICKNESS (RING_THICKNESS + RING_STROKE_WIDTH)
 
