@@ -53,10 +53,13 @@ void Settings_loadFromStorage() {
   globalSettings.tempUnit = TEMP_UNIT_CELSIUS;
 
   // widget slot defaults
-  strncpy(globalSettings.widgetUpperSecondary, "{dist} KM", WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetUpperPrimary, "{steps} STEPS", WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetLowerPrimary, "{date}", WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetLowerSecondary, "{batt}%", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetUpperSecondary, "{thi}° / {tlo}°",
+          WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetUpperPrimary, "{temp}° {cond}", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetLowerPrimary, "{date:%a, %b %e}",
+          WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetLowerSecondary, "{steps} STEPS",
+          WIDGET_TEXT_LEN);
 
   if (persist_exists(SETTINGS_PERSIST_KEY)) {
     StoredSettings storedSettings;
