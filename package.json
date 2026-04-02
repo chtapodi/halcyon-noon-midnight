@@ -72,7 +72,9 @@
       "SETTING_WIDGET_LOWER_SECONDARY",
       "WEATHER_SUNRISE_MINUTE",
       "WEATHER_SUNSET_MINUTE",
-      "SETTING_TEMP_UNIT"
+      "SETTING_TEMP_UNIT",
+      "REQUEST_UPDATE",
+      "WATCH_IS_24H"
     ],
     "resources": {
       "media": [

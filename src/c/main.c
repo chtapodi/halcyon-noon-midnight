@@ -13,6 +13,10 @@
 #define FORCE_12H false
 #define TIME_STR_LEN 6
 
+// Heartbeat timer: the watch requests data from the phone on this interval
+#define UPDATE_REQUEST_INTERVAL_MS (30 * 60 * 1000) // 30 minutes
+#define UPDATE_REQUEST_INITIAL_DELAY_MS (3 * 1000)   // 3 seconds after startup
+
 // windows and layers
 static Window *mainWindow;
 static Layer *windowLayer;
@@ -23,6 +27,9 @@ static Layer *infoLayer;
 
 // Time string (populated each tick)
 static char timeText[TIME_STR_LEN];
+
+// Heartbeat timer for requesting data updates from the phone
+static AppTimer *s_update_request_timer = NULL;
 
 // ============================================================
 // Slot descriptor — one per visible row in the layout
@@ -299,6 +306,13 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_clock();
 }
 
+static void update_request_timer_callback(void *data) {
+  messaging_request_update();
+  // Reschedule — AppTimer is one-shot, so we re-register for the next interval
+  s_update_request_timer = app_timer_register(
+      UPDATE_REQUEST_INTERVAL_MS, update_request_timer_callback, NULL);
+}
+
 static void init() {
 #ifdef FORCE_BACKLIGHT
   light_enable(true);
@@ -329,6 +343,10 @@ static void init() {
 #else
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 #endif
+
+  // Schedule initial update request with short delay to give PKJS time to start
+  s_update_request_timer = app_timer_register(
+      UPDATE_REQUEST_INITIAL_DELAY_MS, update_request_timer_callback, NULL);
 }
 
 static void deinit() { window_destroy(mainWindow); }

@@ -26,8 +26,7 @@ export const WIDGET_OPTIONS: WidgetOption[] = [
     // Device
     { value: 'BATTERY {batt}%', label: 'Battery %', preview: 'BATTERY 85%', category: 'Device' },
     // Today's Forecast
-    { value: 'H: {thi}° L: {tlo}°', label: 'Today\'s High & Low', preview: 'H: 22° L: 14°', category: 'Weather: Today\s Forecast' },
-    { value: '{cond_day}', label: 'Today\'s Forecast Condition', preview: 'PARTLY CLOUDY', category: 'Weather: Today\s Forecast' },
+    { value: '{thi}° / {tlo}°', label: 'Today\'s High & Low', preview: '22° / 14°', category: 'Weather: Today\s Forecast' },
     { value: 'RAIN {pop}%', label: 'Today\'s Chance of Rain', preview: 'RAIN 30%', category: 'Weather: Today\s Forecast' },
     // Current Conditions
     { value: '{temp}° {cond}', label: 'Current Temp & Condition', preview: '18° CLOUDY', category: 'Weather: Current' },

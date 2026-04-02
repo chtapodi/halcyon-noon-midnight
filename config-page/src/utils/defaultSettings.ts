@@ -34,9 +34,9 @@ export const getDefaultSettings = (capabilities: Capabilities): Settings => ({
   SETTING_PIP_VISIBILITY: 0,
   SETTING_SHOW_LEADING_ZERO: 0,
   // Widget slots default to format strings
-  SETTING_WIDGET_UPPER_SECONDARY: '{dist} KM',
-  SETTING_WIDGET_UPPER_PRIMARY: '{steps} STEPS',   // Steps by default
-  SETTING_WIDGET_LOWER_PRIMARY: '{date}',    // Date by default
-  SETTING_WIDGET_LOWER_SECONDARY: '{batt}%',
+  SETTING_WIDGET_UPPER_SECONDARY: '{thi}° / {tlo}°',
+  SETTING_WIDGET_UPPER_PRIMARY: '{temp}° {cond}',
+  SETTING_WIDGET_LOWER_PRIMARY: '{date:%a, %b %e}',
+  SETTING_WIDGET_LOWER_SECONDARY: '{steps} STEPS',
   SETTING_TEMP_UNIT: 0,
 });

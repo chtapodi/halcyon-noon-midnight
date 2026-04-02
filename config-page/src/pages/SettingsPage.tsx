@@ -227,6 +227,7 @@ export const SettingsPage: React.FC = () => {
         />
         <Toggle
           label="Use larger fonts"
+          description="Increase the size of widget text"
           messageKey="SETTING_USE_LARGE_FONTS"
         />
         <Toggle

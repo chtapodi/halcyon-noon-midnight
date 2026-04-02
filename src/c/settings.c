@@ -53,9 +53,11 @@ void Settings_loadFromStorage() {
   globalSettings.tempUnit = TEMP_UNIT_CELSIUS;
 
   // widget slot defaults
-  strncpy(globalSettings.widgetUpperSecondary, "{thi}° / {tlo}°",
+  // Weather-dependent slots use placeholders until JS sends real data.
+  // This prevents raw tokens like "{temp}°" from flashing on first run.
+  strncpy(globalSettings.widgetUpperSecondary, "--° / --°",
           WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetUpperPrimary, "{temp}° {cond}", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetUpperPrimary, "--° --", WIDGET_TEXT_LEN);
   strncpy(globalSettings.widgetLowerPrimary, "{date:%a, %b %e}",
           WIDGET_TEXT_LEN);
   strncpy(globalSettings.widgetLowerSecondary, "{steps} STEPS",

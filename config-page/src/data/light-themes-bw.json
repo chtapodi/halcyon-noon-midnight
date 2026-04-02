@@ -18,7 +18,7 @@
     }
   },
   {
-    "name": "Sea of Tranquility",
+    "name": "Regolith",
     "settings": {
       "SETTING_TIME_COLOR": "000000",
       "SETTING_SUBTEXT_PRIMARY_COLOR": "000000",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "name": "Graphite",
+    "name": "First Draft",
     "settings": {
       "SETTING_TIME_COLOR": "000000",
       "SETTING_SUBTEXT_PRIMARY_COLOR": "000000",
@@ -54,7 +54,7 @@
     }
   },
   {
-    "name": "Regolith",
+    "name": "Marine Layer",
     "settings": {
       "SETTING_TIME_COLOR": "000000",
       "SETTING_SUBTEXT_PRIMARY_COLOR": "000000",

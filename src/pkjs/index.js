@@ -5,6 +5,10 @@
 // Architecture: Two-pass token substitution.
 //   Pass 1 (here): substitutes JS-side tokens like {temp}, {sunrise}, {cond}
 //   Pass 2 (watch): substitutes C-side tokens like {date}, {steps}, {batt}
+//
+// Refresh mechanism: The watch sends a REQUEST_UPDATE message every 30 min.
+// This replaces the old setInterval approach, which was unreliable in PKJS
+// (the JS runtime can be suspended/killed by the phone OS at any time).
 // ============================================================
 
 var USE_LOCAL_CONFIG = true;
@@ -14,13 +18,23 @@ var configLocalUri = 'http://10.25.219.9:3000/index.html';
 var SunCalc = require('./suncalc');
 var Weather = require('./weather');
 
-// Weather refresh interval (30 minutes)
-var WEATHER_REFRESH_MS = 30 * 60 * 1000;
-
 // Cached data (in-memory; also persisted to localStorage)
 var cachedWeather = null;
 var cachedSolar = null;
 var cachedSettings = null;
+
+// 24-hour preference from the watch (updated on each heartbeat)
+var cachedIs24h = false;
+
+// Default widget format strings — used when no settings have been configured yet
+// so that JS can perform token substitution even on first run.
+// These must match the defaults in config-page/src/data/widgetTypes.ts.
+var DEFAULT_WIDGETS = {
+  'SETTING_WIDGET_UPPER_SECONDARY': '{thi}° / {tlo}°',
+  'SETTING_WIDGET_UPPER_PRIMARY': '{temp}° {cond}',
+  'SETTING_WIDGET_LOWER_PRIMARY': '{date:%a, %b %e}',
+  'SETTING_WIDGET_LOWER_SECONDARY': '{steps} STEPS'
+};
 
 // ---- Time helpers ----
 
@@ -96,12 +110,12 @@ function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h) {
 function sendDataToWatch() {
   var settings = cachedSettings;
   if (!settings) {
-    console.log('No settings cached yet, sending available data anyway');
+    console.log('No settings cached yet, using defaults');
     settings = {};
   }
 
   var useFahrenheit = (settings.SETTING_TEMP_UNIT === 1);
-  var use24h = false; // could be exposed as a setting later
+  var use24h = cachedIs24h;
 
   // Prepare Pass 1 output for each widget slot
   var slotKeys = [
@@ -114,7 +128,11 @@ function sendDataToWatch() {
   var msg = {};
 
   slotKeys.forEach(function (key) {
+    // Use configured setting, falling back to default format string
     var fmt = settings[key];
+    if (fmt === undefined || fmt === null) {
+      fmt = DEFAULT_WIDGETS[key];
+    }
     if (fmt !== undefined && fmt !== null) {
       // Apply JS tokens; C tokens pass through untouched
       var processed = applyJsTokens(fmt, cachedWeather, cachedSolar, useFahrenheit, use24h);
@@ -139,7 +157,7 @@ function sendDataToWatch() {
   );
 }
 
-// ---- Location handling ----
+// ---- Location + weather fetch ----
 
 function locationError(err) {
   console.log('Location error: ' + err.message);
@@ -148,14 +166,6 @@ function locationError(err) {
 function locationSuccess(pos) {
   var lat = pos.coords.latitude;
   var lng = pos.coords.longitude;
-  var tzOffsetMinutes = new Date().getTimezoneOffset() * -1;
-
-  // Send location to watch (for legacy compat / future use)
-  Pebble.sendAppMessage({
-    'LOCATION_LAT': Math.round(lat * 1000000),
-    'LOCATION_LNG': Math.round(lng * 1000000),
-    'LOCATION_GMT_OFFSET': tzOffsetMinutes
-  }, function () { }, function () { });
 
   // Calculate sunrise/sunset on the JS side
   var times = SunCalc.getTimes(new Date(), lat, lng);
@@ -176,13 +186,10 @@ function locationSuccess(pos) {
     sendDataToWatch();
   });
 
-  // Schedule periodic refresh
-  setInterval(function () {
-    navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
-      timeout: 15000,
-      maximumAge: 60000
-    });
-  }, WEATHER_REFRESH_MS);
+  // NOTE: No setInterval here! The watch sends REQUEST_UPDATE on a timer,
+  // which triggers getLocation() → this function again. That approach is
+  // reliable because the watch timer always runs, unlike JS setInterval
+  // which can be killed when the phone suspends the PKJS runtime.
 }
 
 function getLocation() {
@@ -212,13 +219,32 @@ Pebble.addEventListener('ready', function (e) {
   }
 
   // If we have cached data, send it immediately so the watch has something
-  if (cachedWeather || cachedSolar) {
-    sendDataToWatch();
-  }
+  // (uses defaults if no settings configured yet)
+  sendDataToWatch();
 
   // Then kick off a fresh location + weather fetch
   getLocation();
 });
+
+// ---- Watch-initiated heartbeat ----
+// The watch sends REQUEST_UPDATE every ~30 minutes to request fresh data.
+// It also includes its 24h time format preference.
+Pebble.addEventListener('appmessage', function (e) {
+  console.log('Received message from watch: ' + JSON.stringify(e.payload));
+
+  if (e.payload['REQUEST_UPDATE']) {
+    // Extract 24h preference from the watch
+    if (e.payload['WATCH_IS_24H'] !== undefined) {
+      cachedIs24h = !!e.payload['WATCH_IS_24H'];
+      console.log('Watch 24h mode: ' + cachedIs24h);
+    }
+
+    // Trigger a full location + weather refresh
+    getLocation();
+  }
+});
+
+// ---- Configuration ----
 
 Pebble.addEventListener('showConfiguration', function () {
   var url = USE_LOCAL_CONFIG ? configLocalUri : configDataUri;

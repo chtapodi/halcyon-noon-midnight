@@ -15,37 +15,11 @@ void messaging_init(void (*processed_callback)(void)) {
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
 
-  app_message_open(768, 8);
+  app_message_open(768, 64);
 }
 
 void inbox_received_callback(DictionaryIterator *iterator, void *context) {
-  // Does this message contain new location data?
-  Tuple *lat_tuple = dict_find(iterator, MESSAGE_KEY_LOCATION_LAT);
-  Tuple *lng_tuple = dict_find(iterator, MESSAGE_KEY_LOCATION_LNG);
-  Tuple *tzOffset_tuple = dict_find(iterator, MESSAGE_KEY_LOCATION_GMT_OFFSET);
-
-  if (lat_tuple != NULL && lng_tuple != NULL && tzOffset_tuple != NULL) {
-    LocationInfo loc;
-
-    // set the coordinates
-    float lat = (int)lat_tuple->value->int32;
-    lat /= 1000000;
-
-    float lng = (int)lng_tuple->value->int32;
-    lng /= 1000000;
-
-    float tzOffset = (int)tzOffset_tuple->value->int32;
-    tzOffset /= 60;
-
-    loc.lat = lat;
-    loc.lng = lng;
-    loc.tzOffset = tzOffset;
-    loc.lastUpdatedTime = time(NULL);
-
-    solarUtils_updateLocation(loc);
-  }
-
-  // Or perhaps it contains new configuration data?
+  // Process configuration data
   Tuple *timeColor_tuple = dict_find(iterator, MESSAGE_KEY_SETTING_TIME_COLOR);
   Tuple *subTextPrimaryColor_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_SUBTEXT_PRIMARY_COLOR);
@@ -326,4 +300,23 @@ void outbox_failed_callback(DictionaryIterator *iterator,
 
 void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
   // APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
+}
+
+void messaging_request_update() {
+  DictionaryIterator *iter;
+  AppMessageResult result = app_message_outbox_begin(&iter);
+
+  if (result != APP_MSG_OK) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to begin outbox: %d", (int)result);
+    return;
+  }
+
+  dict_write_int8(iter, MESSAGE_KEY_REQUEST_UPDATE, 1);
+  dict_write_int8(iter, MESSAGE_KEY_WATCH_IS_24H,
+                  clock_is_24h_style() ? 1 : 0);
+
+  result = app_message_outbox_send();
+  if (result != APP_MSG_OK) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to send outbox: %d", (int)result);
+  }
 }
