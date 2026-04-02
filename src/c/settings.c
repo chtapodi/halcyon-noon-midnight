@@ -51,6 +51,7 @@ void Settings_loadFromStorage() {
   globalSettings.showLeadingZero = false;
   globalSettings.pipVisibility = PIP_SHOW_ALL;
   globalSettings.tempUnit = TEMP_UNIT_CELSIUS;
+  globalSettings.language = 0;
 
   // widget slot defaults
   // Weather-dependent slots use placeholders until JS sends real data.
@@ -58,7 +59,7 @@ void Settings_loadFromStorage() {
   strncpy(globalSettings.widgetUpperSecondary, "--° / --°",
           WIDGET_TEXT_LEN);
   strncpy(globalSettings.widgetUpperPrimary, "--° --", WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetLowerPrimary, "{date:%a, %b %e}",
+  strncpy(globalSettings.widgetLowerPrimary, "{day_name}, {month_name} {day0}",
           WIDGET_TEXT_LEN);
   strncpy(globalSettings.widgetLowerSecondary, "{steps} STEPS",
           WIDGET_TEXT_LEN);

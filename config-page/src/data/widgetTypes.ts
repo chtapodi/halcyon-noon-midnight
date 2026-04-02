@@ -12,11 +12,11 @@ export interface WidgetOption {
 export const WIDGET_OPTIONS: WidgetOption[] = [
     { value: '', label: 'None', preview: '' },
     // Date/time
-    { value: '{date:%a, %b %e}', label: 'Date', preview: 'MON, JAN 01', category: 'Date & Time' },
-    { value: '{date:%Y-%m-%d}', label: 'Numeric Date', preview: '2026-03-22', category: 'Date & Time' },
-    { value: 'DAY {date:%j}', label: 'Day Number', preview: 'DAY 81', category: 'Date & Time' },
-    { value: 'WEEK {date:%V}', label: 'Week Number', preview: 'WEEK 23', category: 'Date & Time' },
-    { value: '{date:%Y}', label: 'Year', preview: '2026', category: 'Date & Time' },
+    { value: '{day_name}, {month_name} {day0}', label: 'Date', preview: 'MON, JAN 01', category: 'Date & Time' },
+    { value: '{year}-{month_num}-{day0}', label: 'Numeric Date', preview: '2026-03-22', category: 'Date & Time' },
+    { value: 'DAY {day_of_year}', label: 'Day Number', preview: 'DAY 81', category: 'Date & Time' },
+    { value: 'WEEK {week_of_year}', label: 'Week Number', preview: 'WEEK 23', category: 'Date & Time' },
+    { value: '{year}', label: 'Year', preview: '2026', category: 'Date & Time' },
     // Solar
     { value: 'RISE {sunrise}', label: 'Sunrise Time', preview: 'RISE 6:42 AM', category: 'Solar' },
     { value: 'SET {sunset}', label: 'Sunset Time', preview: 'SET 6:18 PM', category: 'Solar' },

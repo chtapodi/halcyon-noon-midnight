@@ -100,6 +100,8 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
       dict_find(iterator, MESSAGE_KEY_WEATHER_SUNSET_MINUTE);
   Tuple *tempUnit_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_TEMP_UNIT);
+  Tuple *language_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_LANGUAGE);
 
   if (timeColor_tuple != NULL) {
     globalSettings.timeColor = GColorFromHEX(timeColor_tuple->value->int32);
@@ -282,6 +284,10 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 
   if (tempUnit_tuple != NULL) {
     globalSettings.tempUnit = (TempUnitType)tempUnit_tuple->value->int8;
+  }
+
+  if (language_tuple != NULL) {
+    globalSettings.language = (uint8_t)language_tuple->value->int8;
   }
 
   Settings_saveToStorage();

@@ -1,6 +1,21 @@
 #include "widgets.h"
+#include "settings.h"
 #include "utils.h"
 #include <pebble.h>
+
+static const char* DAY_NAMES[4][7] = {
+  {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"},  // EN
+  {"DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"},  // ES
+  {"DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"},  // FR
+  {"SON", "MON", "DIE", "MIT", "DON", "FRE", "SAM"}   // DE
+};
+
+static const char* MONTH_NAMES[4][12] = {
+  {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"}, // EN
+  {"ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"}, // ES
+  {"JAN", "FEV", "MAR", "AVR", "MAI", "JUN", "JUL", "AOU", "SEP", "OCT", "NOV", "DEC"}, // FR
+  {"JAN", "FEB", "MAR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"}  // DE
+};
 
 void widget_get_text(const char *format_string, char *buf, int buf_len) {
   if (!format_string || buf_len <= 0)
@@ -27,14 +42,41 @@ void widget_get_text(const char *format_string, char *buf, int buf_len) {
         char temp[32] = {0};
         bool matched = false;
 
-        if (strncmp(token, "date:", (token_len > 5 ? 5 : token_len)) == 0 &&
+        uint8_t lang = globalSettings.language;
+        if (lang > 3) lang = 0;
+        struct tm *t = getCurrentTime();
+
+        if (strncmp(token, "day_name", token_len) == 0 && token_len == 8) {
+          snprintf(temp, sizeof(temp), "%s", DAY_NAMES[lang][t->tm_wday]);
+          matched = true;
+        } else if (strncmp(token, "month_name", token_len) == 0 && token_len == 10) {
+          snprintf(temp, sizeof(temp), "%s", MONTH_NAMES[lang][t->tm_mon]);
+          matched = true;
+        } else if (strncmp(token, "day0", token_len) == 0 && token_len == 4) {
+          snprintf(temp, sizeof(temp), "%02d", t->tm_mday);
+          matched = true;
+        } else if (strncmp(token, "day", token_len) == 0 && token_len == 3) {
+          snprintf(temp, sizeof(temp), "%d", t->tm_mday);
+          matched = true;
+        } else if (strncmp(token, "month_num", token_len) == 0 && token_len == 9) {
+          snprintf(temp, sizeof(temp), "%02d", t->tm_mon + 1);
+          matched = true;
+        } else if (strncmp(token, "year", token_len) == 0 && token_len == 4) {
+          snprintf(temp, sizeof(temp), "%d", t->tm_year + 1900);
+          matched = true;
+        } else if (strncmp(token, "day_of_year", token_len) == 0 && token_len == 11) {
+          snprintf(temp, sizeof(temp), "%d", t->tm_yday + 1);
+          matched = true;
+        } else if (strncmp(token, "week_of_year", token_len) == 0 && token_len == 12) {
+          strftime(temp, sizeof(temp), "%V", t);
+          matched = true;
+        } else if (strncmp(token, "date:", (token_len > 5 ? 5 : token_len)) == 0 &&
             token_len > 5) {
           const char *fmt_start = token + 5;
           int fmt_len = token_len - 5;
           char fmt[32] = {0};
-          if (fmt_len < (int)sizeof(fmt)) {
+            if (fmt_len < (int)sizeof(fmt)) {
             memcpy(fmt, fmt_start, fmt_len);
-            struct tm *t = getCurrentTime();
             strftime(temp, sizeof(temp), fmt, t);
             to_uppercase(temp);
             matched = true;

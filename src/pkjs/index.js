@@ -32,7 +32,7 @@ var cachedIs24h = false;
 var DEFAULT_WIDGETS = {
   'SETTING_WIDGET_UPPER_SECONDARY': '{thi}° / {tlo}°',
   'SETTING_WIDGET_UPPER_PRIMARY': '{temp}° {cond}',
-  'SETTING_WIDGET_LOWER_PRIMARY': '{date:%a, %b %e}',
+  'SETTING_WIDGET_LOWER_PRIMARY': '{day_name}, {month_name} {day0}',
   'SETTING_WIDGET_LOWER_SECONDARY': '{steps} STEPS'
 };
 
@@ -57,7 +57,7 @@ function formatMinutes(minutes, use24h) {
  * JS-side tokens with their current values and returns the result.
  * Unknown tokens (e.g. {date}, {steps}) are left untouched for the C side.
  */
-function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h) {
+function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h, lang) {
   if (!formatStr) return formatStr;
 
   var result = formatStr;
@@ -83,8 +83,8 @@ function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h) {
     result = result.replace('{temp}', String(temp));
     result = result.replace('{thi}', String(tempHi));
     result = result.replace('{tlo}', String(tempLo));
-    result = result.replace('{cond}', weather.cond || '--');
-    result = result.replace('{cond_day}', weather.cond_day || '--');
+    result = result.replace('{cond}', Weather.getCondition(weather.code, lang) || '--');
+    result = result.replace('{cond_day}', Weather.getCondition(weather.codeDay, lang) || '--');
     result = result.replace('{hum}', String(Math.round(weather.hum)));
     result = result.replace('{wind}', String(wind));
     result = result.replace('{uv}', String(Math.round(weather.uv)));
@@ -115,6 +115,7 @@ function sendDataToWatch() {
   }
 
   var useFahrenheit = (settings.SETTING_TEMP_UNIT === 1);
+  var lang = settings.SETTING_LANGUAGE || 0;
   var use24h = cachedIs24h;
 
   // Prepare Pass 1 output for each widget slot
@@ -135,7 +136,7 @@ function sendDataToWatch() {
     }
     if (fmt !== undefined && fmt !== null) {
       // Apply JS tokens; C tokens pass through untouched
-      var processed = applyJsTokens(fmt, cachedWeather, cachedSolar, useFahrenheit, use24h);
+      var processed = applyJsTokens(fmt, cachedWeather, cachedSolar, useFahrenheit, use24h, lang);
       msg[key] = processed;
     }
   });

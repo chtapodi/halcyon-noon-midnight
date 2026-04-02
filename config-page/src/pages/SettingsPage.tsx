@@ -218,6 +218,16 @@ export const SettingsPage: React.FC = () => {
 
       <Section title="General">
         <Select
+          label="Language"
+          messageKey="SETTING_LANGUAGE"
+          options={[
+            { label: 'English', value: 0 },
+            { label: 'Español', value: 1 },
+            { label: 'Français', value: 2 },
+            { label: 'Deutsch', value: 3 },
+          ]}
+        />
+        <Select
           label="Weather Units"
           messageKey="SETTING_TEMP_UNIT"
           options={[

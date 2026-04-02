@@ -142,6 +142,7 @@ typedef struct {
   bool showLeadingZero;
   PipVisibilityType pipVisibility;
   TempUnitType tempUnit;
+  uint8_t language;
 
   // Widget slots (stored as format strings)
   char widgetUpperSecondary[WIDGET_TEXT_LEN];
@@ -189,6 +190,7 @@ typedef struct {
 
   PipVisibilityType pipVisibility;
   TempUnitType tempUnit;
+  uint8_t language;
 
   // Widget slots (stored as format strings)
   char widgetUpperSecondary[WIDGET_TEXT_LEN];

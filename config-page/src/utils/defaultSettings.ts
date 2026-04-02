@@ -36,7 +36,8 @@ export const getDefaultSettings = (capabilities: Capabilities): Settings => ({
   // Widget slots default to format strings
   SETTING_WIDGET_UPPER_SECONDARY: '{thi}° / {tlo}°',
   SETTING_WIDGET_UPPER_PRIMARY: '{temp}° {cond}',
-  SETTING_WIDGET_LOWER_PRIMARY: '{date:%a, %b %e}',
+  SETTING_WIDGET_LOWER_PRIMARY: '{day_name}, {month_name} {day0}',
   SETTING_WIDGET_LOWER_SECONDARY: '{steps} STEPS',
   SETTING_TEMP_UNIT: 0,
+  SETTING_LANGUAGE: 0,
 });

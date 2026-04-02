@@ -2,19 +2,43 @@
 // ---- OpenMeteo weather code → human-readable label ----
 
 var WEATHER_CODES = {
-  0: 'CLEAR',
-  1: 'MOSTLY CLEAR', 2: 'PARTLY CLOUDY', 3: 'OVERCAST',
-  45: 'FOGGY', 48: 'FOGGY',
-  51: 'DRIZZLE', 53: 'DRIZZLE', 55: 'DRIZZLE',
-  56: 'FRZG DRIZZLE', 57: 'FRZG DRIZZLE',
-  61: 'LIGHT RAIN', 63: 'RAIN', 65: 'HEAVY RAIN',
-  66: 'FREEZING RAIN', 67: 'FREEZING RAIN',
-  71: 'LIGHT SNOW', 73: 'SNOW', 75: 'HEAVY SNOW',
-  77: 'SNOW GRAINS',
-  80: 'SHOWERS', 81: 'SHOWERS', 82: 'HEAVY SHOWERS',
-  85: 'SNOW SHOWERS', 86: 'SNOW SHOWERS',
-  95: 'THUNDERSTORM', 96: 'HAIL STORM', 99: 'HAIL STORM'
+  0: ['CLEAR', 'DESPEJADO', 'DÉGAGÉ', 'KLAR'],
+  1: ['MOSTLY CLEAR', 'MAYORMENTE DESP.', 'PLUTÔT DÉGAGÉ', 'MEIST KLAR'],
+  2: ['PARTLY CLOUDY', 'PARCIALMENTE NUB.', 'PART. NUAGEUX', 'TEILW. BEWÖLKT'],
+  3: ['OVERCAST', 'NUBLADO', 'COUVERT', 'STARK BEWÖLKT'],
+  45: ['FOGGY', 'NIEBLA', 'BROUILLARD', 'NEBEL'],
+  48: ['FOGGY', 'NIEBLA', 'BROUILLARD', 'NEBEL'],
+  51: ['DRIZZLE', 'LLOVIZNA', 'BRUINE', 'NIESELREGEN'],
+  53: ['DRIZZLE', 'LLOVIZNA', 'BRUINE', 'NIESELREGEN'],
+  55: ['DRIZZLE', 'LLOVIZNA', 'BRUINE', 'NIESELREGEN'],
+  56: ['FRZG DRIZZLE', 'LLOVIZNA HELADA', 'BRUINE VERGL.', 'GEF. NIESELREGEN'],
+  57: ['FRZG DRIZZLE', 'LLOVIZNA HELADA', 'BRUINE VERGL.', 'GEF. NIESELREGEN'],
+  61: ['LIGHT RAIN', 'LLUVIA LIGERA', 'PLUIE LÉGÈRE', 'LEICHTER REGEN'],
+  63: ['RAIN', 'LLUVIA', 'PLUIE', 'REGEN'],
+  65: ['HEAVY RAIN', 'LLUVIA FUERTE', 'FORTE PLUIE', 'STARKER REGEN'],
+  66: ['FREEZING RAIN', 'LLUVIA HELADA', 'PLUIE VERGL.', 'GEFRIERENDER REGEN'],
+  67: ['FREEZING RAIN', 'LLUVIA HELADA', 'PLUIE VERGL.', 'GEFRIERENDER REGEN'],
+  71: ['LIGHT SNOW', 'NIEVE LIGERA', 'NEIGE LÉGÈRE', 'LEICHTER SCHNEE'],
+  73: ['SNOW', 'NIEVE', 'NEIGE', 'SCHNEE'],
+  75: ['HEAVY SNOW', 'NIEVE FUERTE', 'FORTE NEIGE', 'STARKER SCHNEE'],
+  77: ['SNOW GRAINS', 'GRANOS DE NIEVE', 'NEIGE EN GRAINS', 'SCHNEEGRIESEL'],
+  80: ['SHOWERS', 'CHUBASCOS', 'AVERSES', 'REGENSCHAUER'],
+  81: ['SHOWERS', 'CHUBASCOS', 'AVERSES', 'REGENSCHAUER'],
+  82: ['HEAVY SHOWERS', 'CHUBASCOS FUCRTES', 'FORTES AVERSES', 'STARKE REGENSC.'],
+  85: ['SNOW SHOWERS', 'CHUBASCOS NIEVE', 'AVERSES NEIGE', 'SCHNEESCHAUER'],
+  86: ['SNOW SHOWERS', 'CHUBASCOS NIEVE', 'AVERSES NEIGE', 'SCHNEESCHAUER'],
+  95: ['THUNDERSTORM', 'TORMENTA', 'ORAGE', 'GEWITTER'],
+  96: ['HAIL STORM', 'TORM. GRANIZO', 'ORAGE GRÊLE', 'HAGELSTURM'],
+  99: ['HAIL STORM', 'TORM. GRANIZO', 'ORAGE GRÊLE', 'HAGELSTURM']
 };
+
+function getCondition(code, lang) {
+  var langIndex = lang || 0;
+  if (WEATHER_CODES[code]) {
+      return WEATHER_CODES[code][langIndex] || WEATHER_CODES[code][0];
+  }
+  return 'WX' + code;
+}
 
 var OPENMETEO_BASE = 'https://api.open-meteo.com/v1/forecast';
 
@@ -43,8 +67,8 @@ function fetchWeather(lat, lng, callback) {
           temp: cur.temperature_2m,
           tempHi: daily.temperature_2m_max[0],
           tempLo: daily.temperature_2m_min[0],
-          cond: WEATHER_CODES[code] || ('WX' + code),
-          cond_day: WEATHER_CODES[codeDay] || ('WX' + codeDay),
+          code: code,
+          codeDay: codeDay,
           hum: cur.relative_humidity_2m,
           wind: cur.wind_speed_10m,
           wind_dir: cur.wind_direction_10m,
@@ -108,5 +132,6 @@ module.exports = {
   toMPH: toMPH,
   toInch: toInch,
   getCardinal: getCardinal,
-  codes: WEATHER_CODES
+  codes: WEATHER_CODES,
+  getCondition: getCondition
 };
