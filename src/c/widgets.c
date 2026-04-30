@@ -83,6 +83,12 @@ void widget_get_text(const char *format_string, char *buf, int buf_len) {
             to_uppercase(temp);
             matched = true;
           }
+        } else if (strncmp(token, "local_date", token_len) == 0 && token_len == 10) {
+          // Expand to the active language's idiomatic date format and recurse
+          // to substitute the inner tokens. defaultDateFormat[] entries must
+          // not contain {local_date} themselves — recursion is bounded at 1.
+          widget_get_text(defaultDateFormat[lang], temp, sizeof(temp));
+          matched = true;
         } else if (strncmp(token, "steps", token_len) == 0 && token_len == 5) {
 #if defined(PBL_HEALTH)
           HealthServiceAccessibilityMask mask =

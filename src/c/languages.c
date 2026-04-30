@@ -117,9 +117,9 @@ const char monthNames[37][12][8] = {
     {"ינו", "פבר", "מרץ", "אפר", "מאי", "יונ", "יול", "אוג", "ספט", "אוק",
      "נוב", "דצמ"}};
 
-/* Per-language idiomatic default date format string for the lower-primary
-   widget slot. Mirrored in src/pkjs/languages.js (defaultDateFormats) and
-   config-page/src/data/dateFormats.ts — keep all three in sync. */
+/* Per-language idiomatic date format string. Used by widgets.c to expand the
+   {local_date} super-token at render time. Mirrored in
+   config-page/src/data/dateFormats.ts (preview only) — keep both in sync. */
 const char *const defaultDateFormat[37] = {
     /*  0 en */ "{day_name}, {month_name} {day0}",
     /*  1 fr */ "{day_name} {day0} {month_name}",

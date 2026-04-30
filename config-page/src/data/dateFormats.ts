@@ -1,6 +1,6 @@
-// Per-language idiomatic default date format string for the lower-primary
-// widget slot. Mirrored in src/c/languages.c (defaultDateFormat) and
-// src/pkjs/languages.js (DEFAULT_DATE_FORMATS) — keep all three in sync.
+// Per-language idiomatic date format string. Used by the preview only — the
+// watch holds the canonical copy in src/c/languages.c (defaultDateFormat) and
+// expands {local_date} at render time. Keep both in sync.
 export const DEFAULT_DATE_FORMATS: string[] = [
     /*  0 en */ "{day_name}, {month_name} {day0}",
     /*  1 fr */ "{day_name} {day0} {month_name}",
@@ -40,6 +40,3 @@ export const DEFAULT_DATE_FORMATS: string[] = [
     /* 35 ko */ "{month_num}월 {day}일 ({day_name})",
     /* 36 he */ "{day_name} {day0} {month_name}",
 ];
-
-export const defaultDateFormat = (langIndex: number): string =>
-    DEFAULT_DATE_FORMATS[langIndex >= 0 && langIndex < 37 ? langIndex : 0];

@@ -7,7 +7,7 @@ var WEATHER_CODES = {
   3: ['OVERCAST', 'COUVERT', 'STARK BEWÖLKT', 'NUBLADO', 'COPERTO', 'BEWÖLKT', 'KAPALI', 'ZATAŽENO', 'ENCOBERTO', 'ΝΕΦΕΛΩΔΗΣ', 'MUULIT', 'ZACHMURZONE', 'ZATIAHNUTÉ', 'NHIỀU MÂY', 'NOROS', 'COBERT', 'OVERSKYET', 'ПАСМУРНО', 'PILVINE', 'ESTALIA', 'PILVISTÄ', 'OVERSKYET', 'APSINIAUKĘ', 'OBLAČNO', 'BORULT', 'OBLAČNO', 'SCALTA', 'APMĀCIES', 'OBLAČNO', '阴天', 'MENDUNG', 'ПОХМУРО', 'CYMOGLOG', 'NUBRADO', '曇り', '흐림', 'מעונן'],
   45: ['FOGGY', 'BROUILLARD', 'NEBEL', 'NIEBLA', 'NEBBIA', 'MISTIG', 'SİSLİ', 'MLHA', 'NEVOEIRO', 'ΟΜΙΧΛΩΔΗΣ', 'DIMMA', 'MGLISTO', 'HMLA', 'SƯƠNG MÙ', 'CEAȚĂ', 'BOIRA', 'TÅKE', 'ТУМАН', 'UDUNE', 'LAINOA', 'USVAISTA', 'TÅGE', 'RŪKAS', 'MEGLA', 'KÖDÖS', 'MAGLA', 'CEOCH', 'MIGLAINS', 'MAGLA', '雾', 'BERKABUT', 'ТУМАН', 'NIWLOG', 'NÉBOA', '霧', '안개', 'ערפילי'],
   48: ['FOGGY', 'BROUILLARD', 'NEBEL', 'NIEBLA', 'NEBBIA', 'MISTIG', 'SİSLİ', 'MLHA', 'NEVOEIRO', 'ΟΜΙΧΛΩΔΗΣ', 'DIMMA', 'MGLISTO', 'HMLA', 'SƯƠNG MÙ', 'CEAȚĂ', 'BOIRA', 'TÅKE', 'ТУМАН', 'UDUNE', 'LAINOA', 'USVAISTA', 'TÅGE', 'RŪKAS', 'MEGLA', 'KÖDÖS', 'MAGLA', 'CEOCH', 'MIGLAINS', 'MAGLA', '雾', 'BERKABUT', 'ТУМАН', 'NIWLOG', 'NÉBOA', '霧', '안개', 'ערפילי'],
-  51: ['DRIZZLE', 'BRUINE', 'NIESELREGEN', 'LLOVIZNA', 'PIOGGERELLA', 'MIEZEL', 'ÇİSELEME', 'MRHOLENÍ', 'CHUVISCO', 'ΨΙΧΑΛΑ', 'DUGGREGN', 'MŻAWKA', 'MRHOLENIE', 'MƯA PHÙN', 'BOREALA', 'BORAIM', 'YRYR', 'MOXÍN', '霧雨', '이슬비', 'רסס'],
+  51: ['DRIZZLE', 'BRUINE', 'NIESELREGEN', 'LLOVIZNA', 'PIOGGERELLA', 'MIEZEL', 'ÇİSELEME', 'MRHOLENÍ', 'CHUVISCO', 'ΨΙΧΑΛΑ', 'DUGGREGN', 'MŻAWKA', 'MRHOLENIE', 'MƯA PHÙN', 'BURNIȚĂ', 'BOREIM', 'DYNREGN', 'МОРОСЬ', 'UDUVÍHM', 'ZIRRIMINA', 'TIHKUSADETTA', 'STØVREGN', 'KDRENA', 'PRŠENJE', 'SZITÁLÁS', 'SIPENJE', 'DRUCHLÁK', 'SMRIDZINĀŠANA', 'ROSULJA', '毛毛雨', 'GERIMIS', 'МРЯКА', 'YRYR', 'MOXÍN', '霧雨', '이슬비', 'רסס'],
   53: ['DRIZZLE', 'BRUINE', 'NIESELREGEN', 'LLOVIZNA', 'PIOGGERELLA', 'MIEZEL', 'ÇİSELEME', 'MRHOLENÍ', 'CHUVISCO', 'ΨΙΧΑΛΑ', 'DUGGREGN', 'MŻAWKA', 'MRHOLENIE', 'MƯA PHÙN', 'BURNIȚĂ', 'BOREIM', 'DYNREGN', 'МОРОСЬ', 'UDUVÍHM', 'ZIRRIMINA', 'TIHKUSADETTA', 'STØVREGN', 'KDRENA', 'PRŠENJE', 'SZITÁLÁS', 'SIPENJE', 'DRUCHLÁK', 'SMRIDZINĀŠANA', 'ROSULJA', '毛毛雨', 'GERIMIS', 'МРЯКА', 'YRYR', 'MOXÍN', '霧雨', '이슬비', 'רסס'],
   55: ['DRIZZLE', 'BRUINE', 'NIESELREGEN', 'LLOVIZNA', 'PIOGGERELLA', 'MIEZEL', 'ÇİSELEME', 'MRHOLENÍ', 'CHUVISCO', 'ΨΙΧΑΛΑ', 'DUGGREGN', 'MŻAWKA', 'MRHOLENIE', 'MƯA PHÙN', 'BURNIȚĂ', 'BOREIM', 'DYNREGN', 'МОРОСЬ', 'UDUVÍHM', 'ZIRRIMINA', 'TIHKUSADETTA', 'STØVREGN', 'KDRENA', 'PRŠENJE', 'SZITÁLÁS', 'SIPENJE', 'DRUCHLÁK', 'SMRIDZINĀŠANA', 'ROSULJA', '毛毛雨', 'GERIMIS', 'МРЯКА', 'YRYR', 'MOXÍN', '霧雨', '이슬비', 'רסס'],
   56: ['FRZG DRIZZLE', 'BRUINE VERGL.', 'GEF. NIESELREGEN', 'LLOVIZNA HELADA', 'PIOGG. GELATA', 'IJZEL', 'DONDURUCU ÇİSELEME', 'MRZN. MRHOLENÍ', 'CHUVISCO GELADO', 'ΠΑΓΩΜΕΝΗ ΨΙΧΑΛΑ', 'UNDERKYLT REGN', 'MARZNĄCA MŻAWKA', 'MRZN. MRHOLENIE', 'MƯA PHÙN LẠNH', 'BURNIȚĂ ÎNGHEȚATĂ', 'BORIM GELAT', 'FROSSEN YRYR', 'ЛЕДЯНАЯ МОРОСЬ', 'JÄÄUDUVÍHM', 'ZIRRIMINA IZOTUA', 'JÄÄTÄVÄÄ TIHKUA', 'ISSLAG', 'LEDO KDRENA', 'LEDENO PRŠENJE', 'ÓNOS SZITÁLÁS', 'LEDENA ROSULJA', 'DRUCHLÁK REOITE', 'SALST SMRIDZIN.', 'LEDENA ROSULJA', '冻毛毛雨', 'GERIMIS BEKU', 'КРИЖАНА МРЯКА', 'YRYR RHEWI', 'MOXÍN XEADA', '着氷性の霧雨', '얼어붙는 이슬비', 'רסס קופא'],
@@ -93,52 +93,8 @@ var LABELS = (function () {
   return arr;
 })();
 
-// Per-language idiomatic default date format string for the lower-primary
-// widget slot. Mirrored in src/c/languages.c (defaultDateFormat) and
-// config-page/src/data/dateFormats.ts — keep all three in sync.
-var DEFAULT_DATE_FORMATS = [
-  /*  0 en */ "{day_name}, {month_name} {day0}",
-  /*  1 fr */ "{day_name} {day0} {month_name}",
-  /*  2 de */ "{day_name}, {day0}. {month_name}",
-  /*  3 es */ "{day_name} {day0} {month_name}",
-  /*  4 it */ "{day_name} {day0} {month_name}",
-  /*  5 nl */ "{day_name} {day0} {month_name}",
-  /*  6 tr */ "{day0} {month_name} {day_name}",
-  /*  7 cs */ "{day_name} {day0}. {month_name}",
-  /*  8 pt */ "{day_name}, {day0} {month_name}",
-  /*  9 el */ "{day_name}, {day0} {month_name}",
-  /* 10 sv */ "{day_name} {day0} {month_name}",
-  /* 11 pl */ "{day_name}, {day0} {month_name}",
-  /* 12 sk */ "{day_name} {day0}. {month_name}",
-  /* 13 vi */ "{day_name}, {day0}/{month_num}",
-  /* 14 ro */ "{day_name}, {day0} {month_name}",
-  /* 15 ca */ "{day_name} {day0} {month_name}",
-  /* 16 no */ "{day_name} {day0}. {month_name}",
-  /* 17 ru */ "{day_name}, {day0} {month_name}",
-  /* 18 et */ "{day_name}, {day0}. {month_name}",
-  /* 19 eu */ "{day_name} {day0} {month_name}",
-  /* 20 fi */ "{day_name} {day0}. {month_name}",
-  /* 21 da */ "{day_name} {day0}. {month_name}",
-  /* 22 lt */ "{day_name}, {day0} {month_name}",
-  /* 23 sl */ "{day_name}, {day0}. {month_name}",
-  /* 24 hu */ "{month_name} {day0}., {day_name}",
-  /* 25 hr */ "{day_name}, {day0}. {month_name}",
-  /* 26 ga */ "{day_name} {day0} {month_name}",
-  /* 27 lv */ "{day_name}, {day0}. {month_name}",
-  /* 28 sr */ "{day_name}, {day0}. {month_name}",
-  /* 29 zh */ "{month_num}月{day}日 {day_name}",
-  /* 30 id */ "{day_name}, {day0} {month_name}",
-  /* 31 uk */ "{day_name}, {day0} {month_name}",
-  /* 32 cy */ "{day_name} {day0} {month_name}",
-  /* 33 gl */ "{day_name} {day0} {month_name}",
-  /* 34 ja */ "{month_num}月{day}日 ({day_name})",
-  /* 35 ko */ "{month_num}월 {day}일 ({day_name})",
-  /* 36 he */ "{day_name} {day0} {month_name}"
-];
-
 module.exports = {
   weatherCodes: WEATHER_CODES,
   cardinals: CARDINALS,
-  labels: LABELS,
-  defaultDateFormats: DEFAULT_DATE_FORMATS
+  labels: LABELS
 };

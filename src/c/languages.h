@@ -44,8 +44,8 @@ extern const char dayNames[37][7][8];
 /* month names in many different languages! */
 extern const char monthNames[37][12][8];
 
-/* idiomatic default format string for the date widget per language.
-   Used only on first install / when no persisted value exists. */
+/* idiomatic date format string per language. Used by widgets.c to expand the
+   {local_date} super-token at render time. */
 extern const char *const defaultDateFormat[37];
 
 /* decimal separator per language (e.g. '.' or ',') */

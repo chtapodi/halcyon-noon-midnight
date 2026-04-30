@@ -6,6 +6,9 @@
     "pebble-watchface"
   ],
   "private": true,
+  "scripts": {
+    "check:i18n": "node scripts/check-languages.js"
+  },
   "pebble": {
     "displayName": "Halcyon",
     "uuid": "c8e97ab8-7c12-45fb-975d-e85d5de61e8b",

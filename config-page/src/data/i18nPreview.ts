@@ -2,6 +2,8 @@
 // own canonical day/month/label tables; for previews we approximate via
 // Intl.DateTimeFormat (close enough — exact strings differ slightly).
 
+import { DEFAULT_DATE_FORMATS } from './dateFormats';
+
 const LOCALE_BY_INDEX: string[] = [
     'en', 'fr', 'de', 'es', 'it', 'nl', 'tr', 'cs', 'pt', 'el',
     'sv', 'pl', 'sk', 'vi', 'ro', 'ca', 'no', 'ru', 'et', 'eu',
@@ -14,6 +16,15 @@ const LOCALE_BY_INDEX: string[] = [
 const STEPS_LABELS = ["STEPS", "PAS", "SCHRITTE", "PASOS", "PASSI", "STAPPEN", "ADIMLAR", "KROKY", "PASSOS", "ΒΗΜΑΤΑ", "STEG", "KROKI", "KROKY", "BƯỚC", "PAȘI", "PASSOS", "SKRITT", "ШАГИ", "SAMMUD", "URRATSAK", "ASKELTA", "TRIN", "ŽINGSNIAI", "KORAKI", "LÉPÉSEK", "KORACI", "CÉIMEANNA", "SOĻI", "KORACI", "步数", "LANGKAH", "КРОКИ", "CAMAU", "PASOS", "歩数", "걸음", "צעדים"];
 const DAY_LABELS = ["DAY", "JOUR", "TAG", "DÍA", "GIORNO", "DAG", "GÜN", "DEN", "DIA", "ΗΜΈ", "DAG", "DZIEŃ", "DEŇ", "NGÀY", "ZI", "DIA", "DAG", "ДЕН", "PÄEV", "EGUN", "PÄIVÄ", "DAG", "PARA", "DAN", "NAP", "DAN", "LÁ", "DIENA", "DAN", "天", "HARI", "ДЕНЬ", "DIWR", "DÍA", "日", "일", "יום"];
 const WEEK_LABELS = ["WEEK", "SEM", "W", "SEM", "SETT", "WK", "HF", "TÝD", "SEM", "ΕΒΔ", "V", "TYDZ", "TÝŽ", "TUẦN", "SĂPT", "SETM", "UKE", "НЕД", "NÄD", "AST", "VK", "UGE", "SAV", "TED", "HÉT", "TJ", "SCHT", "NED", "NED", "周", "MING", "ТИЖ", "WNOS", "SEM", "週", "주", "שב"];
+
+// Sample weather condition (WMO code 2, "Partly Cloudy") for previews. Mirrors
+// src/pkjs/languages.js WEATHER_CODES[2]. Only one condition is needed since
+// the preview never sees real weather data.
+const SAMPLE_CONDITION = ["PARTLY CLOUDY", "PART. NUAGEUX", "TEILW. BEWÖLKT", "PARCIALMENTE NUB.", "PARZ. NUVOLOSO", "LICHT BEWÖLKT", "PARÇALI BULUTLU", "POLOJASNO", "PARCIAL. NUBLADO", "ΜΕΡΙΚΩΣ ΣΥΝΝΕΦΙΑΣΜΕΝΟΣ", "HALVKLART", "CZĘŚCIOWO ZACHMURZONE", "POLOJASNO", "CÓ MÂY", "PARȚIAL NOROS", "PARCIALMENT NUBOL", "LETTESKYET", "ПЕРЕМ. ОБЛАЧНОСТЬ", "VAHELDUV PILVISUS", "HODEI KERTSUAK", "PUOLIPILVISTÄ", "LETTESKYET", "MAŽAITIKIMYBE", "DELNO OBLAČNO", "RÉSZLEGESEN FELHŐS", "DJELOMIČNO OBLAČNO", "PÁIRTEACH SCALTA", "DAĻĒJI MĀKOŅAINS", "DELIMIČNO OBLAČNO", "多云", "BERAWAN SEBAGIAN", "МІНЛИВА ХМАРНІСТЬ", "RHANNOL GYMOGLOG", "PARCIALMENTE NUBRADO", "晴れ時々曇り", "구름 조금", "מעונן חלקית"];
+
+// Sample wind direction (NW, cardinal index 7) per language. Mirrors index 7 of
+// each row in src/pkjs/languages.js CARDINALS.
+const SAMPLE_CARDINAL = ["NW", "NO", "NW", "NO", "NO", "NW", "KB", "SZ", "NO", "ΒΔ", "NV", "NW", "SZ", "TB", "NV", "NO", "NV", "СЗ", "LO", "IM", "LU", "NV", "ŠV", "SZ", "ÉNY", "SZ", "TI", "ZR", "SZ", "西北", "BL", "ПнЗ", "GG", "NO", "北西", "북서", "צמ׳"];
 
 const safeIdx = (i: number) => (i >= 0 && i < 37 ? i : 0);
 
@@ -66,11 +77,17 @@ export const getDecimalSeparator = (lang: number): string =>
 export const renderPreview = (
     formatStr: string,
     lang: number,
-    isFahrenheit: boolean = false,
+    isImperial: boolean = false,
 ): string => {
     if (!formatStr) return '';
     const idx = safeIdx(lang);
     const now = new Date();
+
+    // Expand the {local_date} super-token first so its inner tokens fall
+    // through to the normal substitution loop. Mirrors widgets.c behavior.
+    if (formatStr.indexOf('{local_date}') !== -1) {
+        formatStr = formatStr.split('{local_date}').join(DEFAULT_DATE_FORMATS[idx]);
+    }
 
     const dayName = intlFmt(now, lang, { weekday: 'short' }).toUpperCase().replace(/\.$/, '');
     const monthName = intlFmt(now, lang, { month: 'short' }).toUpperCase().replace(/\.$/, '');
@@ -89,25 +106,25 @@ export const renderPreview = (
         // Health / device (C-side)
         '{steps}': '1234',
         '{dist}': '0' + dec + '8',
-        '{dist_unit}': isFahrenheit ? 'MI' : 'KM',
+        '{dist_unit}': isImperial ? 'MI' : 'KM',
         '{batt}': '85',
         // Solar / weather (PKJS-side)
         '{sunrise}': '6:42',
         '{sunset}': '18:18',
-        '{temp}': isFahrenheit ? '64' : '18',
-        '{thi}': isFahrenheit ? '72' : '22',
-        '{tlo}': isFahrenheit ? '57' : '14',
-        '{cond}': 'CLOUDY',
-        '{cond_day}': 'CLOUDY',
+        '{temp}': isImperial ? '64' : '18',
+        '{thi}': isImperial ? '72' : '22',
+        '{tlo}': isImperial ? '57' : '14',
+        '{cond}': SAMPLE_CONDITION[idx],
+        '{cond_day}': SAMPLE_CONDITION[idx],
         '{hum}': '65',
         '{wind}': '12',
-        '{wind_unit}': isFahrenheit ? 'MPH' : 'KM/H',
-        '{wind_dir}': 'NW',
+        '{wind_unit}': isImperial ? 'MPH' : 'KM/H',
+        '{wind_dir}': SAMPLE_CARDINAL[idx],
         '{uv}': '6',
         '{rain}': '0' + dec + '0',
         '{pop}': '30',
-        '{dew}': isFahrenheit ? '54' : '12',
-        '{temp_unit}': isFahrenheit ? '°F' : '°C',
+        '{dew}': isImperial ? '54' : '12',
+        '{temp_unit}': isImperial ? '°F' : '°C',
         // Localized labels
         '{steps_label}': STEPS_LABELS[idx],
         '{day_label}': DAY_LABELS[idx],

@@ -15,18 +15,15 @@ var cachedSettings = null;
 var cachedIs24h = false;
 
 // Default widget format strings — used when no settings have been configured yet
-// so that JS can perform token substitution even on first run.
-// The lower-primary date format is picked per-language at send time;
-// see Languages.defaultDateFormats and getDefaultWidgets() below.
-function getDefaultWidgets(langIndex) {
-  var idx = (typeof langIndex === 'number' && langIndex >= 0 && langIndex < 37) ? langIndex : 0;
-  return {
-    'SETTING_WIDGET_UPPER_SECONDARY': '{thi}° / {tlo}°',
-    'SETTING_WIDGET_UPPER_PRIMARY': '{temp}° {cond}',
-    'SETTING_WIDGET_LOWER_PRIMARY': Languages.defaultDateFormats[idx],
-    'SETTING_WIDGET_LOWER_SECONDARY': '{steps} {steps_label}'
-  };
-}
+// so that JS can perform token substitution even on first run. The lower-primary
+// uses the {local_date} super-token, which the watch expands per-language at
+// render time.
+var DEFAULT_WIDGETS = {
+  'SETTING_WIDGET_UPPER_SECONDARY': '{thi}° / {tlo}°',
+  'SETTING_WIDGET_UPPER_PRIMARY': '{temp}° {cond}',
+  'SETTING_WIDGET_LOWER_PRIMARY': '{local_date}',
+  'SETTING_WIDGET_LOWER_SECONDARY': '{steps} {steps_label}'
+};
 
 // ---- Time helpers ----
 
@@ -49,7 +46,7 @@ function formatMinutes(minutes, use24h) {
  * JS-side tokens with their current values and returns the result.
  * Unknown tokens (e.g. {date}, {steps}) are left untouched for the C side.
  */
-function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h, lang) {
+function applyJsTokens(formatStr, weather, solar, isImperial, use24h, lang) {
   if (!formatStr) return formatStr;
 
   var langIndex = parseInt(lang) || 0;
@@ -68,12 +65,12 @@ function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h, lang) {
 
   // Weather tokens
   if (weather) {
-    var temp = useFahrenheit ? Weather.toF(weather.temp) : Math.round(weather.temp);
-    var tempHi = useFahrenheit ? Weather.toF(weather.tempHi) : Math.round(weather.tempHi);
-    var tempLo = useFahrenheit ? Weather.toF(weather.tempLo) : Math.round(weather.tempLo);
-    var dew = useFahrenheit ? Weather.toF(weather.dew) : Math.round(weather.dew);
-    var wind = useFahrenheit ? Weather.toMPH(weather.wind) : Math.round(weather.wind);
-    var rain = useFahrenheit ? Weather.toInch(weather.rain) : weather.rain.toFixed(1);
+    var temp = isImperial ? Weather.toF(weather.temp) : Math.round(weather.temp);
+    var tempHi = isImperial ? Weather.toF(weather.tempHi) : Math.round(weather.tempHi);
+    var tempLo = isImperial ? Weather.toF(weather.tempLo) : Math.round(weather.tempLo);
+    var dew = isImperial ? Weather.toF(weather.dew) : Math.round(weather.dew);
+    var wind = isImperial ? Weather.toMPH(weather.wind) : Math.round(weather.wind);
+    var rain = isImperial ? Weather.toInch(weather.rain) : weather.rain.toFixed(1);
 
     result = result.replace('{temp}', String(temp));
     result = result.replace('{thi}', String(tempHi));
@@ -86,8 +83,8 @@ function applyJsTokens(formatStr, weather, solar, useFahrenheit, use24h, lang) {
     result = result.replace('{rain}', String(rain));
     result = result.replace('{pop}', String(Math.round(weather.pop)));
     result = result.replace('{dew}', String(dew));
-    result = result.replace('{temp_unit}', useFahrenheit ? '°F' : '°C');
-    result = result.replace('{wind_unit}', useFahrenheit ? Languages.labels[langIndex].WIND_IMPERIAL : Languages.labels[langIndex].WIND_METRIC);
+    result = result.replace('{temp_unit}', isImperial ? '°F' : '°C');
+    result = result.replace('{wind_unit}', isImperial ? Languages.labels[langIndex].WIND_IMPERIAL : Languages.labels[langIndex].WIND_METRIC);
     result = result.replace('{wind_dir}', Weather.getCardinal(weather.wind_dir, langIndex));
     result = result.replace('{steps_label}', Languages.labels[langIndex].STEPS);
     result = result.replace('{week_label}', Languages.labels[langIndex].WEEK);
@@ -120,10 +117,10 @@ function sendDataToWatch() {
     settings = {};
   }
 
-  var useFahrenheit = (settings.SETTING_TEMP_UNIT === 1);
+  var isImperial = (settings.SETTING_TEMP_UNIT === 1);
   var lang = settings.SETTING_LANGUAGE || 0;
   var use24h = cachedIs24h;
-  var defaultWidgets = getDefaultWidgets(lang);
+  var defaultWidgets = DEFAULT_WIDGETS;
 
   // Prepare Pass 1 output for each widget slot
   var slotKeys = [
@@ -143,7 +140,7 @@ function sendDataToWatch() {
     }
     if (fmt !== undefined && fmt !== null) {
       // Apply JS tokens; C tokens pass through untouched
-      var processed = applyJsTokens(fmt, cachedWeather, cachedSolar, useFahrenheit, use24h, lang);
+      var processed = applyJsTokens(fmt, cachedWeather, cachedSolar, isImperial, use24h, lang);
       msg[key] = processed;
     }
   });
@@ -155,7 +152,7 @@ function sendDataToWatch() {
   }
 
   // Send temp unit setting
-  msg['SETTING_TEMP_UNIT'] = useFahrenheit ? 1 : 0;
+  msg['SETTING_TEMP_UNIT'] = isImperial ? 1 : 0;
 
   console.log('Sending to watch: ' + JSON.stringify(msg));
 

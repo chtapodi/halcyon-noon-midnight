@@ -8,9 +8,10 @@ export const WidgetSelector: React.FC = () => {
     const capabilities = useCapabilities();
     const { settings } = useConfig();
     const lang = Number(settings.SETTING_LANGUAGE) || 0;
+    const isImperial = Number(settings.SETTING_TEMP_UNIT) === 1;
     const widgetOptions = React.useMemo(
-        () => getWidgetOptions(lang, !!capabilities.HEALTH),
-        [lang, capabilities.HEALTH],
+        () => getWidgetOptions(lang, !!capabilities.HEALTH, isImperial),
+        [lang, capabilities.HEALTH, isImperial],
     );
 
     return (
