@@ -15,57 +15,63 @@ function getCondition(code, lang) {
 }
 
 var OPENMETEO_BASE = 'https://api.open-meteo.com/v1/forecast';
+var FETCH_TIMEOUT_MS = 15000;
 
-function fetchWeather(lat, lng, callback) {
+function fetchWeather(lat, lng, callback, errback) {
   var url = OPENMETEO_BASE +
     '?latitude=' + lat +
     '&longitude=' + lng +
     '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,precipitation,uv_index,dew_point_2m' +
     '&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max' +
+    '&forecast_days=1' +
     '&timezone=auto';
 
   console.log(url);
 
+  function fail(reason) {
+    console.log('Weather fetch failed: ' + reason);
+    if (errback) errback(reason);
+  }
+
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
+  xhr.timeout = FETCH_TIMEOUT_MS;
   xhr.onload = function () {
-    if (xhr.status === 200) {
-      try {
-        var data = JSON.parse(xhr.responseText);
-        var cur = data.current;
-        var daily = data.daily;
+    if (xhr.status !== 200) {
+      fail('status ' + xhr.status);
+      return;
+    }
+    try {
+      var data = JSON.parse(xhr.responseText);
+      var cur = data.current;
+      var daily = data.daily;
 
-        var code = cur.weather_code;
-        var codeDay = daily.weather_code[0];
-        var weather = {
-          temp: cur.temperature_2m,
-          tempHi: daily.temperature_2m_max[0],
-          tempLo: daily.temperature_2m_min[0],
-          code: code,
-          codeDay: codeDay,
-          hum: cur.relative_humidity_2m,
-          wind: cur.wind_speed_10m,
-          wind_dir: cur.wind_direction_10m,
-          uv: cur.uv_index,
-          rain: cur.precipitation,
-          pop: daily.precipitation_probability_max[0],
-          dew: cur.dew_point_2m
-        };
+      var weather = {
+        temp: cur.temperature_2m,
+        tempHi: daily.temperature_2m_max[0],
+        tempLo: daily.temperature_2m_min[0],
+        code: cur.weather_code,
+        codeDay: daily.weather_code[0],
+        hum: cur.relative_humidity_2m,
+        wind: cur.wind_speed_10m,
+        wind_dir: cur.wind_direction_10m,
+        uv: cur.uv_index,
+        rain: cur.precipitation,
+        pop: daily.precipitation_probability_max[0],
+        dew: cur.dew_point_2m,
+        fetchedAt: Date.now()
+      };
 
-        localStorage.setItem('halcyonWeather', JSON.stringify(weather));
-        console.log('Weather fetched: ' + JSON.stringify(weather));
+      localStorage.setItem('halcyonWeather', JSON.stringify(weather));
+      console.log('Weather fetched: ' + JSON.stringify(weather));
 
-        if (callback) callback(weather);
-      } catch (e) {
-        console.log('Error parsing weather response: ' + e);
-      }
-    } else {
-      console.log('Weather fetch failed, status: ' + xhr.status);
+      if (callback) callback(weather);
+    } catch (e) {
+      fail('parse error: ' + e);
     }
   };
-  xhr.onerror = function () {
-    console.log('Weather fetch network error');
-  };
+  xhr.onerror = function () { fail('network error'); };
+  xhr.ontimeout = function () { fail('timeout after ' + FETCH_TIMEOUT_MS + 'ms'); };
   xhr.send();
 }
 

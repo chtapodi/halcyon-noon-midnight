@@ -16,6 +16,7 @@
 // Heartbeat timer: the watch requests data from the phone on this interval
 #define UPDATE_REQUEST_INTERVAL_MS (30 * 60 * 1000) // 30 minutes
 #define UPDATE_REQUEST_INITIAL_DELAY_MS (3 * 1000)   // 3 seconds after startup
+#define UPDATE_REQUEST_RETRY_MS (30 * 1000)          // fast retry after outbox fail
 
 // windows and layers
 static Window *mainWindow;
@@ -324,11 +325,26 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_clock();
 }
 
+static void update_request_timer_callback(void *data);
+
+static void schedule_next_update_request(uint32_t delay_ms) {
+  if (s_update_request_timer) {
+    app_timer_cancel(s_update_request_timer);
+  }
+  s_update_request_timer =
+      app_timer_register(delay_ms, update_request_timer_callback, NULL);
+}
+
 static void update_request_timer_callback(void *data) {
+  // Schedule the next normal-interval tick *first*, so that a sync outbox
+  // failure inside messaging_request_update() can call on_request_failed()
+  // and pull the next attempt forward without us clobbering it afterward.
+  schedule_next_update_request(UPDATE_REQUEST_INTERVAL_MS);
   messaging_request_update();
-  // Reschedule — AppTimer is one-shot, so we re-register for the next interval
-  s_update_request_timer = app_timer_register(
-      UPDATE_REQUEST_INTERVAL_MS, update_request_timer_callback, NULL);
+}
+
+static void on_request_failed(void) {
+  schedule_next_update_request(UPDATE_REQUEST_RETRY_MS);
 }
 
 static void init() {
@@ -343,7 +359,7 @@ static void init() {
   solarUtils_init();
 
   // init the messaging thing
-  messaging_init(onSettingsChanged);
+  messaging_init(onSettingsChanged, on_request_failed);
 
   // Create main Window element and assign to pointer
   mainWindow = window_create();
@@ -363,8 +379,7 @@ static void init() {
 #endif
 
   // Schedule initial update request with short delay to give PKJS time to start
-  s_update_request_timer = app_timer_register(
-      UPDATE_REQUEST_INITIAL_DELAY_MS, update_request_timer_callback, NULL);
+  schedule_next_update_request(UPDATE_REQUEST_INITIAL_DELAY_MS);
 }
 
 static void deinit() { window_destroy(mainWindow); }

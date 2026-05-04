@@ -163,9 +163,43 @@ function sendDataToWatch() {
 }
 
 // ---- Location + weather fetch ----
+//
+// Backoff: on any failure (geolocation or weather fetch), schedule a JS-side
+// retry at 1m → 5m → 15m, then give up and let the next watch-driven
+// REQUEST_UPDATE (every 30m) take over. Reset on success.
+//
+// JS timers can be killed by the phone suspending PKJS, so we still rely on
+// the watch's heartbeat as the ultimate floor — backoff is best-effort.
+var RETRY_DELAYS_MS = [60 * 1000, 5 * 60 * 1000, 15 * 60 * 1000];
+var retryAttempt = 0;
+var retryTimer = null;
+
+function scheduleRetry(reason) {
+  if (retryAttempt >= RETRY_DELAYS_MS.length) {
+    console.log('Backoff exhausted (' + reason + '); waiting for next REQUEST_UPDATE');
+    return;
+  }
+  var delay = RETRY_DELAYS_MS[retryAttempt];
+  retryAttempt++;
+  console.log('Scheduling retry #' + retryAttempt + ' in ' + (delay / 1000) + 's (' + reason + ')');
+  if (retryTimer) clearTimeout(retryTimer);
+  retryTimer = setTimeout(function () {
+    retryTimer = null;
+    getLocation();
+  }, delay);
+}
+
+function resetBackoff() {
+  if (retryTimer) {
+    clearTimeout(retryTimer);
+    retryTimer = null;
+  }
+  retryAttempt = 0;
+}
 
 function locationError(err) {
   console.log('Location error: ' + err.message);
+  scheduleRetry('geolocation: ' + err.message);
 }
 
 function locationSuccess(pos) {
@@ -185,11 +219,16 @@ function locationSuccess(pos) {
   // Send to watch immediately (even before weather)
   sendDataToWatch();
 
-  // Fetch weather
-  Weather.fetch(lat, lng, function (data) {
-    cachedWeather = data;
-    sendDataToWatch();
-  });
+  Weather.fetch(lat, lng,
+    function (data) {
+      cachedWeather = data;
+      resetBackoff();
+      sendDataToWatch();
+    },
+    function (reason) {
+      scheduleRetry('weather: ' + reason);
+    }
+  );
 
   // NOTE: No setInterval here! The watch sends REQUEST_UPDATE on a timer,
   // which triggers getLocation() → this function again. That approach is
@@ -201,7 +240,7 @@ function getLocation() {
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
     locationError,
-    { timeout: 15000, maximumAge: 60000 }
+    { timeout: 15000, maximumAge: 10 * 60 * 1000 }
   );
 }
 
@@ -244,7 +283,8 @@ Pebble.addEventListener('appmessage', function (e) {
       console.log('Watch 24h mode: ' + cachedIs24h);
     }
 
-    // Trigger a full location + weather refresh
+    // Fresh heartbeat from the watch — start a new backoff cycle.
+    resetBackoff();
     getLocation();
   }
 });

@@ -4,10 +4,12 @@
 #include <pebble.h>
 
 void (*message_processed_callback)(void);
+void (*request_failed_callback)(void);
 
-void messaging_init(void (*processed_callback)(void)) {
-  // Custom callback
+void messaging_init(void (*processed_callback)(void),
+                    void (*failed_callback)(void)) {
   message_processed_callback = processed_callback;
+  request_failed_callback = failed_callback;
 
   // Register callbacks
   app_message_register_inbox_received(inbox_received_callback);
@@ -301,7 +303,10 @@ void inbox_dropped_callback(AppMessageResult reason, void *context) {
 
 void outbox_failed_callback(DictionaryIterator *iterator,
                             AppMessageResult reason, void *context) {
-  // APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed: %d", (int)reason);
+  // The watch only ever sends REQUEST_UPDATE via the outbox, so any failure
+  // here means the heartbeat didn't reach the phone — ask main to retry soon.
+  if (request_failed_callback) request_failed_callback();
 }
 
 void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
@@ -314,6 +319,7 @@ void messaging_request_update() {
 
   if (result != APP_MSG_OK) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to begin outbox: %d", (int)result);
+    if (request_failed_callback) request_failed_callback();
     return;
   }
 
@@ -324,5 +330,6 @@ void messaging_request_update() {
   result = app_message_outbox_send();
   if (result != APP_MSG_OK) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to send outbox: %d", (int)result);
+    if (request_failed_callback) request_failed_callback();
   }
 }
