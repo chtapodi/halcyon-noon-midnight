@@ -33,16 +33,14 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   { value: '{dist} {dist_unit}', label: 'Distance Walked', category: 'Health' },
   // Device
   { value: 'BATTERY {batt}%', label: 'Battery %', category: 'Device' },
-  // Today's Forecast
-  { value: '{thi}° / {tlo}°', label: 'Today\'s High & Low', category: 'Weather: Today\'s Forecast' },
-  { value: 'RAIN {pop}%', label: 'Today\'s Chance of Rain', category: 'Weather: Today\'s Forecast' },
-  // Current Conditions
-  { value: '{temp}°', label: 'Current Temperature', category: 'Weather: Current Temperature' },
-  { value: '{cond}', label: 'Current Condition', category: 'Weather: Current Condition' },
-  { value: '{hum}% HUMIDITY', label: 'Humidity', category: 'Weather: Current' },
-  { value: '{wind} {wind_unit} {wind_dir}', label: 'Wind', category: 'Weather: Current' },
-  { value: 'UVI {uv}', label: 'UV Index', category: 'Weather: Current' },
-  { value: '{dew}° DEW', label: 'Dew Point', category: 'Weather: Current' },
+  // Weather
+  { value: '{temp}° ({tlo}°/{thi}°)', label: 'Temperature (Current & Forecast)', category: 'Weather' },
+  { value: '{cond}', label: 'Current Condition', category: 'Weather' },
+  { value: '{hum}% HUMIDITY', label: 'Humidity', category: 'Weather' },
+  { value: '{wind} {wind_unit} {wind_dir}', label: 'Wind', category: 'Weather' },
+  { value: 'UV {uv}', label: 'UV Index', category: 'Weather' },
+  { value: '{dew}° DEW', label: 'Dew Point', category: 'Weather' },
+  { value: 'RAIN {pop}%', label: 'Today\'s Chance of Rain', category: 'Weather' },
   // Custom
   { value: '__custom__', label: 'Custom…', category: 'Custom' },
 ];

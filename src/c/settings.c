@@ -56,9 +56,9 @@ void Settings_loadFromStorage() {
   // widget slot defaults
   // Weather-dependent slots use placeholders until JS sends real data.
   // This prevents raw tokens like "{temp}°" from flashing on first run.
-  strncpy(globalSettings.widgetUpperSecondary, "--° / --°",
+  strncpy(globalSettings.widgetUpperSecondary, "--° (--° / --°)",
           WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetUpperPrimary, "--° --", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetUpperPrimary, "--", WIDGET_TEXT_LEN);
   // Lower-primary defaults to the {local_date} super-token; widgets.c expands
   // it at render time using the active language's idiomatic format.
   strncpy(globalSettings.widgetLowerPrimary, "{local_date}", WIDGET_TEXT_LEN);

@@ -1,6 +1,6 @@
 var USE_LOCAL_CONFIG = true;
 var configDataUri = 'https://halcyon.freakified.net/';
-var configLocalUri = 'http://10.25.219.12:3000/index.html';
+var configLocalUri = 'http://10.25.219.11:3000/index.html';
 
 var SunCalc = require('./suncalc');
 var Weather = require('./weather');
@@ -19,8 +19,8 @@ var cachedIs24h = false;
 // uses the {local_date} super-token, which the watch expands per-language at
 // render time.
 var DEFAULT_WIDGETS = {
-  'SETTING_WIDGET_UPPER_SECONDARY': '{thi}° / {tlo}°',
-  'SETTING_WIDGET_UPPER_PRIMARY': '{temp}° {cond}',
+  'SETTING_WIDGET_UPPER_SECONDARY': '{temp}° ({thi}°/{tlo})°',
+  'SETTING_WIDGET_UPPER_PRIMARY': '{cond}',
   'SETTING_WIDGET_LOWER_PRIMARY': '{local_date}',
   'SETTING_WIDGET_LOWER_SECONDARY': '{steps} {steps_label}'
 };
