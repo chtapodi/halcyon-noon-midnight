@@ -22,25 +22,25 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   // Date/time
   { value: '{local_date}', label: 'Date', category: 'Date & Time' },
   { value: '{year}-{month_num}-{day0}', label: 'Numeric Date', category: 'Date & Time' },
-  { value: '{day_label} {day_of_year}', label: 'Day Number', category: 'Date & Time' },
-  { value: '{week_label} {week_of_year}', label: 'Week Number', category: 'Date & Time' },
+  { value: '{t:DAY} {day_of_year}', label: 'Day Number', category: 'Date & Time' },
+  { value: '{t:WEEK} {week_of_year}', label: 'Week Number', category: 'Date & Time' },
   { value: '{year}', label: 'Year', category: 'Date & Time' },
   // Solar
-  { value: 'RISE {sunrise}', label: 'Sunrise Time', category: 'Solar' },
-  { value: 'SET {sunset}', label: 'Sunset Time', category: 'Solar' },
+  { value: '{t:RISE} {sunrise}', label: 'Sunrise Time', category: 'Solar' },
+  { value: '{t:SET} {sunset}', label: 'Sunset Time', category: 'Solar' },
   // Health
-  { value: '{steps} {steps_label}', label: 'Steps', category: 'Health' },
+  { value: '{steps} {t:STEPS}', label: 'Steps', category: 'Health' },
   { value: '{dist} {dist_unit}', label: 'Distance Walked', category: 'Health' },
   // Device
-  { value: 'BATTERY {batt}%', label: 'Battery %', category: 'Device' },
+  { value: '{t:BATTERY} {batt}%', label: 'Battery %', category: 'Device' },
   // Weather
   { value: '{temp}° ({tlo}°/{thi}°)', label: 'Temperature (Current & Forecast)', category: 'Weather' },
   { value: '{cond}', label: 'Current Condition', category: 'Weather' },
-  { value: '{hum}% HUMIDITY', label: 'Humidity', category: 'Weather' },
+  { value: '{hum}% {t:HUMIDITY}', label: 'Humidity', category: 'Weather' },
   { value: '{wind} {wind_unit} {wind_dir}', label: 'Wind', category: 'Weather' },
-  { value: 'UV {uv}', label: 'UV Index', category: 'Weather' },
-  { value: '{dew}° DEW', label: 'Dew Point', category: 'Weather' },
-  { value: 'RAIN {pop}%', label: 'Today\'s Chance of Rain', category: 'Weather' },
+  { value: '{t:UV} {uv}', label: 'UV Index', category: 'Weather' },
+  { value: '{dew}° {t:DEW}', label: 'Dew Point', category: 'Weather' },
+  { value: '{t:RAIN} {pop}%', label: 'Today\'s Chance of Rain', category: 'Weather' },
   // Custom
   { value: '__custom__', label: 'Custom…', category: 'Custom' },
 ];

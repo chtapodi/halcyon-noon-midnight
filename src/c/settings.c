@@ -62,7 +62,7 @@ void Settings_loadFromStorage() {
   // Lower-primary defaults to the {local_date} super-token; widgets.c expands
   // it at render time using the active language's idiomatic format.
   strncpy(globalSettings.widgetLowerPrimary, "{local_date}", WIDGET_TEXT_LEN);
-  strncpy(globalSettings.widgetLowerSecondary, "{steps} {steps_label}",
+  strncpy(globalSettings.widgetLowerSecondary, "{steps} {t:STEPS}",
           WIDGET_TEXT_LEN);
 
   if (persist_exists(SETTINGS_PERSIST_KEY)) {

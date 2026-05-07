@@ -14,7 +14,26 @@ const LOCALE_BY_INDEX: string[] = [
 const STEPS_LABELS = ["STEPS", "PAS", "SCHRITTE", "PASOS", "PASSI", "STAPPEN", "ADIMLAR", "KROKY", "PASSOS", "ΒΗΜΑΤΑ", "STEG", "KROKI", "KROKY", "BƯỚC", "PAȘI", "PASSOS", "SKRITT", "ШАГИ", "SAMMUD", "URRATSAK", "ASKELTA", "TRIN", "ŽINGSNIAI", "KORAKI", "LÉPÉSEK", "KORACI", "CÉIMEANNA", "SOĻI", "KORACI", "步数", "LANGKAH", "КРОКИ", "CAMAU", "PASOS", "歩数", "걸음", "צעדים"];
 const DAY_LABELS = ["DAY", "JOUR", "TAG", "DÍA", "GIORNO", "DAG", "GÜN", "DEN", "DIA", "ΗΜΈ", "DAG", "DZIEŃ", "DEŇ", "NGÀY", "ZI", "DIA", "DAG", "ДЕН", "PÄEV", "EGUN", "PÄIVÄ", "DAG", "PARA", "DAN", "NAP", "DAN", "LÁ", "DIENA", "DAN", "天", "HARI", "ДЕНЬ", "DIWR", "DÍA", "日", "일", "יום"];
 const WEEK_LABELS = ["WEEK", "SEM", "W", "SEM", "SETT", "WK", "HF", "TÝD", "SEM", "ΕΒΔ", "V", "TYDZ", "TÝŽ", "TUẦN", "SĂPT", "SETM", "UKE", "НЕД", "NÄD", "AST", "VK", "UGE", "SAV", "TED", "HÉT", "TJ", "SCHT", "NED", "NED", "周", "MING", "ТИЖ", "WNOS", "SEM", "週", "주", "שב"];
+const BATTERY_LABELS = ["BATTERY", "BATTERIE", "AKKU", "BATERÍA", "BATTERIA", "BATTERIJ", "PİL", "BATTERY", "BATERIA", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "ЗАРЯД", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "电量", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "バッテリー", "배터리", "BATTERY"];
+const HUMIDITY_LABELS = ["HUMIDITY", "HUMIDITÉ", "FEUCHT", "HUMEDAD", "UMIDITÀ", "VOCHT", "NEM", "HUMIDITY", "UMIDADE", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "ВЛАЖН", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "습도", "HUMIDITY"];
+const DEW_LABELS = ["DEW", "ROSÉE", "TAU", "ROCÍO", "RUGIADA", "DAUW", "ÇİĞ", "DEW", "ORVALHO", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "РОСА", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "露点", "DEW", "DEW", "DEW", "DEW", "露点", "이슬점", "DEW"];
+const RISE_LABELS = ["RISE", "LEVER", "AUFGANG", "SALIDA", "ALBA", "OPKOMST", "DOĞUŞ", "RISE", "NASCER", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "ВОСХОД", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "日出", "RISE", "RISE", "RISE", "RISE", "日の出", "일출", "RISE"];
+const SET_LABELS = ["SET", "COUCHER", "UNTERGANG", "PUESTA", "TRAMONTO", "ONDER", "BATIŞ", "SET", "PÔR", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "ЗАХОД", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "日落", "SET", "SET", "SET", "SET", "日の入", "일몰", "SET"];
+const RAIN_LABELS = ["RAIN", "PLUIE", "REGEN", "LLUVIA", "PIOGGIA", "REGEN", "YAĞMUR", "RAIN", "CHUVA", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "ДОЖДЬ", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "비", "RAIN"];
+const UV_LABELS = ["UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV"];
 
+const TRANSLATIONS: Record<string, string[]> = {
+  STEPS: STEPS_LABELS,
+  DAY: DAY_LABELS,
+  WEEK: WEEK_LABELS,
+  BATTERY: BATTERY_LABELS,
+  HUMIDITY: HUMIDITY_LABELS,
+  DEW: DEW_LABELS,
+  RISE: RISE_LABELS,
+  SET: SET_LABELS,
+  RAIN: RAIN_LABELS,
+  UV: UV_LABELS,
+};
 // Sample weather condition (WMO code 2, "Partly Cloudy") for previews. Mirrors
 // src/pkjs/languages.js WEATHER_CODES[2]. Only one condition is needed since
 // the preview never sees real weather data.
@@ -123,16 +142,18 @@ export const renderPreview = (
     '{pop}': '30',
     '{dew}': isImperial ? '54' : '12',
     '{temp_unit}': isImperial ? '°F' : '°C',
-    // Localized labels
-    '{steps_label}': STEPS_LABELS[idx],
-    '{day_label}': DAY_LABELS[idx],
-    '{week_label}': WEEK_LABELS[idx],
   };
 
   let out = formatStr;
   for (const [token, value] of Object.entries(replacements)) {
     out = out.split(token).join(value);
   }
+  
+  // Universal translation token substitution {t:KEY}
+  out = out.replace(/\{t:([A-Z_]+)\}/g, (match, key) => {
+    return TRANSLATIONS[key] ? TRANSLATIONS[key][idx] : match;
+  });
+
   // Strip any unrecognized {tokens} so previews don't show raw braces.
   out = out.replace(/\{[a-z_:%]+\}/gi, '');
   return out;

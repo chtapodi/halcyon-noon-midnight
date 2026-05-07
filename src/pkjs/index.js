@@ -22,7 +22,7 @@ var DEFAULT_WIDGETS = {
   'SETTING_WIDGET_UPPER_SECONDARY': '{temp}° ({thi}°/{tlo})°',
   'SETTING_WIDGET_UPPER_PRIMARY': '{cond}',
   'SETTING_WIDGET_LOWER_PRIMARY': '{local_date}',
-  'SETTING_WIDGET_LOWER_SECONDARY': '{steps} {steps_label}'
+  'SETTING_WIDGET_LOWER_SECONDARY': '{steps} {t:STEPS}'
 };
 
 // ---- Time helpers ----
@@ -85,24 +85,18 @@ function applyJsTokens(formatStr, weather, solar, isImperial, use24h, lang) {
     result = result.replace('{temp_unit}', isImperial ? '°F' : '°C');
     result = result.replace('{wind_unit}', isImperial ? L.labels.WIND_IMPERIAL : L.labels.WIND_METRIC);
     result = result.replace('{wind_dir}', Weather.getCardinal(weather.wind_dir, lang));
-    result = result.replace('{steps_label}', L.labels.STEPS);
-    result = result.replace('{week_label}', L.labels.WEEK);
-    result = result.replace('{day_label}', L.labels.DAY);
   } else {
     // No weather data yet — replace with placeholders so the watch shows something
     var dash = '--';
-    ['temp', 'thi', 'tlo', 'cond', 'cond_day', 'hum', 'wind', 'uv', 'rain', 'pop', 'dew', 'temp_unit', 'wind_unit', 'wind_dir', 'steps_label', 'week_label', 'day_label'].forEach(function (t) {
-      if (t === 'steps_label') {
-        result = result.replace('{' + t + '}', L.labels.STEPS);
-      } else if (t === 'week_label') {
-        result = result.replace('{' + t + '}', L.labels.WEEK);
-      } else if (t === 'day_label') {
-        result = result.replace('{' + t + '}', L.labels.DAY);
-      } else {
-        result = result.replace('{' + t + '}', dash);
-      }
+    ['temp', 'thi', 'tlo', 'cond', 'cond_day', 'hum', 'wind', 'uv', 'rain', 'pop', 'dew', 'temp_unit', 'wind_unit', 'wind_dir'].forEach(function (t) {
+      result = result.replace('{' + t + '}', dash);
     });
   }
+
+  // Universal translation token substitution {t:KEY}
+  result = result.replace(/\{t:([A-Z_]+)\}/g, function(match, key) {
+    return L.labels[key] || match;
+  });
 
   return result;
 }

@@ -47,7 +47,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   fr: {
@@ -89,7 +96,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERIE',
+      HUMIDITY: 'HUMIDITÉ',
+      DEW: 'ROSÉE',
+      RISE: 'LEVER',
+      SET: 'COUCHER',
+      RAIN: 'PLUIE',
+      UV: 'UV'
     }
   },
   de: {
@@ -131,7 +145,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'AKKU',
+      HUMIDITY: 'FEUCHT',
+      DEW: 'TAU',
+      RISE: 'AUFGANG',
+      SET: 'UNTERGANG',
+      RAIN: 'REGEN',
+      UV: 'UV'
     }
   },
   es: {
@@ -173,7 +194,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATERÍA',
+      HUMIDITY: 'HUMEDAD',
+      DEW: 'ROCÍO',
+      RISE: 'SALIDA',
+      SET: 'PUESTA',
+      RAIN: 'LLUVIA',
+      UV: 'UV'
     }
   },
   it: {
@@ -215,7 +243,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERIA',
+      HUMIDITY: 'UMIDITÀ',
+      DEW: 'RUGIADA',
+      RISE: 'ALBA',
+      SET: 'TRAMONTO',
+      RAIN: 'PIOGGIA',
+      UV: 'UV'
     }
   },
   nl: {
@@ -257,7 +292,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERIJ',
+      HUMIDITY: 'VOCHT',
+      DEW: 'DAUW',
+      RISE: 'OPKOMST',
+      SET: 'ONDER',
+      RAIN: 'REGEN',
+      UV: 'UV'
     }
   },
   tr: {
@@ -299,7 +341,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'PİL',
+      HUMIDITY: 'NEM',
+      DEW: 'ÇİĞ',
+      RISE: 'DOĞUŞ',
+      SET: 'BATIŞ',
+      RAIN: 'YAĞMUR',
+      UV: 'UV'
     }
   },
   cz: {
@@ -341,7 +390,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   pt: {
@@ -383,7 +439,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATERIA',
+      HUMIDITY: 'UMIDADE',
+      DEW: 'ORVALHO',
+      RISE: 'NASCER',
+      SET: 'PÔR',
+      RAIN: 'CHUVA',
+      UV: 'UV'
     }
   },
   el: {
@@ -425,7 +488,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   sv: {
@@ -467,7 +537,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   pl: {
@@ -509,7 +586,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   sk: {
@@ -551,7 +635,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   vi: {
@@ -593,7 +684,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   ro: {
@@ -635,7 +733,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   ca: {
@@ -677,7 +782,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   no: {
@@ -719,7 +831,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   ru: {
@@ -761,7 +880,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'ЗАРЯД',
+      HUMIDITY: 'ВЛАЖН',
+      DEW: 'РОСА',
+      RISE: 'ВОСХОД',
+      SET: 'ЗАХОД',
+      RAIN: 'ДОЖДЬ',
+      UV: 'UV'
     }
   },
   et: {
@@ -803,7 +929,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   eu: {
@@ -845,7 +978,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   fi: {
@@ -887,7 +1027,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   da: {
@@ -929,7 +1076,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   lt: {
@@ -971,7 +1125,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   sl: {
@@ -1013,7 +1174,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   hu: {
@@ -1055,7 +1223,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   hr: {
@@ -1097,7 +1272,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   ga: {
@@ -1139,7 +1321,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   lv: {
@@ -1181,7 +1370,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   sr: {
@@ -1223,7 +1419,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   zh: {
@@ -1265,7 +1468,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: '电量',
+      HUMIDITY: '湿度',
+      DEW: '露点',
+      RISE: '日出',
+      SET: '日落',
+      RAIN: '雨',
+      UV: 'UV'
     }
   },
   id: {
@@ -1307,7 +1517,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   uk: {
@@ -1349,7 +1566,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   cy: {
@@ -1391,7 +1615,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   gl: {
@@ -1433,7 +1664,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   },
   ja: {
@@ -1475,7 +1713,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'バッテリー',
+      HUMIDITY: '湿度',
+      DEW: '露点',
+      RISE: '日の出',
+      SET: '日の入',
+      RAIN: '雨',
+      UV: 'UV'
     }
   },
   ko: {
@@ -1517,7 +1762,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: '배터리',
+      HUMIDITY: '습도',
+      DEW: '이슬점',
+      RISE: '일출',
+      SET: '일몰',
+      RAIN: '비',
+      UV: 'UV'
     }
   },
   he: {
@@ -1559,7 +1811,14 @@ var LANGUAGES = {
       DIST_METRIC: 'KM',
       DIST_IMPERIAL: 'MI',
       WIND_METRIC: 'KM/H',
-      WIND_IMPERIAL: 'MPH'
+      WIND_IMPERIAL: 'MPH',
+      BATTERY: 'BATTERY',
+      HUMIDITY: 'HUMIDITY',
+      DEW: 'DEW',
+      RISE: 'RISE',
+      SET: 'SET',
+      RAIN: 'RAIN',
+      UV: 'UV'
     }
   }
 };
