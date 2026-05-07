@@ -51,7 +51,7 @@ module.exports = {
     "WIND_IMPERIAL": "MPH",
     "BATTERY": "电量",
     "HUMIDITY": "湿度",
-    "DEW": "露点",
+    "DPT": "DPT",
     "RISE": "日出",
     "SET": "日落",
     "RAIN": "雨",

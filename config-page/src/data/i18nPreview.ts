@@ -16,7 +16,7 @@ const DAY_LABELS = ["DAY", "JOUR", "TAG", "DÍA", "GIORNO", "DAG", "GÜN", "DEN"
 const WEEK_LABELS = ["WEEK", "SEM", "W", "SEM", "SETT", "WK", "HF", "TÝD", "SEM", "ΕΒΔ", "V", "TYDZ", "TÝŽ", "TUẦN", "SĂPT", "SETM", "UKE", "НЕД", "NÄD", "AST", "VK", "UGE", "SAV", "TED", "HÉT", "TJ", "SCHT", "NED", "NED", "周", "MING", "ТИЖ", "WNOS", "SEM", "週", "주", "שב"];
 const BATTERY_LABELS = ["BATTERY", "BATTERIE", "AKKU", "BATERÍA", "BATTERIA", "BATTERIJ", "PİL", "BATTERY", "BATERIA", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "ЗАРЯД", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "电量", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "バッテリー", "배터리", "BATTERY"];
 const HUMIDITY_LABELS = ["HUMIDITY", "HUMIDITÉ", "FEUCHT", "HUMEDAD", "UMIDITÀ", "VOCHT", "NEM", "HUMIDITY", "UMIDADE", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "ВЛАЖН", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "습도", "HUMIDITY"];
-const DEW_LABELS = ["DEW", "ROSÉE", "TAU", "ROCÍO", "RUGIADA", "DAUW", "ÇİĞ", "DEW", "ORVALHO", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "РОСА", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "DEW", "露点", "DEW", "DEW", "DEW", "DEW", "露点", "이슬점", "DEW"];
+const DPT_LABELS = ["DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT"];
 const RISE_LABELS = ["RISE", "LEVER", "AUFGANG", "SALIDA", "ALBA", "OPKOMST", "DOĞUŞ", "RISE", "NASCER", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "ВОСХОД", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "日出", "RISE", "RISE", "RISE", "RISE", "日の出", "일출", "RISE"];
 const SET_LABELS = ["SET", "COUCHER", "UNTERGANG", "PUESTA", "TRAMONTO", "ONDER", "BATIŞ", "SET", "PÔR", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "ЗАХОД", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "日落", "SET", "SET", "SET", "SET", "日の入", "일몰", "SET"];
 const RAIN_LABELS = ["RAIN", "PLUIE", "REGEN", "LLUVIA", "PIOGGIA", "REGEN", "YAĞMUR", "RAIN", "CHUVA", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "ДОЖДЬ", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "비", "RAIN"];
@@ -28,7 +28,7 @@ const TRANSLATIONS: Record<string, string[]> = {
   WEEK: WEEK_LABELS,
   BATTERY: BATTERY_LABELS,
   HUMIDITY: HUMIDITY_LABELS,
-  DEW: DEW_LABELS,
+  DPT: DPT_LABELS,
   RISE: RISE_LABELS,
   SET: SET_LABELS,
   RAIN: RAIN_LABELS,
@@ -72,6 +72,18 @@ const dayOfYear = (d: Date): number => {
   return Math.floor((d.getTime() - start.getTime()) / 86400000);
 };
 
+const sampleNextSolarEvent = (now: Date, idx: number) => {
+  const currentMinute = now.getHours() * 60 + now.getMinutes();
+  const sunriseMinute = 6 * 60 + 42;
+  const sunsetMinute = 18 * 60 + 18;
+  const isSunriseNext = currentMinute < sunriseMinute || currentMinute >= sunsetMinute;
+
+  return {
+    label: isSunriseNext ? TRANSLATIONS.RISE[idx] : TRANSLATIONS.SET[idx],
+    time: isSunriseNext ? '6:42' : '18:18',
+  };
+};
+
 // Decimal separator per language (mirrors src/c/languages.c decimalSeparator[]).
 const DECIMAL_SEPARATORS: string[] = [
     /*  0 en */ '.', /*  1 fr */ ',', /*  2 de */ ',', /*  3 es */ ',',
@@ -99,6 +111,7 @@ export const renderPreview = (
   if (!formatStr) return '';
   const idx = safeIdx(lang);
   const now = new Date();
+  const nextSolar = sampleNextSolarEvent(now, idx);
 
   // Expand the {local_date} super-token first so its inner tokens fall
   // through to the normal substitution loop. Mirrors widgets.c behavior.
@@ -128,6 +141,9 @@ export const renderPreview = (
     // Solar / weather (PKJS-side)
     '{sunrise}': '6:42',
     '{sunset}': '18:18',
+    '{next_solar}': `${nextSolar.label} ${nextSolar.time}`,
+    '{next_solar_label}': nextSolar.label,
+    '{next_solar_time}': nextSolar.time,
     '{temp}': isImperial ? '64' : '18',
     '{thi}': isImperial ? '72' : '22',
     '{tlo}': isImperial ? '57' : '14',

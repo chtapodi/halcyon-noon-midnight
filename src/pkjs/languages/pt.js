@@ -51,7 +51,7 @@ module.exports = {
     "WIND_IMPERIAL": "MPH",
     "BATTERY": "BATERIA",
     "HUMIDITY": "UMIDADE",
-    "DEW": "ORVALHO",
+    "DPT": "DPT",
     "RISE": "NASCER",
     "SET": "PÔR",
     "RAIN": "CHUVA",

@@ -26,8 +26,7 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   { value: '{t:WEEK} {week_of_year}', label: 'Week Number', category: 'Date & Time' },
   { value: '{year}', label: 'Year', category: 'Date & Time' },
   // Solar
-  { value: '{t:RISE} {sunrise}', label: 'Sunrise Time', category: 'Solar' },
-  { value: '{t:SET} {sunset}', label: 'Sunset Time', category: 'Solar' },
+  { value: '{next_solar}', label: 'Next Sunrise/Sunset', category: 'Solar' },
   // Health
   { value: '{steps} {t:STEPS}', label: 'Steps', category: 'Health' },
   { value: '{dist} {dist_unit}', label: 'Distance Walked', category: 'Health' },
@@ -39,7 +38,7 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   { value: '{hum}% {t:HUMIDITY}', label: 'Humidity', category: 'Weather' },
   { value: '{wind} {wind_unit} {wind_dir}', label: 'Wind', category: 'Weather' },
   { value: '{t:UV} {uv}', label: 'UV Index', category: 'Weather' },
-  { value: '{dew}° {t:DEW}', label: 'Dew Point', category: 'Weather' },
+  { value: '{dew}° {t:DPT}', label: 'Dew Point', category: 'Weather' },
   { value: '{t:RAIN} {pop}%', label: 'Today\'s Chance of Rain', category: 'Weather' },
   // Custom
   { value: '__custom__', label: 'Custom…', category: 'Custom' },

@@ -39,6 +39,30 @@ function formatMinutes(minutes, use24h) {
   return h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
 }
 
+function getNextSolarEvent(solar, use24h, labels) {
+  if (!solar) {
+    return {
+      label: '--',
+      time: '--:--',
+      text: '-- --:--'
+    };
+  }
+
+  var now = new Date();
+  var currentMinute = now.getHours() * 60 + now.getMinutes();
+  var sunriseDelta = (solar.sunriseMinute - currentMinute + 24 * 60) % (24 * 60);
+  var sunsetDelta = (solar.sunsetMinute - currentMinute + 24 * 60) % (24 * 60);
+  var isSunriseNext = sunriseDelta < sunsetDelta;
+  var label = isSunriseNext ? (labels.RISE || 'RISE') : (labels.SET || 'SET');
+  var time = formatMinutes(isSunriseNext ? solar.sunriseMinute : solar.sunsetMinute, use24h);
+
+  return {
+    label: label,
+    time: time,
+    text: label + ' ' + time
+  };
+}
+
 // ---- Pass 1: token substitution ----
 
 /**
@@ -55,11 +79,19 @@ function applyJsTokens(formatStr, weather, solar, isImperial, use24h, lang) {
 
   // Solar tokens
   if (solar) {
+    var nextSolar = getNextSolarEvent(solar, use24h, L.labels);
     result = result.replace('{sunrise}', formatMinutes(solar.sunriseMinute, use24h));
     result = result.replace('{sunset}', formatMinutes(solar.sunsetMinute, use24h));
+    result = result.replace('{next_solar}', nextSolar.text);
+    result = result.replace('{next_solar_label}', nextSolar.label);
+    result = result.replace('{next_solar_time}', nextSolar.time);
   } else {
+    var nextSolarPlaceholder = getNextSolarEvent(null, use24h, L.labels);
     result = result.replace('{sunrise}', '--:--');
     result = result.replace('{sunset}', '--:--');
+    result = result.replace('{next_solar}', nextSolarPlaceholder.text);
+    result = result.replace('{next_solar_label}', nextSolarPlaceholder.label);
+    result = result.replace('{next_solar_time}', nextSolarPlaceholder.time);
   }
 
   // Weather tokens

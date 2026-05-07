@@ -218,8 +218,8 @@ export const SettingsPage: React.FC = () => {
 
       <Section title="General">
         <Select
-          label="Language"
-          description="Controls language and format for certain widgets"
+          label="Language (Experimental)"
+          description="Controls language and formatting for widgets"
           messageKey="SETTING_LANGUAGE"
           options={[
             { label: 'English', value: 0 },
