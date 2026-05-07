@@ -6,21 +6,21 @@ const LOCALE_BY_INDEX: string[] = [
   'en', 'fr', 'de', 'es', 'it', 'nl', 'tr', 'cs', 'pt', 'el',
   'sv', 'pl', 'sk', 'vi', 'ro', 'ca', 'no', 'ru', 'et', 'eu',
   'fi', 'da', 'lt', 'sl', 'hu', 'hr', 'ga', 'lv', 'sr', 'zh-CN',
-  'id', 'uk', 'cy', 'gl', 'ja', 'ko', 'he',
+  'id', 'uk', 'cy', 'gl', 'ja', 'ko', 'he', 'en-GB',
 ];
 
 // Short/uppercase labels per language, mirroring src/pkjs/languages.js LABELS.
 // Used for {steps_label}, {day_label}, {week_label}, {dist_unit}, {wind_unit}.
-const STEPS_LABELS = ["STEPS", "PAS", "SCHRITTE", "PASOS", "PASSI", "STAPPEN", "ADIMLAR", "KROKY", "PASSOS", "ΒΗΜΑΤΑ", "STEG", "KROKI", "KROKY", "BƯỚC", "PAȘI", "PASSOS", "SKRITT", "ШАГИ", "SAMMUD", "URRATSAK", "ASKELTA", "TRIN", "ŽINGSNIAI", "KORAKI", "LÉPÉSEK", "KORACI", "CÉIMEANNA", "SOĻI", "KORACI", "步数", "LANGKAH", "КРОКИ", "CAMAU", "PASOS", "歩数", "걸음", "צעדים"];
-const DAY_LABELS = ["DAY", "JOUR", "TAG", "DÍA", "GIORNO", "DAG", "GÜN", "DEN", "DIA", "ΗΜΈ", "DAG", "DZIEŃ", "DEŇ", "NGÀY", "ZI", "DIA", "DAG", "ДЕН", "PÄEV", "EGUN", "PÄIVÄ", "DAG", "PARA", "DAN", "NAP", "DAN", "LÁ", "DIENA", "DAN", "天", "HARI", "ДЕНЬ", "DIWR", "DÍA", "日", "일", "יום"];
-const WEEK_LABELS = ["WEEK", "SEM", "W", "SEM", "SETT", "WK", "HF", "TÝD", "SEM", "ΕΒΔ", "V", "TYDZ", "TÝŽ", "TUẦN", "SĂPT", "SETM", "UKE", "НЕД", "NÄD", "AST", "VK", "UGE", "SAV", "TED", "HÉT", "TJ", "SCHT", "NED", "NED", "周", "MING", "ТИЖ", "WNOS", "SEM", "週", "주", "שב"];
-const BATTERY_LABELS = ["BATTERY", "BATTERIE", "AKKU", "BATERÍA", "BATTERIA", "BATTERIJ", "PİL", "BATTERY", "BATERIA", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "ЗАРЯД", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "电量", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "バッテリー", "배터리", "BATTERY"];
-const HUMIDITY_LABELS = ["HUMIDITY", "HUMIDITÉ", "FEUCHT", "HUMEDAD", "UMIDITÀ", "VOCHT", "NEM", "HUMIDITY", "UMIDADE", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "ВЛАЖН", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "습도", "HUMIDITY"];
-const DPT_LABELS = ["DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT"];
-const RISE_LABELS = ["RISE", "LEVER", "AUFGANG", "SALIDA", "ALBA", "OPKOMST", "DOĞUŞ", "RISE", "NASCER", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "ВОСХОД", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "日出", "RISE", "RISE", "RISE", "RISE", "日の出", "일출", "RISE"];
-const SET_LABELS = ["SET", "COUCHER", "UNTERGANG", "PUESTA", "TRAMONTO", "ONDER", "BATIŞ", "SET", "PÔR", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "ЗАХОД", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "日落", "SET", "SET", "SET", "SET", "日の入", "일몰", "SET"];
-const RAIN_LABELS = ["RAIN", "PLUIE", "REGEN", "LLUVIA", "PIOGGIA", "REGEN", "YAĞMUR", "RAIN", "CHUVA", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "ДОЖДЬ", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "비", "RAIN"];
-const UV_LABELS = ["UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV"];
+const STEPS_LABELS = ["STEPS", "PAS", "SCHRITTE", "PASOS", "PASSI", "STAPPEN", "ADIMLAR", "KROKY", "PASSOS", "ΒΗΜΑΤΑ", "STEG", "KROKI", "KROKY", "BƯỚC", "PAȘI", "PASSOS", "SKRITT", "ШАГИ", "SAMMUD", "URRATSAK", "ASKELTA", "TRIN", "ŽINGSNIAI", "KORAKI", "LÉPÉSEK", "KORACI", "CÉIMEANNA", "SOĻI", "KORACI", "步数", "LANGKAH", "КРОКИ", "CAMAU", "PASOS", "歩数", "걸음", "צעדים", "STEPS"];
+const DAY_LABELS = ["DAY", "JOUR", "TAG", "DÍA", "GIORNO", "DAG", "GÜN", "DEN", "DIA", "ΗΜΈ", "DAG", "DZIEŃ", "DEŇ", "NGÀY", "ZI", "DIA", "DAG", "ДЕН", "PÄEV", "EGUN", "PÄIVÄ", "DAG", "PARA", "DAN", "NAP", "DAN", "LÁ", "DIENA", "DAN", "天", "HARI", "ДЕНЬ", "DIWR", "DÍA", "日", "일", "יום", "DAY"];
+const WEEK_LABELS = ["WEEK", "SEM", "W", "SEM", "SETT", "WK", "HF", "TÝD", "SEM", "ΕΒΔ", "V", "TYDZ", "TÝŽ", "TUẦN", "SĂPT", "SETM", "UKE", "НЕД", "NÄD", "AST", "VK", "UGE", "SAV", "TED", "HÉT", "TJ", "SCHT", "NED", "NED", "周", "MING", "ТИЖ", "WNOS", "SEM", "週", "주", "שב", "WEEK"];
+const BATTERY_LABELS = ["BATTERY", "BATTERIE", "AKKU", "BATERÍA", "BATTERIA", "BATTERIJ", "PİL", "BATTERY", "BATERIA", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "ЗАРЯД", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "电量", "BATTERY", "BATTERY", "BATTERY", "BATTERY", "バッテリー", "배터리", "BATTERY", "BATTERY"];
+const HUMIDITY_LABELS = ["HUMIDITY", "HUMIDITÉ", "FEUCHT", "HUMEDAD", "UMIDITÀ", "VOCHT", "NEM", "HUMIDITY", "UMIDADE", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "ВЛАЖН", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "HUMIDITY", "HUMIDITY", "HUMIDITY", "HUMIDITY", "湿度", "습도", "HUMIDITY", "HUMIDITY"];
+const DPT_LABELS = ["DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT", "DPT"];
+const RISE_LABELS = ["RISE", "LEVER", "AUFGANG", "SALIDA", "ALBA", "OPKOMST", "DOĞUŞ", "RISE", "NASCER", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "ВОСХОД", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "RISE", "日出", "RISE", "RISE", "RISE", "RISE", "日の出", "일출", "RISE", "RISE"];
+const SET_LABELS = ["SET", "COUCHER", "UNTERGANG", "PUESTA", "TRAMONTO", "ONDER", "BATIŞ", "SET", "PÔR", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "ЗАХОД", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "SET", "日落", "SET", "SET", "SET", "SET", "日の入", "일몰", "SET", "SET"];
+const RAIN_LABELS = ["RAIN", "PLUIE", "REGEN", "LLUVIA", "PIOGGIA", "REGEN", "YAĞMUR", "RAIN", "CHUVA", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "ДОЖДЬ", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "RAIN", "RAIN", "RAIN", "RAIN", "雨", "비", "RAIN", "RAIN"];
+const UV_LABELS = ["UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV"];
 
 const TRANSLATIONS: Record<string, string[]> = {
   STEPS: STEPS_LABELS,
@@ -37,13 +37,13 @@ const TRANSLATIONS: Record<string, string[]> = {
 // Sample weather condition (WMO code 2, "Partly Cloudy") for previews. Mirrors
 // src/pkjs/languages.js WEATHER_CODES[2]. Only one condition is needed since
 // the preview never sees real weather data.
-const SAMPLE_CONDITION = ["PARTLY CLOUDY", "PART. NUAGEUX", "TEILW. BEWÖLKT", "PARCIALMENTE NUB.", "PARZ. NUVOLOSO", "LICHT BEWÖLKT", "PARÇALI BULUTLU", "POLOJASNO", "PARCIAL. NUBLADO", "ΜΕΡΙΚΩΣ ΣΥΝΝΕΦΙΑΣΜΕΝΟΣ", "HALVKLART", "CZĘŚCIOWO ZACHMURZONE", "POLOJASNO", "CÓ MÂY", "PARȚIAL NOROS", "PARCIALMENT NUBOL", "LETTESKYET", "ПЕРЕМ. ОБЛАЧНОСТЬ", "VAHELDUV PILVISUS", "HODEI KERTSUAK", "PUOLIPILVISTÄ", "LETTESKYET", "MAŽAITIKIMYBE", "DELNO OBLAČNO", "RÉSZLEGESEN FELHŐS", "DJELOMIČNO OBLAČNO", "PÁIRTEACH SCALTA", "DAĻĒJI MĀKOŅAINS", "DELIMIČNO OBLAČNO", "多云", "BERAWAN SEBAGIAN", "МІНЛИВА ХМАРНІСТЬ", "RHANNOL GYMOGLOG", "PARCIALMENTE NUBRADO", "晴れ時々曇り", "구름 조금", "מעונן חלקית"];
+const SAMPLE_CONDITION = ["PARTLY CLOUDY", "PART. NUAGEUX", "TEILW. BEWÖLKT", "PARCIALMENTE NUB.", "PARZ. NUVOLOSO", "LICHT BEWÖLKT", "PARÇALI BULUTLU", "POLOJASNO", "PARCIAL. NUBLADO", "ΜΕΡΙΚΩΣ ΣΥΝΝΕΦΙΑΣΜΕΝΟΣ", "HALVKLART", "CZĘŚCIOWO ZACHMURZONE", "POLOJASNO", "CÓ MÂY", "PARȚIAL NOROS", "PARCIALMENT NUBOL", "LETTESKYET", "ПЕРЕМ. ОБЛАЧНОСТЬ", "VAHELDUV PILVISUS", "HODEI KERTSUAK", "PUOLIPILVISTÄ", "LETTESKYET", "MAŽAITIKIMYBE", "DELNO OBLAČNO", "RÉSZLEGESEN FELHŐS", "DJELOMIČNO OBLAČNO", "PÁIRTEACH SCALTA", "DAĻĒJI MĀKOŅAINS", "DELIMIČNO OBLAČNO", "多云", "BERAWAN SEBAGIAN", "МІНЛИВА ХМАРНІСТЬ", "RHANNOL GYMOGLOG", "PARCIALMENTE NUBRADO", "晴れ時々曇り", "구름 조금", "מעונן חלקית", "PARTLY CLOUDY"];
 
 // Sample wind direction (NW, cardinal index 7) per language. Mirrors index 7 of
 // each row in src/pkjs/languages.js CARDINALS.
-const SAMPLE_CARDINAL = ["NW", "NO", "NW", "NO", "NO", "NW", "KB", "SZ", "NO", "ΒΔ", "NV", "NW", "SZ", "TB", "NV", "NO", "NV", "СЗ", "LO", "IM", "LU", "NV", "ŠV", "SZ", "ÉNY", "SZ", "TI", "ZR", "SZ", "西北", "BL", "ПнЗ", "GG", "NO", "北西", "북서", "צמ׳"];
+const SAMPLE_CARDINAL = ["NW", "NO", "NW", "NO", "NO", "NW", "KB", "SZ", "NO", "ΒΔ", "NV", "NW", "SZ", "TB", "NV", "NO", "NV", "СЗ", "LO", "IM", "LU", "NV", "ŠV", "SZ", "ÉNY", "SZ", "TI", "ZR", "SZ", "西北", "BL", "ПнЗ", "GG", "NO", "北西", "북서", "צמ׳", "NW"];
 
-const safeIdx = (i: number) => (i >= 0 && i < 37 ? i : 0);
+const safeIdx = (i: number) => (i >= 0 && i < 38 ? i : 0);
 
 const intlFmt = (date: Date, lang: number, opts: Intl.DateTimeFormatOptions): string => {
   const locale = LOCALE_BY_INDEX[safeIdx(lang)];
@@ -95,7 +95,7 @@ const DECIMAL_SEPARATORS: string[] = [
     /* 24 hu */ ',', /* 25 hr */ ',', /* 26 ga */ '.', /* 27 lv */ ',',
     /* 28 sr */ ',', /* 29 zh */ '.', /* 30 id */ ',', /* 31 uk */ ',',
     /* 32 cy */ '.', /* 33 gl */ ',', /* 34 ja */ '.', /* 35 ko */ '.',
-    /* 36 he */ '.',
+    /* 36 he */ '.', /* 37 en-GB */ '.',
 ];
 
 export const getDecimalSeparator = (lang: number): string =>

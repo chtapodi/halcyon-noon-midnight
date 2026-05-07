@@ -2,7 +2,7 @@
 #include <pebble.h>
 
 /* day names in many different languages! */
-const char dayNames[37][7][8] = {
+const char dayNames[38][7][8] = {
     {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"},
     {"DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"},
     {"SO", "MO", "DI", "MI", "DO", "FR", "SA"},
@@ -39,10 +39,11 @@ const char dayNames[37][7][8] = {
     {"DOM", "LUN", "MAR", "MER", "XOV", "VEN", "SAB"},
     {"日", "月", "火", "水", "木", "金", "土"},
     {"일", "월", "화", "수", "목", "금", "토"},
-    {"א", "ב", "ג", "ד", "ה", "ו", "ש"}};
+    {"א", "ב", "ג", "ד", "ה", "ו", "ש"},
+    {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"}};
 
 /* month names in many different languages! */
-const char monthNames[37][12][8] = {
+const char monthNames[38][12][8] = {
     {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT",
      "NOV", "DEC"},
     {"JAN", "FÉV", "MAR", "AVR", "MAI", "JUI", "JUL", "AOÛ", "SEP", "OCT",
@@ -115,12 +116,14 @@ const char monthNames[37][12][8] = {
     {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월",
      "11월", "12월"},
     {"ינו", "פבר", "מרץ", "אפר", "מאי", "יונ", "יול", "אוג", "ספט", "אוק",
-     "נוב", "דצמ"}};
+     "נוב", "דצמ"},
+    {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT",
+     "NOV", "DEC"}};
 
 /* Per-language idiomatic date format string. Used by widgets.c to expand the
    {local_date} super-token at render time. Mirrored in
    config-page/src/data/dateFormats.ts (preview only) — keep both in sync. */
-const char *const defaultDateFormat[37] = {
+const char *const defaultDateFormat[38] = {
     /*  0 en */ "{day_name}, {month_name} {day0}",
     /*  1 fr */ "{day_name} {day0} {month_name}",
     /*  2 de */ "{day_name}, {day0}. {month_name}",
@@ -157,11 +160,12 @@ const char *const defaultDateFormat[37] = {
     /* 33 gl */ "{day_name} {day0} {month_name}",
     /* 34 ja */ "{month_num}月{day}日 ({day_name})",
     /* 35 ko */ "{month_num}월 {day}일 ({day_name})",
-    /* 36 he */ "{day_name} {day0} {month_name}"};
+    /* 36 he */ "{day_name} {day0} {month_name}",
+    /* 37 en-GB */ "{day_name}, {day0} {month_name}"};
 
 /* Per-language decimal separator. Most European languages use ',';
    English, Asian languages, Irish, Welsh, Hebrew use '.'. */
-const char decimalSeparator[37] = {
+const char decimalSeparator[38] = {
     /*  0 en */ '.', /*  1 fr */ ',', /*  2 de */ ',', /*  3 es */ ',',
     /*  4 it */ ',', /*  5 nl */ ',', /*  6 tr */ ',', /*  7 cs */ ',',
     /*  8 pt */ ',', /*  9 el */ ',', /* 10 sv */ ',', /* 11 pl */ ',',
@@ -171,6 +175,5 @@ const char decimalSeparator[37] = {
     /* 24 hu */ ',', /* 25 hr */ ',', /* 26 ga */ '.', /* 27 lv */ ',',
     /* 28 sr */ ',', /* 29 zh */ '.', /* 30 id */ ',', /* 31 uk */ ',',
     /* 32 cy */ '.', /* 33 gl */ ',', /* 34 ja */ '.', /* 35 ko */ '.',
-    /* 36 he */ '.'};
-
+    /* 36 he */ '.', /* 37 en-GB */ '.'};
 

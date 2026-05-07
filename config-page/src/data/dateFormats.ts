@@ -39,4 +39,5 @@ export const DEFAULT_DATE_FORMATS: string[] = [
     /* 34 ja */ "{month_num}月{day}日 ({day_name})",
     /* 35 ko */ "{month_num}월 {day}일 ({day_name})",
     /* 36 he */ "{day_name} {day0} {month_name}",
+    /* 37 en-GB */ "{day_name}, {day0} {month_name}",
 ];

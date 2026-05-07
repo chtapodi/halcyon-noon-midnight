@@ -40,7 +40,8 @@ var LANG_ORDER = [
   'gl',
   'ja',
   'ko',
-  'he'
+  'he',
+  'en_gb'
 ];
 
 var LANGUAGES = {
@@ -80,7 +81,8 @@ var LANGUAGES = {
   gl: require('./languages/gl'),
   ja: require('./languages/ja'),
   ko: require('./languages/ko'),
-  he: require('./languages/he')
+  he: require('./languages/he'),
+  en_gb: require('./languages/en_gb')
 };
 
 function getLang(idx) {
