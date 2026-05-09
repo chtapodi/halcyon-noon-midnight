@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "EGUNSENTI",
     "SET": "ILUNABAR",
     "RAIN": "EURIA",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

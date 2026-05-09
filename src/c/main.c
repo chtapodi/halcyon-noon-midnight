@@ -325,6 +325,14 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_clock();
 }
 
+#if defined(PBL_HEALTH)
+static void health_handler(HealthEventType event, void *context) {
+  if (event == HealthEventHeartRateUpdate) {
+    update_clock();
+  }
+}
+#endif
+
 static void update_request_timer_callback(void *data);
 
 static void schedule_next_update_request(uint32_t delay_ms) {
@@ -378,11 +386,20 @@ static void init() {
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 #endif
 
+#if defined(PBL_HEALTH)
+  health_service_events_subscribe(health_handler, NULL);
+#endif
+
   // Schedule initial update request with short delay to give PKJS time to start
   schedule_next_update_request(UPDATE_REQUEST_INITIAL_DELAY_MS);
 }
 
-static void deinit() { window_destroy(mainWindow); }
+static void deinit() {
+#if defined(PBL_HEALTH)
+  health_service_events_unsubscribe();
+#endif
+  window_destroy(mainWindow);
+}
 
 int main(void) {
   init();

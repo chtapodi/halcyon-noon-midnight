@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "NAPKELTE",
     "SET": "NAPNYUGTA",
     "RAIN": "ESŐ",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

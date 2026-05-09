@@ -11,8 +11,8 @@ export const WidgetSelector: React.FC = () => {
     const isImperial = Number(settings.SETTING_TEMP_UNIT) === 1;
     const isRound = capabilities.ROUND && !capabilities.RECT;
     const widgetOptions = React.useMemo(
-        () => getWidgetOptions(lang, !!capabilities.HEALTH, isImperial),
-        [lang, capabilities.HEALTH, isImperial],
+        () => getWidgetOptions(lang, !!capabilities.HEALTH, !!capabilities.HRM, isImperial),
+        [lang, capabilities.HEALTH, capabilities.HRM, isImperial],
     );
 
     return (

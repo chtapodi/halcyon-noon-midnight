@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "日出",
     "SET": "日落",
     "RAIN": "雨",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "次/分"
   }
 };

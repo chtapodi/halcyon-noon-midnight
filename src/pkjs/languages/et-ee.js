@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "PÄIK. TÕUS",
     "SET": "LOOJANG",
     "RAIN": "VIHM",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

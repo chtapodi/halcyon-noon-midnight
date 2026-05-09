@@ -149,6 +149,19 @@ void widget_get_text(const char *format_string, char *buf, int buf_len) {
           temp[0] = '\0';
 #endif
           matched = true;
+        } else if (strncmp(token, "hr", token_len) == 0 && token_len == 2) {
+#if defined(PBL_HEALTH)
+          HealthValue bpm =
+              health_service_peek_current_value(HealthMetricHeartRateBPM);
+          if (bpm > 0) {
+            snprintf(temp, sizeof(temp), "%d", (int)bpm);
+          } else {
+            snprintf(temp, sizeof(temp), "--");
+          }
+#else
+          temp[0] = '\0';
+#endif
+          matched = true;
         } else if (strncmp(token, "batt", token_len) == 0 && token_len == 4) {
           BatteryChargeState state = battery_state_service_peek();
           snprintf(temp, sizeof(temp), "%d", state.charge_percent);

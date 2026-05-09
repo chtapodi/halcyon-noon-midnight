@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "SOL OPP",
     "SET": "SOL NED",
     "RAIN": "REGN",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "TERBIT",
     "SET": "TERBENAM",
     "RAIN": "HUJAN",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

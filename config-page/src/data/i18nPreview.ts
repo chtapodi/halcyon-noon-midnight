@@ -21,6 +21,7 @@ const RISE_LABELS = ["RISE", "LEVER", "AUFGANG", "SALIDA", "ALBA", "OPKOMST", "D
 const SET_LABELS = ["SET", "COUCHER", "UNTERGANG", "PUESTA", "TRAMONTO", "ONDER", "BATIŞ", "ZÁPAD", "PÔR", "ΔΥΣΗ", "NEDGÅNG", "ZACHÓD", "ZÁPAD", "LẶN", "APUS", "POSTA", "SOL NED", "ЗАХОД", "LOOJANG", "ILUNABAR", "AUR. LASKU", "SOL NED", "LEIDŽIASI", "ZAHOD", "NAPNYUGTA", "ZALAZAK", "DUL SÍOS", "RIET", "ZALAZAK", "日落", "TERBENAM", "ЗАХІД", "MACHLUD", "POSTA", "日没", "일몰", "שקיעה", "SET"];
 const RAIN_LABELS = ["RAIN", "PLUIE", "REGEN", "LLUVIA", "PIOGGIA", "REGEN", "YAĞMUR", "DÉŠŤ", "CHUVA", "ΒΡΟΧΗ", "REGN", "DESZCZ", "DÁŽĎ", "MƯA", "PLOAIE", "PLUJA", "REGN", "ДОЖДЬ", "VIHM", "EURIA", "SADE", "REGN", "LIETUS", "DEŽ", "ESŐ", "KIŠA", "BÁISTEACH", "LIETUS", "KIŠA", "雨", "HUJAN", "ДОЩ", "GLAW", "CHUVIA", "雨", "비", "גשם", "RAIN"];
 const UV_LABELS = ["UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV", "UV"];
+const BPM_LABELS = ["BPM", "BPM", "BPM", "PPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "УД/МИН", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "BPM", "次/分", "BPM", "УД/ХВ", "BPM", "BPM", "拍/分", "BPM", "פעימות", "BPM"];
 
 const TRANSLATIONS: Record<string, string[]> = {
   STEPS: STEPS_LABELS,
@@ -33,6 +34,7 @@ const TRANSLATIONS: Record<string, string[]> = {
   SET: SET_LABELS,
   RAIN: RAIN_LABELS,
   UV: UV_LABELS,
+  BPM: BPM_LABELS,
 };
 // Sample weather condition (WMO code 3, "Cloudy/Overcast") for previews. Mirrors
 // src/pkjs/languages.js WEATHER_CODES[3]. Only one condition is needed since
@@ -137,6 +139,7 @@ export const renderPreview = (
     '{steps}': '1234',
     '{dist}': '0' + dec + '8',
     '{dist_unit}': isImperial ? 'MI' : 'KM',
+    '{hr}': '72',
     '{batt}': '85',
     // Solar / weather (PKJS-side)
     '{sunrise}': '6:42',

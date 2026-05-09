@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "RĂSĂRIT",
     "SET": "APUS",
     "RAIN": "PLOAIE",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

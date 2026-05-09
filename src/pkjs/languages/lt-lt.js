@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "TEKA",
     "SET": "LEIDŽIASI",
     "RAIN": "LIETUS",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

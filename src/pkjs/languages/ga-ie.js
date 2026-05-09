@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "ÉIRÍ",
     "SET": "DUL SÍOS",
     "RAIN": "BÁISTEACH",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

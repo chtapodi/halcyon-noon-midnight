@@ -51,6 +51,7 @@ module.exports = {
     "RISE": "CODI",
     "SET": "MACHLUD",
     "RAIN": "GLAW",
-    "UV": "UV"
+    "UV": "UV",
+    "BPM": "BPM"
   }
 };

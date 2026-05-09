@@ -30,6 +30,7 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   // Health
   { value: '{steps} {t:STEPS}', label: 'Steps', category: 'Health' },
   { value: '{dist} {dist_unit}', label: 'Distance Walked', category: 'Health' },
+  { value: '{hr} {t:BPM}', label: 'Current Heart Rate', category: 'Health' },
   // Device
   { value: '{t:BATTERY} {batt}%', label: 'Battery %', category: 'Device' },
   // Weather
@@ -45,10 +46,17 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
 ];
 
 const HEALTH_LABELS = new Set(['Steps', 'Distance Walked']);
+const HRM_LABELS = new Set(['Current Heart Rate']);
 
-export const getWidgetOptions = (lang: number, hasHealth: boolean, isImperial: boolean = false): WidgetOption[] => {
+export const getWidgetOptions = (
+  lang: number,
+  hasHealth: boolean,
+  hasHrm: boolean,
+  isImperial: boolean = false,
+): WidgetOption[] => {
   return WIDGET_TEMPLATES
     .filter((t) => hasHealth || !HEALTH_LABELS.has(t.label))
+    .filter((t) => hasHrm || !HRM_LABELS.has(t.label))
     .map((t) => {
       const preview = t.value && t.value !== '__custom__' ? renderPreview(t.value, lang, isImperial) : '';
       return { value: t.value, label: t.label, preview, category: t.category };
