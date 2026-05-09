@@ -9,6 +9,7 @@ export const WidgetSelector: React.FC = () => {
     const { settings } = useConfig();
     const lang = Number(settings.SETTING_LANGUAGE) || 0;
     const isImperial = Number(settings.SETTING_TEMP_UNIT) === 1;
+    const isRound = capabilities.ROUND && !capabilities.RECT;
     const widgetOptions = React.useMemo(
         () => getWidgetOptions(lang, !!capabilities.HEALTH, isImperial),
         [lang, capabilities.HEALTH, isImperial],
@@ -16,7 +17,7 @@ export const WidgetSelector: React.FC = () => {
 
     return (
         <div className="widget-selector-container">
-            <div className="widget-selector-preview">
+            <div className={`widget-selector-preview ${isRound ? 'round' : 'rect'}`}>
                 <WatchPreview />
             </div>
             <div className="widget-selector-controls">

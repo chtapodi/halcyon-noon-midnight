@@ -485,16 +485,19 @@ input[type='checkbox'] {
 
 /* Watch Preview Component */
 .halite-watch-preview {
-  width: 144px;
-  height: 168px;
+  width: 100%;
+  height: 100%;
   background-color: #000;
 }
 
 .halite-watch-face {
   position: relative;
-  width: 144px;
-  height: 168px;
   overflow: hidden;
+}
+
+.halite-watch-preview-container.round,
+.halite-watch-face.round {
+  border-radius: 50%;
 }
 
 .halite-watch-preview-content {
@@ -508,6 +511,10 @@ input[type='checkbox'] {
   pointer-events: none;
   text-align: center;
   z-index: 10;
+}
+
+.halite-watch-face.round .halite-watch-preview-content {
+  padding: 34px 28px;
 }
 
 .halite-watch-preview-widget {
@@ -580,6 +587,10 @@ input[type='checkbox'] {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
+.halite-theme-card.round {
+  width: 103px;
+}
+
 .halite-theme-card[data-selected="true"] .halite-theme-card-preview {
   box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--halite-orange);
 }
@@ -599,9 +610,17 @@ input[type='checkbox'] {
   border: 2px solid black;
 }
 
+.halite-theme-card-preview.round {
+  border-radius: 50%;
+}
+
 .halite-theme-card-preview .halite-watch-face {
   transform: scale(0.5);
   margin: -42px -36px;
+}
+
+.halite-theme-card-preview .halite-watch-face.round {
+  margin: -45px;
 }
 
 .halite-theme-card-label {
@@ -627,6 +646,12 @@ input[type='checkbox'] {
   color: var(--text-muted);
 }
 
+.halite-custom-icon.round {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
 .halite-custom-panel {
   display: flex;
   flex-direction: row;
@@ -644,6 +669,11 @@ input[type='checkbox'] {
   overflow: hidden;
   border: 4px solid black;
   box-shadow: var(--shadow-md);
+}
+
+.halite-custom-panel-preview.round,
+.widget-selector-preview.round {
+  border-radius: 50%;
 }
 
 .halite-custom-actions {

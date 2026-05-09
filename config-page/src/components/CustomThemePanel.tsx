@@ -3,7 +3,7 @@ import { Button } from 'react-aria-components';
 import { WatchPreview, WatchPreviewProps } from './WatchPreview';
 import { ImportThemeModal } from './ImportThemeModal';
 import { SavedTheme } from '../hooks/useSavedThemes';
-import { useConfig } from '../context/PebbleConfigContext';
+import { useCapabilities, useConfig } from '../context/PebbleConfigContext';
 import { Settings } from '../context/types';
 import { copyToClipboard } from '../utils/clipboard';
 
@@ -51,11 +51,13 @@ export const CustomThemePanel: React.FC<CustomThemePanelProps> = ({
   onSelectTheme,
 }) => {
   const { settings } = useConfig();
+  const capabilities = useCapabilities();
   const [importOpen, setImportOpen] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
 
   const isCustom = themeId === 'custom';
   const isSaved = !!savedTheme;
+  const isRound = capabilities.ROUND && !capabilities.RECT;
 
   const handleSave = () => {
     const theme = onSave(settings);
@@ -109,7 +111,7 @@ export const CustomThemePanel: React.FC<CustomThemePanelProps> = ({
 
   return (
     <div className="halite-custom-panel">
-      <div className="halite-custom-panel-preview">
+      <div className={`halite-custom-panel-preview ${isRound ? 'round' : 'rect'}`}>
         <WatchPreview
           overrideSettings={isSaved ? savedTheme!.settings : undefined}
           {...watchPreviewProps}

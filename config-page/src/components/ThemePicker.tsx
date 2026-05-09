@@ -1,5 +1,5 @@
 import React from 'react';
-import { useConfig } from '../context/PebbleConfigContext';
+import { useCapabilities, useConfig } from '../context/PebbleConfigContext';
 import { Settings } from '../context/types';
 import { FormItem } from './FormItem';
 import { GridList, GridListItem, Text } from 'react-aria-components';
@@ -15,7 +15,9 @@ export const ThemePicker: React.FC<{
   savedThemes?: SavedTheme[];
 }> = ({ label, messageKey, themes, watchPreviewProps, savedThemes = [] }) => {
   const { settings, updateSetting } = useConfig();
+  const capabilities = useCapabilities();
   const currentValue = settings[messageKey];
+  const isRound = capabilities.ROUND && !capabilities.RECT;
 
   const handleThemeChange = (themeId: string) => {
     updateSetting(messageKey, themeId);
@@ -70,10 +72,10 @@ export const ThemePicker: React.FC<{
         className="halite-theme-grid"
       >
         {(item) => (
-          <GridListItem id={item.id} className="halite-theme-card" textValue={item.name}>
-            <div className="halite-theme-card-preview">
+          <GridListItem id={item.id} className={`halite-theme-card ${isRound ? 'round' : 'rect'}`} textValue={item.name}>
+            <div className={`halite-theme-card-preview ${isRound ? 'round' : 'rect'}`}>
               {item.id === 'custom' ? (
-                <div className="halite-custom-icon">
+                <div className={`halite-custom-icon ${isRound ? 'round' : 'rect'}`}>
                   <img src={customIconUrl} alt="" width={40} height={38} />
                 </div>
               ) : (
