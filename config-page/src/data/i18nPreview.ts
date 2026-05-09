@@ -10,7 +10,7 @@ const LOCALE_BY_INDEX: string[] = [
 ];
 
 // Short/uppercase labels per language, mirroring src/pkjs/languages.js LABELS.
-// Used for {steps_label}, {day_label}, {week_label}, {dist_unit}, {wind_unit}.
+// Used for {steps_label}, {day_label}, {week_label}, and {t:KEY} labels.
 const STEPS_LABELS = ["STEPS", "PAS", "SCHRITTE", "PASOS", "PASSI", "STAPPEN", "ADIMLAR", "KROKY", "PASSOS", "ΒΗΜΑΤΑ", "STEG", "KROKI", "KROKY", "BƯỚC", "PAȘI", "PASSOS", "SKRITT", "ШАГИ", "SAMMUD", "URRATSAK", "ASKELTA", "TRIN", "ŽINGSNIAI", "KORAKI", "LÉPÉSEK", "KORACI", "CÉIMEANNA", "SOĻI", "KORACI", "步数", "LANGKAH", "КРОКИ", "CAMAU", "PASOS", "歩数", "걸음", "צעדים", "STEPS"];
 const DAY_LABELS = ["DAY", "JOUR", "TAG", "DÍA", "GIORNO", "DAG", "GÜN", "DEN", "DIA", "ΗΜΈ", "DAG", "DZIEŃ", "DEŇ", "NGÀY", "ZI", "DIA", "DAG", "ДЕН", "PÄEV", "EGUN", "PÄIVÄ", "DAG", "PARA", "DAN", "NAP", "DAN", "LÁ", "DIENA", "DAN", "天", "HARI", "ДЕНЬ", "DIWR", "DÍA", "日", "일", "יום", "DAY"];
 const WEEK_LABELS = ["WEEK", "SEM", "W", "SEM", "SETT", "WK", "HF", "TÝD", "SEM", "ΕΒΔ", "V", "TYDZ", "TÝŽ", "TUẦN", "SĂPT", "SETM", "UKE", "НЕД", "NÄD", "AST", "VK", "UGE", "SAV", "TED", "HÉT", "TJ", "SCHT", "NED", "NED", "周", "MING", "ТИЖ", "WNOS", "SEM", "週", "주", "שב", "WEEK"];

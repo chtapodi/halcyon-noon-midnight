@@ -45,15 +45,11 @@ module.exports = {
     "STEPS": "歩数",
     "WEEK": "週",
     "DAY": "日",
-    "DIST_METRIC": "KM",
-    "DIST_IMPERIAL": "MI",
-    "WIND_METRIC": "KM/H",
-    "WIND_IMPERIAL": "MPH",
     "BATTERY": "バッテリー",
     "HUMIDITY": "湿度",
-    "DPT": "DPT",
+    "DPT": "露点",
     "RISE": "日の出",
-    "SET": "日の入",
+    "SET": "日没",
     "RAIN": "雨",
     "UV": "UV"
   }

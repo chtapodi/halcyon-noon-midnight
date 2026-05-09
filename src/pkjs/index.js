@@ -115,7 +115,7 @@ function applyJsTokens(formatStr, weather, solar, isImperial, use24h, lang) {
     result = result.replace('{pop}', String(Math.round(weather.pop)));
     result = result.replace('{dew}', String(dew));
     result = result.replace('{temp_unit}', isImperial ? '°F' : '°C');
-    result = result.replace('{wind_unit}', isImperial ? L.labels.WIND_IMPERIAL : L.labels.WIND_METRIC);
+    result = result.replace('{wind_unit}', isImperial ? 'MPH' : 'KM/H');
     result = result.replace('{wind_dir}', Weather.getCardinal(weather.wind_dir, lang));
   } else {
     // No weather data yet — replace with placeholders so the watch shows something

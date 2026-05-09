@@ -32,9 +32,10 @@ if (!Array.isArray(LANG_ORDER) || LANG_ORDER.length === 0) {
   failures.push('LANG_ORDER: missing or empty');
 }
 
-var base = LANGUAGES.en;
+var baseCode = LANG_ORDER[0];
+var base = baseCode && LANGUAGES[baseCode];
 if (!base) {
-  failures.push('LANGUAGES.en: missing');
+  failures.push('LANGUAGES.' + (baseCode || '<first>') + ': missing');
 }
 
 var weatherKeys = base && base.weather ? sortedNumericKeys(base.weather) : [];
