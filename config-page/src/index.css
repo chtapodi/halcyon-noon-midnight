@@ -962,6 +962,16 @@ input[type='checkbox'] {
   gap: 8px;
 }
 
+.widget-selector-controls .widget-slot-label {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
 .widget-slot-label {
   font-size: 0.78rem;
   font-weight: 650;

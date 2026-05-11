@@ -36,10 +36,10 @@ const TRANSLATIONS: Record<string, string[]> = {
   UV: UV_LABELS,
   BPM: BPM_LABELS,
 };
-// Sample weather condition (WMO code 3, "Cloudy/Overcast") for previews. Mirrors
-// src/pkjs/languages.js WEATHER_CODES[3]. Only one condition is needed since
+// Sample weather condition (WMO code 0, "Clear") for previews. Mirrors
+// src/pkjs/languages.js WEATHER_CODES[0]. Only one condition is needed since
 // the preview never sees real weather data.
-const SAMPLE_CONDITION = ["OVERCAST", "COUVERT", "STARK BEWÖLKT", "NUBLADO", "COPERTO", "BEWÖLKT", "KAPALI", "ZATAŽENO", "ENCOBERTO", "ΝΕΦΕΛΩΔΗΣ", "MULET", "ZACHMURZONE", "ZATIAHNUTÉ", "NHIỀU MÂY", "NOROS", "COBERT", "OVERSKYET", "ПАСМУРНО", "PILVINE", "ESTALIA", "PILVISTÄ", "OVERSKYET", "APSINIAUKĘ", "OBLAČNO", "BORULT", "OBLAČNO", "SCALTA", "APMĀCIES", "OBLAČNO", "阴天", "MENDUNG", "ПОХМУРО", "CYMOGLOG", "NUBRADO", "曇り", "흐림", "מעונן", "OVERCAST"];
+const SAMPLE_CONDITION = ["CLEAR", "DÉGAGÉ", "KLAR", "DESPEJADO", "SERENO", "HELDER", "AÇIK", "JASNO", "LIMPO", "ΑΙΘΡΙΟΣ", "KLART", "CZYSTO", "JASNO", "TRỜI QUANG", "SENIN", "CLAR", "KLART", "ЯСНО", "SELGE", "GARBI", "SELKEÄÄ", "KLART", "GIEDRA", "JASNO", "TISZTA", "VEDRO", "GLAN", "SKAIDRS", "VEDRO", "晴朗", "CERAH", "ЯСНО", "CLIR", "CLARO", "快晴", "맑음", "בהיר", "CLEAR"];
 
 // Sample wind direction (NW, cardinal index 7) per language. Mirrors index 7 of
 // each row in src/pkjs/languages.js CARDINALS.
