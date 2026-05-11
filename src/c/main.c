@@ -25,6 +25,7 @@ static Layer *shiftingLayer;
 static Layer *centerLayer;
 static Layer *ringLayer;
 static Layer *infoLayer;
+static bool s_quick_view_visible = false;
 
 // Time string (populated each tick)
 static char timeText[TIME_STR_LEN];
@@ -135,7 +136,7 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   } while (0)
 
   // Upper secondary (topmost)
-  if (widgetTextUS[0] != '\0') {
+  if (!s_quick_view_visible && widgetTextUS[0] != '\0') {
     PUSH_SLOT(widgetTextUS, secondary_font, secondary_height, secondary_offset,
               secondaryColor);
   }
@@ -156,7 +157,7 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
   }
 
   // Lower secondary (bottommost)
-  if (widgetTextLS[0] != '\0') {
+  if (!s_quick_view_visible && widgetTextLS[0] != '\0') {
     PUSH_SLOT(widgetTextLS, secondary_font, secondary_height, secondary_offset,
               secondaryColor);
   }
@@ -192,6 +193,7 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
 static void quickViewLayerReposition() {
   GRect full_bounds = layer_get_bounds(windowLayer);
   GRect bounds = layer_get_unobstructed_bounds(windowLayer);
+  s_quick_view_visible = bounds.size.h < full_bounds.size.h;
 
   // Resize the shifting and center layer based on the current unobstructed
   // bounds
@@ -211,6 +213,7 @@ static void quickViewLayerReposition() {
   // Mark everything as dirty to redraw
   layer_mark_dirty(ringLayer);
   layer_mark_dirty(centerLayer);
+  layer_mark_dirty(infoLayer);
 }
 
 static void update_clock() {
