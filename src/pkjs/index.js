@@ -159,7 +159,13 @@ function sendDataToWatch() {
   var isImperial = (settings.SETTING_TEMP_UNIT === 1);
   var lang = settings.SETTING_LANGUAGE || 0;
   var use24h = cachedIs24h;
+  var weather = Weather.isFresh(cachedWeather) ? cachedWeather : null;
   var defaultWidgets = getDefaultWidgets();
+
+  if (cachedWeather && !weather) {
+    cachedWeather = null;
+    Weather.clear();
+  }
 
   // Prepare Pass 1 output for each widget slot
   var slotKeys = [
@@ -179,7 +185,7 @@ function sendDataToWatch() {
     }
     if (fmt !== undefined && fmt !== null) {
       // Apply JS tokens; C tokens pass through untouched
-      var processed = applyJsTokens(fmt, cachedWeather, cachedSolar, isImperial, use24h, lang);
+      var processed = applyJsTokens(fmt, weather, cachedSolar, isImperial, use24h, lang);
       msg[key] = processed;
     }
   });

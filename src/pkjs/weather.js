@@ -10,13 +10,23 @@ function getCondition(code, lang) {
 
 var OPENMETEO_BASE = 'https://api.open-meteo.com/v1/forecast';
 var FETCH_TIMEOUT_MS = 15000;
+var WEATHER_CACHE_MAX_AGE_MS = 30 * 60 * 1000;
+
+function isFreshWeather(weather) {
+  return !!(weather && weather.fetchedAt &&
+    (Date.now() - weather.fetchedAt) <= WEATHER_CACHE_MAX_AGE_MS);
+}
+
+function clearWeather() {
+  localStorage.removeItem('halcyonWeather');
+}
 
 function fetchWeather(lat, lng, callback, errback) {
   var url = OPENMETEO_BASE +
     '?latitude=' + lat +
     '&longitude=' + lng +
     '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,precipitation,uv_index,dew_point_2m' +
-    '&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean' +
+    '&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max' +
     '&forecast_days=1' +
     '&timezone=auto';
 
@@ -39,6 +49,10 @@ function fetchWeather(lat, lng, callback, errback) {
       var data = JSON.parse(xhr.responseText);
       var cur = data.current;
       var daily = data.daily;
+      var pop = daily.precipitation_probability_max ||
+        daily.precipitation_probability_mean ||
+        daily.precipitation_probability_min ||
+        [0];
 
       var weather = {
         temp: cur.temperature_2m,
@@ -51,7 +65,7 @@ function fetchWeather(lat, lng, callback, errback) {
         wind_dir: cur.wind_direction_10m,
         uv: cur.uv_index,
         rain: cur.precipitation,
-        pop: daily.precipitation_probability_max[0],
+        pop: pop[0],
         dew: cur.dew_point_2m,
         fetchedAt: Date.now()
       };
@@ -73,8 +87,12 @@ function restoreWeather() {
   var saved = localStorage.getItem('halcyonWeather');
   if (saved) {
     try {
-      return JSON.parse(saved);
+      var weather = JSON.parse(saved);
+      if (isFreshWeather(weather)) return weather;
+      clearWeather();
+      return null;
     } catch (e) {
+      clearWeather();
       return null;
     }
   }
@@ -101,6 +119,8 @@ function getCardinal(degrees, lang) {
 module.exports = {
   fetch: fetchWeather,
   restore: restoreWeather,
+  isFresh: isFreshWeather,
+  clear: clearWeather,
   toF: toF,
   toMPH: toMPH,
   toInch: toInch,
