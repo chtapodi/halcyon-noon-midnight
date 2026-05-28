@@ -28,7 +28,8 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   { value: '', label: 'None' },
   // Date/time
   { value: '{local_date}', label: 'Date', category: 'Date & Time' },
-  { value: '{alt_tz}', label: 'Alternate Time Zone', category: 'Date & Time' },
+  { value: '{alt_tz}', label: 'Alternate Time Zone 1', category: 'World Time' },
+  { value: '{alt_tz2}', label: 'Alternate Time Zone 2', category: 'World Time' },
   { value: '{year}-{month_num}-{day0}', label: 'Numeric Date', category: 'Date & Time' },
   { value: '{t:DAY} {day_of_year}', label: 'Day Number', category: 'Date & Time' },
   { value: '{t:WEEK} {week_of_year}', label: 'Week Number', category: 'Date & Time' },
@@ -58,13 +59,17 @@ const HRM_LABELS = new Set(['Current Heart Rate']);
 
 export const WIDGET_TOKENS: WidgetToken[] = [
   { token: '{local_date}', label: 'Local Date', category: 'Date & Time' },
-  { token: '{alt_tz}', label: 'Alt TZ Full', category: 'Date & Time' },
-  { token: '{alt_tz_label}', label: 'Alt TZ Label', category: 'Date & Time' },
-  { token: '{alt_tz_time}', label: 'Alt TZ Time', category: 'Date & Time' },
-  { token: '{alt_tz_day}', label: 'Alt TZ Day', category: 'Date & Time' },
+  { token: '{alt_tz}', label: 'Alt TZ Full', category: 'World Time' },
+  { token: '{alt_tz_label}', label: 'Alt TZ Label', category: 'World Time' },
+  { token: '{alt_tz_time}', label: 'Alt TZ Time', category: 'World Time' },
+  { token: '{alt_tz_day}', label: 'Alt TZ Day', category: 'World Time' },
+  { token: '{alt_tz2}', label: 'Alt TZ 2 Full', category: 'World Time' },
+  { token: '{alt_tz2_label}', label: 'Alt TZ 2 Label', category: 'World Time' },
+  { token: '{alt_tz2_time}', label: 'Alt TZ 2 Time', category: 'World Time' },
+  { token: '{alt_tz2_day}', label: 'Alt TZ 2 Day', category: 'World Time' },
   { token: '{day_name}', label: 'Day Name', category: 'Date & Time' },
   { token: '{month_name}', label: 'Month Name', category: 'Date & Time' },
-  { token: '{day0}', label: 'Day 01', category: 'Date & Time' },
+  { token: '{day0}', label: 'Day (Leading Zero)', category: 'Date & Time' },
   { token: '{day}', label: 'Day', category: 'Date & Time' },
   { token: '{month_num}', label: 'Month No.', category: 'Date & Time' },
   { token: '{year}', label: 'Year', category: 'Date & Time' },
@@ -102,12 +107,13 @@ export const getWidgetOptions = (
   hasHrm: boolean,
   isImperial: boolean = false,
   altLabel: string = 'TYO',
+  altLabel2: string = 'UTC',
 ): WidgetOption[] => {
   return WIDGET_TEMPLATES
     .filter((t) => hasHealth || !HEALTH_LABELS.has(t.label))
     .filter((t) => hasHrm || !HRM_LABELS.has(t.label))
     .map((t) => {
-      const preview = t.value && t.value !== '__custom__' ? renderPreview(t.value, lang, isImperial, altLabel) : '';
+      const preview = t.value && t.value !== '__custom__' ? renderPreview(t.value, lang, isImperial, altLabel, altLabel2) : '';
       return { value: t.value, label: t.label, preview, category: t.category };
     });
 };
@@ -120,8 +126,9 @@ export const getPreviewForValue = (
   lang: number,
   isImperial: boolean = false,
   altLabel: string = 'TYO',
+  altLabel2: string = 'UTC',
 ): string => {
   if (!value) return '';
   if (value === '__custom__') return '';
-  return renderPreview(value, lang, isImperial, altLabel);
+  return renderPreview(value, lang, isImperial, altLabel, altLabel2);
 };

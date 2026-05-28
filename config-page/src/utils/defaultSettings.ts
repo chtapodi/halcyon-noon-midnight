@@ -42,4 +42,6 @@ export const getDefaultSettings = (capabilities: Capabilities): Settings => ({
   SETTING_LANGUAGE: 0,
   SETTING_ALT_CITY: 'TOKYO',
   SETTING_ALT_LABEL: 'TYO',
+  SETTING_ALT_CITY2: 'UTC',
+  SETTING_ALT_LABEL2: 'UTC',
 });

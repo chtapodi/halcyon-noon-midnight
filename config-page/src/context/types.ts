@@ -72,4 +72,6 @@ export interface Settings {
   SETTING_LANGUAGE: number;
   SETTING_ALT_CITY: string;
   SETTING_ALT_LABEL: string;
+  SETTING_ALT_CITY2: string;
+  SETTING_ALT_LABEL2: string;
 }

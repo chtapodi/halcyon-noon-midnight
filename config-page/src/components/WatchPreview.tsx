@@ -16,6 +16,7 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
     const isRound = capabilities.ROUND && !capabilities.RECT;
     const previewDimensions = isRound ? { width: 180, height: 180 } : { width: 144, height: 168 };
     const altLabel = String(effectiveSettings.SETTING_ALT_LABEL || 'TYO');
+    const altLabel2 = String(effectiveSettings.SETTING_ALT_LABEL2 || 'UTC');
 
     const getHex = (color: string) => {
         if (!color) return '#000000';
@@ -85,12 +86,12 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
                 <div className="halite-watch-preview-content">
                     {effectiveSettings.SETTING_WIDGET_UPPER_SECONDARY && (
                         <div className="halite-watch-preview-widget secondary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR) }}>
-                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_UPPER_SECONDARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel)}
+                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_UPPER_SECONDARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel, altLabel2)}
                         </div>
                     )}
                     {effectiveSettings.SETTING_WIDGET_UPPER_PRIMARY && (
                         <div className="halite-watch-preview-widget primary upper" style={{ color: getHex(isNight ? effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR) }}>
-                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_UPPER_PRIMARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel)}
+                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_UPPER_PRIMARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel, altLabel2)}
                         </div>
                     )}
                     <div className="halite-watch-time" style={{ color: color('SETTING_TIME_COLOR', 'SETTING_NIGHT_TIME_COLOR') }}>
@@ -100,12 +101,12 @@ export const WatchPreview: React.FC<WatchPreviewProps> = ({ overrideSettings, is
                     </div>
                     {effectiveSettings.SETTING_WIDGET_LOWER_PRIMARY && (
                         <div className="halite-watch-preview-widget primary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_PRIMARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_PRIMARY_COLOR) }}>
-                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_LOWER_PRIMARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel)}
+                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_LOWER_PRIMARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel, altLabel2)}
                         </div>
                     )}
                     {effectiveSettings.SETTING_WIDGET_LOWER_SECONDARY && (
                         <div className="halite-watch-preview-widget secondary lower" style={{ color: getHex(!isNight ? effectiveSettings.SETTING_SUBTEXT_SECONDARY_COLOR : effectiveSettings.SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR) }}>
-                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_LOWER_SECONDARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel)}
+                            {getPreviewForValue(effectiveSettings.SETTING_WIDGET_LOWER_SECONDARY, Number(effectiveSettings.SETTING_LANGUAGE) || 0, Number(effectiveSettings.SETTING_TEMP_UNIT) === 1, altLabel, altLabel2)}
                         </div>
                     )}
                 </div>

@@ -110,6 +110,7 @@ export const renderPreview = (
   lang: number,
   isImperial: boolean = false,
   altLabel: string = 'TYO',
+  altLabel2: string = 'UTC',
 ): string => {
   if (!formatStr) return '';
   const idx = safeIdx(lang);
@@ -126,6 +127,7 @@ export const renderPreview = (
   const monthName = intlFmt(now, lang, { month: 'short' }).toUpperCase().replace(/\.$/, '');
   const dec = getDecimalSeparator(lang);
   const safeAltLabel = altLabel || 'TYO';
+  const safeAltLabel2 = altLabel2 || 'UTC';
 
   const replacements: Record<string, string> = {
     // Date / time tokens (C-side)
@@ -141,6 +143,10 @@ export const renderPreview = (
     '{alt_tz_label}': safeAltLabel,
     '{alt_tz_time}': '7:38',
     '{alt_tz_day}': 'FRI',
+    '{alt_tz2}': `${safeAltLabel2} 22:38`,
+    '{alt_tz2_label}': safeAltLabel2,
+    '{alt_tz2_time}': '22:38',
+    '{alt_tz2_day}': 'THU',
     // Health / device (C-side)
     '{steps}': '1234',
     '{dist}': '0' + dec + '8',

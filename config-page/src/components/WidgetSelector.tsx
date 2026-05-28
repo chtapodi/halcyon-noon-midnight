@@ -17,6 +17,18 @@ const MAX_WIDGET_FORMAT_LENGTH = 47;
 const isPresetValue = (value: string, options: WidgetOption[]) =>
     options.some((option) => option.value === value && option.value !== CUSTOM_VALUE);
 
+const compareLabels = (a: string, b: string) =>
+    a.localeCompare(b, undefined, { sensitivity: 'base' });
+
+const compareCategories = (a: string, b: string) => {
+    if (a === 'Custom') return 1;
+    if (b === 'Custom') return -1;
+    return compareLabels(a, b);
+};
+
+const sortByLabel = <T extends { label: string }>(items: T[]) =>
+    [...items].sort((a, b) => compareLabels(a.label, b.label));
+
 const groupTokens = (tokens: WidgetToken[]) => {
     const groups: Record<string, WidgetToken[]> = {};
     tokens.forEach((token) => {
@@ -127,11 +139,13 @@ const CustomWidgetModal: React.FC<CustomWidgetModalProps> = ({
                                     spellCheck={false}
                                 />
                                 <div className="widget-token-panel" aria-label={`${label} token inserter`}>
-                                    {Object.entries(tokenGroups).map(([category, groupTokens]) => (
+                                    {Object.entries(tokenGroups)
+                                        .sort(([a], [b]) => compareCategories(a, b))
+                                        .map(([category, groupTokens]) => (
                                         <div className="widget-token-group" key={category}>
                                             <div className="widget-token-group-label">{category}</div>
                                             <div className="widget-token-grid">
-                                                {groupTokens.map((token) => (
+                                                {sortByLabel(groupTokens).map((token) => (
                                                     <button
                                                         className="widget-token-button"
                                                         key={token.token}
@@ -172,6 +186,7 @@ const WidgetSlotControl: React.FC<WidgetSlotControlProps> = ({
     const selectId = React.useId();
     const value = String(settings[messageKey] ?? '');
     const altLabel = String(settings.SETTING_ALT_LABEL || 'TYO');
+    const altLabel2 = String(settings.SETTING_ALT_LABEL2 || 'UTC');
     const matchesPreset = isPresetValue(value, options);
     const [isCustom, setIsCustom] = React.useState(() => value !== '' && !matchesPreset);
     const [isEditorOpen, setIsEditorOpen] = React.useState(false);
@@ -184,7 +199,7 @@ const WidgetSlotControl: React.FC<WidgetSlotControlProps> = ({
     }, [options, value]);
 
     const selectValue = isCustom || !matchesPreset ? CUSTOM_VALUE : value;
-    const preview = renderPreview(value, lang, isImperial, altLabel);
+    const preview = renderPreview(value, lang, isImperial, altLabel, altLabel2);
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const nextValue = event.target.value;
@@ -213,6 +228,7 @@ const WidgetSlotControl: React.FC<WidgetSlotControlProps> = ({
                 <select id={selectId} value={selectValue} onChange={handleSelectChange}>
                     {options
                         .filter((option) => !option.category)
+                        .sort((a, b) => compareLabels(a.label, b.label))
                         .map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
@@ -227,9 +243,11 @@ const WidgetSlotControl: React.FC<WidgetSlotControlProps> = ({
                                 groups[category].push(option);
                                 return groups;
                             }, {}),
-                    ).map(([category, groupOptions]) => (
+                    )
+                        .sort(([a], [b]) => compareCategories(a, b))
+                        .map(([category, groupOptions]) => (
                         <optgroup key={category} label={category}>
-                            {groupOptions.map((option) => (
+                            {sortByLabel(groupOptions).map((option) => (
                                 <option key={option.value} value={option.value}>
                                     {option.label}
                                 </option>
@@ -274,10 +292,11 @@ export const WidgetSelector: React.FC = () => {
     const lang = Number(settings.SETTING_LANGUAGE) || 0;
     const isImperial = Number(settings.SETTING_TEMP_UNIT) === 1;
     const altLabel = String(settings.SETTING_ALT_LABEL || 'TYO');
+    const altLabel2 = String(settings.SETTING_ALT_LABEL2 || 'UTC');
     const isRound = capabilities.ROUND && !capabilities.RECT;
     const widgetOptions = React.useMemo(
-        () => getWidgetOptions(lang, !!capabilities.HEALTH, !!capabilities.HRM, isImperial, altLabel),
-        [lang, capabilities.HEALTH, capabilities.HRM, isImperial, altLabel],
+        () => getWidgetOptions(lang, !!capabilities.HEALTH, !!capabilities.HRM, isImperial, altLabel, altLabel2),
+        [lang, capabilities.HEALTH, capabilities.HRM, isImperial, altLabel, altLabel2],
     );
     const widgetTokens = React.useMemo(
         () => getVisibleTokens(!!capabilities.HEALTH, !!capabilities.HRM),

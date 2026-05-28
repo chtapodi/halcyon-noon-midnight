@@ -3,7 +3,7 @@
 #include <pebble.h>
 #include <sys/syslimits.h>
 
-#define CURRENT_SETTINGS_VERSION 2
+#define CURRENT_SETTINGS_VERSION 3
 #define SETTINGS_VERSION_PERSIST_KEY 1
 #define SETTINGS_PERSIST_KEY 2
 #define ALT_CITY_LABEL_LEN 20
@@ -153,6 +153,8 @@ typedef struct {
 
   char altCityLabel[ALT_CITY_LABEL_LEN];
   int16_t altCityUtcOffset;
+  char altCity2Label[ALT_CITY_LABEL_LEN];
+  int16_t altCity2UtcOffset;
   int16_t localUtcOffset;
 } Settings;
 
@@ -205,6 +207,8 @@ typedef struct {
 
   char altCityLabel[ALT_CITY_LABEL_LEN];
   int16_t altCityUtcOffset;
+  char altCity2Label[ALT_CITY_LABEL_LEN];
+  int16_t altCity2UtcOffset;
   int16_t localUtcOffset;
 } StoredSettings;
 

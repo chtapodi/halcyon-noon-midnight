@@ -14,6 +14,8 @@ var cachedSettings = null;
 
 var TIME_FORMAT_STORAGE_KEY = 'halcyonIs24h';
 var DEFAULT_ALT_CITY = 'TOKYO';
+var DEFAULT_ALT_CITY2 = 'UTC';
+var ALT_LABEL_MAX_LENGTH = 6;
 
 function restoreIs24h() {
   try {
@@ -96,19 +98,19 @@ function getNextSolarEvent(solar, use24h, labels) {
   };
 }
 
-function getSelectedAltCity(settings) {
-  var cityName = settings.SETTING_ALT_CITY || DEFAULT_ALT_CITY;
+function getSelectedAltCity(settings, key, fallback) {
+  var cityName = settings[key] || fallback;
   return Cities.findCity(cityName) || Cities.findCity('UTC');
 }
 
-function applyAltCityMessage(msg, settings) {
+function applyAltCityMessage(msg, settings, cityKey, labelKey, messageLabelKey, messageOffsetKey, fallbackCity) {
   var now = new Date();
-  var city = getSelectedAltCity(settings || {});
+  var city = getSelectedAltCity(settings || {}, cityKey, fallbackCity);
   if (!city) return;
 
-  var label = settings.SETTING_ALT_LABEL || city.label || city.name;
-  msg.SETTING_ALT_CITY_LABEL = String(label).toUpperCase().slice(0, 3);
-  msg.ALT_CITY_UTC_OFFSET = Cities.cityOffsetMinutes(city, now);
+  var label = settings[labelKey] || city.label || city.name;
+  msg[messageLabelKey] = String(label).toUpperCase().slice(0, ALT_LABEL_MAX_LENGTH);
+  msg[messageOffsetKey] = Cities.cityOffsetMinutes(city, now);
   msg.LOCAL_UTC_OFFSET = -now.getTimezoneOffset();
 }
 
@@ -225,7 +227,10 @@ function sendDataToWatch() {
     }
   });
 
-  applyAltCityMessage(msg, settings);
+  applyAltCityMessage(msg, settings, 'SETTING_ALT_CITY', 'SETTING_ALT_LABEL',
+    'SETTING_ALT_CITY_LABEL', 'ALT_CITY_UTC_OFFSET', DEFAULT_ALT_CITY);
+  applyAltCityMessage(msg, settings, 'SETTING_ALT_CITY2', 'SETTING_ALT_LABEL2',
+    'SETTING_ALT_CITY2_LABEL', 'ALT_CITY2_UTC_OFFSET', DEFAULT_ALT_CITY2);
 
   // Send solar minutes for the ring
   if (cachedSolar) {
@@ -468,7 +473,8 @@ Pebble.addEventListener('webviewclosed', function (e) {
   // Process non-color, non-widget settings
   Object.keys(configData).forEach(function (key) {
     if (colorKeys.indexOf(key) === -1 && widgetKeys.indexOf(key) === -1 &&
-        key !== 'SETTING_ALT_CITY' && key !== 'SETTING_ALT_LABEL') {
+        key !== 'SETTING_ALT_CITY' && key !== 'SETTING_ALT_LABEL' &&
+        key !== 'SETTING_ALT_CITY2' && key !== 'SETTING_ALT_LABEL2') {
       var value = configData[key];
       if (typeof value === 'boolean') {
         dict[key] = value ? 1 : 0;

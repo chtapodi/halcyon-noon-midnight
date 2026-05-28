@@ -72,6 +72,9 @@ void Settings_loadFromStorage() {
   strncpy(globalSettings.altCityLabel, "TYO", ALT_CITY_LABEL_LEN);
   globalSettings.altCityLabel[ALT_CITY_LABEL_LEN - 1] = '\0';
   globalSettings.altCityUtcOffset = 540;
+  strncpy(globalSettings.altCity2Label, "UTC", ALT_CITY_LABEL_LEN);
+  globalSettings.altCity2Label[ALT_CITY_LABEL_LEN - 1] = '\0';
+  globalSettings.altCity2UtcOffset = 0;
   globalSettings.localUtcOffset = 0;
 
   if (persist_exists(SETTINGS_PERSIST_KEY)) {

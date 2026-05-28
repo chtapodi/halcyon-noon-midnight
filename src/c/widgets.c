@@ -23,10 +23,9 @@ static void format_alt_time(char *buf, size_t buf_len, struct tm *alt_time) {
 static void get_alt_time_info(struct tm *local_time, struct tm *alt_time,
                               char *time_buf, size_t time_buf_len,
                               char *day_buf, size_t day_buf_len,
-                              bool *different_date) {
+                              bool *different_date, int16_t utc_offset) {
   time_t shifted = time(NULL) +
-                   ((int)globalSettings.altCityUtcOffset -
-                    (int)globalSettings.localUtcOffset) *
+                   ((int)utc_offset - (int)globalSettings.localUtcOffset) *
                        60;
   *alt_time = *localtime(&shifted);
   format_alt_time(time_buf, time_buf_len, alt_time);
@@ -38,6 +37,52 @@ static void get_alt_time_info(struct tm *local_time, struct tm *alt_time,
   snprintf(day_buf, day_buf_len, "%s", dayNames[lang][alt_time->tm_wday]);
   *different_date = local_time->tm_year != alt_time->tm_year ||
                     local_time->tm_yday != alt_time->tm_yday;
+}
+
+static void render_alt_time_token(const char *token, int token_len,
+                                  struct tm *local_time, char *temp,
+                                  size_t temp_len, const char *label,
+                                  int16_t utc_offset, const char *full_token,
+                                  const char *label_token,
+                                  const char *time_token,
+                                  const char *day_token, bool *matched) {
+  if (strncmp(token, full_token, token_len) == 0 &&
+      token_len == (int)strlen(full_token)) {
+    struct tm alt_time;
+    char alt_time_text[12] = {0};
+    char alt_day_text[8] = {0};
+    bool different_date = false;
+    get_alt_time_info(local_time, &alt_time, alt_time_text,
+                      sizeof(alt_time_text), alt_day_text,
+                      sizeof(alt_day_text), &different_date, utc_offset);
+    if (different_date) {
+      snprintf(temp, temp_len, "%s %s %s", label, alt_day_text, alt_time_text);
+    } else {
+      snprintf(temp, temp_len, "%s %s", label, alt_time_text);
+    }
+    *matched = true;
+  } else if (strncmp(token, label_token, token_len) == 0 &&
+             token_len == (int)strlen(label_token)) {
+    snprintf(temp, temp_len, "%s", label);
+    *matched = true;
+  } else if (strncmp(token, time_token, token_len) == 0 &&
+             token_len == (int)strlen(time_token)) {
+    struct tm alt_time;
+    char alt_day_text[8] = {0};
+    bool different_date = false;
+    get_alt_time_info(local_time, &alt_time, temp, temp_len, alt_day_text,
+                      sizeof(alt_day_text), &different_date, utc_offset);
+    *matched = true;
+  } else if (strncmp(token, day_token, token_len) == 0 &&
+             token_len == (int)strlen(day_token)) {
+    struct tm alt_time;
+    char alt_time_text[12] = {0};
+    bool different_date = false;
+    get_alt_time_info(local_time, &alt_time, alt_time_text,
+                      sizeof(alt_time_text), temp, temp_len, &different_date,
+                      utc_offset);
+    *matched = true;
+  }
 }
 
 void widget_get_text(const char *format_string, char *buf, int buf_len) {
@@ -203,43 +248,19 @@ void widget_get_text(const char *format_string, char *buf, int buf_len) {
           BatteryChargeState state = battery_state_service_peek();
           snprintf(temp, sizeof(temp), "%d", state.charge_percent);
           matched = true;
-        } else if (strncmp(token, "alt_tz", token_len) == 0 &&
-                   token_len == 6) {
-          struct tm alt_time;
-          char alt_time_text[12] = {0};
-          char alt_day_text[8] = {0};
-          bool different_date = false;
-          get_alt_time_info(t, &alt_time, alt_time_text, sizeof(alt_time_text),
-                            alt_day_text, sizeof(alt_day_text),
-                            &different_date);
-          if (different_date) {
-            snprintf(temp, sizeof(temp), "%s %s %s", globalSettings.altCityLabel,
-                     alt_day_text, alt_time_text);
-          } else {
-            snprintf(temp, sizeof(temp), "%s %s", globalSettings.altCityLabel,
-                     alt_time_text);
+        } else if (strncmp(token, "alt_tz", 6) == 0) {
+          render_alt_time_token(token, token_len, t, temp, sizeof(temp),
+                                globalSettings.altCityLabel,
+                                globalSettings.altCityUtcOffset, "alt_tz",
+                                "alt_tz_label", "alt_tz_time", "alt_tz_day",
+                                &matched);
+          if (!matched) {
+            render_alt_time_token(token, token_len, t, temp, sizeof(temp),
+                                  globalSettings.altCity2Label,
+                                  globalSettings.altCity2UtcOffset, "alt_tz2",
+                                  "alt_tz2_label", "alt_tz2_time",
+                                  "alt_tz2_day", &matched);
           }
-          matched = true;
-        } else if (strncmp(token, "alt_tz_label", token_len) == 0 &&
-                   token_len == 12) {
-          snprintf(temp, sizeof(temp), "%s", globalSettings.altCityLabel);
-          matched = true;
-        } else if (strncmp(token, "alt_tz_time", token_len) == 0 &&
-                   token_len == 11) {
-          struct tm alt_time;
-          char alt_day_text[8] = {0};
-          bool different_date = false;
-          get_alt_time_info(t, &alt_time, temp, sizeof(temp), alt_day_text,
-                            sizeof(alt_day_text), &different_date);
-          matched = true;
-        } else if (strncmp(token, "alt_tz_day", token_len) == 0 &&
-                   token_len == 10) {
-          struct tm alt_time;
-          char alt_time_text[12] = {0};
-          bool different_date = false;
-          get_alt_time_info(t, &alt_time, alt_time_text, sizeof(alt_time_text),
-                            temp, sizeof(temp), &different_date);
-          matched = true;
         }
 
         if (matched) {

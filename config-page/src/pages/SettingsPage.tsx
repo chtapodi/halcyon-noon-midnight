@@ -1,6 +1,6 @@
 import React from 'react';
-import { useConfig, useCapabilities, useWatchInfo } from '../context/PebbleConfigContext';
-import { Page, Section, Toggle, ColorPicker, Select, ThemePicker, CustomThemePanel, WidgetSelector, DonationLink, FormItem } from '../components';
+import { useConfig, useCapabilities } from '../context/PebbleConfigContext';
+import { Page, Section, Toggle, ColorPicker, Select, TextInput, ThemePicker, CustomThemePanel, WidgetSelector, DonationLink } from '../components';
 import { useSavedThemes } from '../hooks/useSavedThemes';
 import lightThemes from '../data/light-themes.json';
 import darkThemes from '../data/dark-themes.json';
@@ -10,35 +10,45 @@ import { prepareThemes } from '../utils/themeUtils';
 import { CITIES, formatStandardOffset, getCityByName } from '../data/cities';
 
 const ALT_TOKEN_RE = /\{alt_tz(?:_label|_time|_day)?\}/;
+const ALT2_TOKEN_RE = /\{alt_tz2(?:_label|_time|_day)?\}/;
+const ALT_LABEL_MAX_LENGTH = 6;
 
 const normalizeAltLabel = (value: string) =>
-  value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
+  value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, ALT_LABEL_MAX_LENGTH);
 
 export const SettingsPage: React.FC = () => {
   const { settings, updateSetting } = useConfig();
   const capabilities = useCapabilities();
-  const watchInfo = useWatchInfo();
-  const altLabelInputId = React.useId();
   const altCity = getCityByName(settings.SETTING_ALT_CITY);
-  const altWidgetSelected = [
+  const altCity2 = getCityByName(settings.SETTING_ALT_CITY2);
+  const cityOptions = React.useMemo(() => CITIES.map((city) => ({
+    label: `${city.displayName} (${formatStandardOffset(city.offset)})`,
+    value: city.name,
+  })), []);
+  const widgetValues = [
     settings.SETTING_WIDGET_UPPER_SECONDARY,
     settings.SETTING_WIDGET_UPPER_PRIMARY,
     settings.SETTING_WIDGET_LOWER_PRIMARY,
     settings.SETTING_WIDGET_LOWER_SECONDARY,
-  ].some((value) => ALT_TOKEN_RE.test(value || ''));
+  ];
+  const altWidgetSelected = widgetValues.some((value) => ALT_TOKEN_RE.test(value || ''));
+  const alt2WidgetSelected = widgetValues.some((value) => ALT2_TOKEN_RE.test(value || ''));
 
-  React.useEffect(() => {
-    if (!settings.SETTING_ALT_LABEL) {
-      updateSetting('SETTING_ALT_LABEL', altCity.abbreviation);
-    }
-  }, [altCity.abbreviation, settings.SETTING_ALT_LABEL, updateSetting]);
-
-  const handleAltCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleAltCityChange = (value: string) => {
     const previousDefault = altCity.abbreviation;
-    const nextCity = getCityByName(event.target.value);
+    const nextCity = getCityByName(value);
     updateSetting('SETTING_ALT_CITY', nextCity.name);
-    if (!settings.SETTING_ALT_LABEL || settings.SETTING_ALT_LABEL === previousDefault) {
+    if (settings.SETTING_ALT_LABEL === previousDefault) {
       updateSetting('SETTING_ALT_LABEL', nextCity.abbreviation);
+    }
+  };
+
+  const handleAltCity2Change = (value: string) => {
+    const previousDefault = altCity2.abbreviation;
+    const nextCity = getCityByName(value);
+    updateSetting('SETTING_ALT_CITY2', nextCity.name);
+    if (settings.SETTING_ALT_LABEL2 === previousDefault) {
+      updateSetting('SETTING_ALT_LABEL2', nextCity.abbreviation);
     }
   };
 
@@ -245,30 +255,46 @@ export const SettingsPage: React.FC = () => {
       </Section>
 
       {altWidgetSelected && (
-        <Section title="Widget: Alternate Time Zone">
-          <FormItem label="City" className="halite-select halite-alt-time-control">
-            <select value={altCity.name} onChange={handleAltCityChange}>
-              {CITIES.map((city) => (
-                <option key={city.name} value={city.name}>
-                  {city.displayName} ({formatStandardOffset(city.offset)})
-                </option>
-              ))}
-            </select>
-          </FormItem>
-          <FormItem
+        <Section title="Widget: Alternate Time Zone 1">
+          <Select
+            label="City"
+            messageKey="SETTING_ALT_CITY"
+            options={cityOptions}
+            value={altCity.name}
+            onChange={handleAltCityChange}
+            className="halite-alt-time-control"
+          />
+          <TextInput
             label="Label"
-            className="halite-text-input halite-alt-time-control"
-            htmlFor={altLabelInputId}
-          >
-            <input
-              id={altLabelInputId}
-              className="halite-input"
-              value={settings.SETTING_ALT_LABEL || altCity.abbreviation}
-              maxLength={3}
-              onChange={(event) => updateSetting('SETTING_ALT_LABEL', normalizeAltLabel(event.target.value))}
-              spellCheck={false}
-            />
-          </FormItem>
+            messageKey="SETTING_ALT_LABEL"
+            value={settings.SETTING_ALT_LABEL ?? altCity.abbreviation}
+            maxLength={ALT_LABEL_MAX_LENGTH}
+            normalizeValue={normalizeAltLabel}
+            spellCheck={false}
+            className="halite-alt-time-control"
+          />
+        </Section>
+      )}
+
+      {alt2WidgetSelected && (
+        <Section title="Widget: Alternate Time Zone 2">
+          <Select
+            label="City"
+            messageKey="SETTING_ALT_CITY2"
+            options={cityOptions}
+            value={altCity2.name}
+            onChange={handleAltCity2Change}
+            className="halite-alt-time-control"
+          />
+          <TextInput
+            label="Label"
+            messageKey="SETTING_ALT_LABEL2"
+            value={settings.SETTING_ALT_LABEL2 ?? altCity2.abbreviation}
+            maxLength={ALT_LABEL_MAX_LENGTH}
+            normalizeValue={normalizeAltLabel}
+            spellCheck={false}
+            className="halite-alt-time-control"
+          />
         </Section>
       )}
 

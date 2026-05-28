@@ -8,9 +8,12 @@ export const Select: React.FC<{
   description?: string;
   messageKey: keyof Settings;
   options: { label: string; value: string | number; category?: string }[];
-}> = ({ label, description, messageKey, options }) => {
+  value?: string | number;
+  onChange?: (value: string) => void;
+  className?: string;
+}> = ({ label, description, messageKey, options, value: controlledValue, onChange, className = '' }) => {
   const { settings, updateSetting } = useConfig();
-  const value = settings[messageKey];
+  const value = controlledValue ?? settings[messageKey];
   const selectId = React.useId();
 
   const groupedOptions = React.useMemo(() => {
@@ -30,12 +33,21 @@ export const Select: React.FC<{
   }, [options]);
 
   return (
-    <FormItem label={label} description={description} className="halite-select" htmlFor={selectId}>
+    <FormItem
+      label={label}
+      description={description}
+      className={`halite-select ${className}`.trim()}
+      htmlFor={selectId}
+    >
       <select
         id={selectId}
         value={value}
         onChange={(e) => {
           const val = e.target.value;
+          if (onChange) {
+            onChange(val);
+            return;
+          }
           const num = parseInt(val, 10);
           updateSetting(messageKey, isNaN(num) ? val : num);
         }}

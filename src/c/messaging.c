@@ -108,6 +108,10 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
       dict_find(iterator, MESSAGE_KEY_SETTING_ALT_CITY_LABEL);
   Tuple *altCityUtcOffset_tuple =
       dict_find(iterator, MESSAGE_KEY_ALT_CITY_UTC_OFFSET);
+  Tuple *altCity2Label_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_ALT_CITY2_LABEL);
+  Tuple *altCity2UtcOffset_tuple =
+      dict_find(iterator, MESSAGE_KEY_ALT_CITY2_UTC_OFFSET);
   Tuple *localUtcOffset_tuple =
       dict_find(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET);
 
@@ -307,6 +311,17 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (altCityUtcOffset_tuple != NULL) {
     globalSettings.altCityUtcOffset =
         (int16_t)altCityUtcOffset_tuple->value->int32;
+  }
+
+  if (altCity2Label_tuple != NULL) {
+    strncpy(globalSettings.altCity2Label, altCity2Label_tuple->value->cstring,
+            ALT_CITY_LABEL_LEN);
+    globalSettings.altCity2Label[ALT_CITY_LABEL_LEN - 1] = '\0';
+  }
+
+  if (altCity2UtcOffset_tuple != NULL) {
+    globalSettings.altCity2UtcOffset =
+        (int16_t)altCity2UtcOffset_tuple->value->int32;
   }
 
   if (localUtcOffset_tuple != NULL) {
