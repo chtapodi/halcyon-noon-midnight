@@ -6,6 +6,7 @@
 #define CURRENT_SETTINGS_VERSION 3
 #define SETTINGS_VERSION_PERSIST_KEY 1
 #define SETTINGS_PERSIST_KEY 2
+#define SETTINGS_EXTRA_PERSIST_KEY 3
 #define ALT_CITY_LABEL_LEN 20
 
 // default settings
@@ -77,10 +78,7 @@ typedef enum {
   PIP_HIDDEN = 2
 } PipVisibilityType;
 
-typedef enum {
-  TEMP_UNIT_CELSIUS = 0,
-  TEMP_UNIT_FAHRENHEIT = 1
-} TempUnitType;
+typedef enum { TEMP_UNIT_CELSIUS = 0, TEMP_UNIT_FAHRENHEIT = 1 } TempUnitType;
 
 // typedef enum {
 //   NO_VIBE = 0,
@@ -205,14 +203,23 @@ typedef struct {
   char widgetUpperPrimary[WIDGET_TEXT_LEN];
   char widgetLowerPrimary[WIDGET_TEXT_LEN];
   char widgetLowerSecondary[WIDGET_TEXT_LEN];
+} StoredSettings;
 
+// we're kinda at the limit for stored settings, so new settings get their own
+// special struct
+typedef struct {
   char altCityLabel[ALT_CITY_LABEL_LEN];
   int16_t altCityUtcOffset;
   char altCity2Label[ALT_CITY_LABEL_LEN];
   int16_t altCity2UtcOffset;
   int16_t localUtcOffset;
   bool usePrimaryFontForAllWidgets;
-} StoredSettings;
+} StoredSettingsExtra;
+
+typedef char StoredSettings_must_fit_in_persist_data
+    [(sizeof(StoredSettings) <= PERSIST_DATA_MAX_LENGTH) ? 1 : -1];
+typedef char StoredSettingsExtra_must_fit_in_persist_data
+    [(sizeof(StoredSettingsExtra) <= PERSIST_DATA_MAX_LENGTH) ? 1 : -1];
 
 extern Settings globalSettings;
 

@@ -6,6 +6,20 @@
 
 Settings globalSettings;
 
+static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra) {
+  strncpy(storedSettingsExtra->altCityLabel, globalSettings.altCityLabel,
+          ALT_CITY_LABEL_LEN);
+  storedSettingsExtra->altCityLabel[ALT_CITY_LABEL_LEN - 1] = '\0';
+  storedSettingsExtra->altCityUtcOffset = globalSettings.altCityUtcOffset;
+  strncpy(storedSettingsExtra->altCity2Label, globalSettings.altCity2Label,
+          ALT_CITY_LABEL_LEN);
+  storedSettingsExtra->altCity2Label[ALT_CITY_LABEL_LEN - 1] = '\0';
+  storedSettingsExtra->altCity2UtcOffset = globalSettings.altCity2UtcOffset;
+  storedSettingsExtra->localUtcOffset = globalSettings.localUtcOffset;
+  storedSettingsExtra->usePrimaryFontForAllWidgets =
+      globalSettings.usePrimaryFontForAllWidgets;
+}
+
 void Settings_init() { Settings_loadFromStorage(); }
 
 void Settings_deinit() { Settings_saveToStorage(); }
@@ -90,6 +104,32 @@ void Settings_loadFromStorage() {
     }
   }
 
+  if (persist_exists(SETTINGS_EXTRA_PERSIST_KEY)) {
+    const int stored_size = persist_get_size(SETTINGS_EXTRA_PERSIST_KEY);
+    if (stored_size > 0) {
+      StoredSettingsExtra storedSettingsExtra;
+      memset(&storedSettingsExtra, 0, sizeof(StoredSettingsExtra));
+      populateStoredSettingsExtra(&storedSettingsExtra);
+      const int read_size = stored_size < (int)sizeof(StoredSettingsExtra)
+                                ? stored_size
+                                : (int)sizeof(StoredSettingsExtra);
+      persist_read_data(SETTINGS_EXTRA_PERSIST_KEY, &storedSettingsExtra,
+                        read_size);
+
+      strncpy(globalSettings.altCityLabel, storedSettingsExtra.altCityLabel,
+              ALT_CITY_LABEL_LEN);
+      globalSettings.altCityLabel[ALT_CITY_LABEL_LEN - 1] = '\0';
+      globalSettings.altCityUtcOffset = storedSettingsExtra.altCityUtcOffset;
+      strncpy(globalSettings.altCity2Label, storedSettingsExtra.altCity2Label,
+              ALT_CITY_LABEL_LEN);
+      globalSettings.altCity2Label[ALT_CITY_LABEL_LEN - 1] = '\0';
+      globalSettings.altCity2UtcOffset = storedSettingsExtra.altCity2UtcOffset;
+      globalSettings.localUtcOffset = storedSettingsExtra.localUtcOffset;
+      globalSettings.usePrimaryFontForAllWidgets =
+          storedSettingsExtra.usePrimaryFontForAllWidgets;
+    }
+  }
+
   Settings_updateDynamicSettings();
 }
 
@@ -99,6 +139,13 @@ void Settings_saveToStorage() {
   memcpy(&storedSettings, &globalSettings, sizeof(StoredSettings));
   persist_write_data(SETTINGS_PERSIST_KEY, &storedSettings,
                      sizeof(StoredSettings));
+
+  StoredSettingsExtra storedSettingsExtra;
+  memset(&storedSettingsExtra, 0, sizeof(StoredSettingsExtra));
+  populateStoredSettingsExtra(&storedSettingsExtra);
+  persist_write_data(SETTINGS_EXTRA_PERSIST_KEY, &storedSettingsExtra,
+                     sizeof(StoredSettingsExtra));
+
   persist_write_int(SETTINGS_VERSION_PERSIST_KEY, CURRENT_SETTINGS_VERSION);
 }
 
