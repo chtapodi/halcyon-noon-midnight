@@ -5,6 +5,7 @@ export * from './Toggle';
 export * from './ColorPicker';
 export * from './Select';
 export * from './TextInput';
+export * from './AltTimezoneSection';
 export * from './ThemePicker';
 export * from './WidgetSelector';
 export * from './WatchPreview';

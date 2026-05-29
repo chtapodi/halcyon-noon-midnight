@@ -18,6 +18,8 @@ export interface WidgetToken {
   requires?: 'health' | 'hrm';
 }
 
+export type WidgetTokenId = string;
+
 interface WidgetOptionTemplate {
   value: string;
   label: string;
@@ -43,7 +45,11 @@ const WIDGET_TEMPLATES: WidgetOptionTemplate[] = [
   // Device
   { value: '{t:BATTERY} {batt}%', label: 'Battery %', category: 'Device' },
   // Weather
-  { value: '{temp}° ({thi}°/{tlo}°)', label: 'Temperature (Current & Forecast)', category: 'Weather' },
+  {
+    value: '{temp}° ({thi}°/{tlo}°)',
+    label: 'Temperature (Current & Forecast)',
+    category: 'Weather',
+  },
   { value: '{cond}', label: 'Current Condition', category: 'Weather' },
   { value: '{hum}% {t:HUMIDITY}', label: 'Humidity', category: 'Weather' },
   { value: '{wind} {wind_unit} {wind_dir}', label: 'Wind', category: 'Weather' },
@@ -101,6 +107,25 @@ export const WIDGET_TOKENS: WidgetToken[] = [
   { token: '{temp_unit}', label: 'Temp Unit', category: 'Weather' },
 ];
 
+export const ALT_TIMEZONE_WIDGET_IDS = ['alt_tz', 'alt_tz_label', 'alt_tz_time', 'alt_tz_day'];
+
+export const ALT_TIMEZONE2_WIDGET_IDS = ['alt_tz2', 'alt_tz2_label', 'alt_tz2_time', 'alt_tz2_day'];
+
+export const WEATHER_WIDGET_IDS = WIDGET_TOKENS.filter((token) => token.category === 'Weather').map(
+  (token) => token.token,
+);
+
+const normalizeWidgetTokenId = (id: WidgetTokenId) =>
+  id.startsWith('{') && id.endsWith('}') ? id : `{${id}}`;
+
+export const containsWidgets = (
+  widgetValues: Array<string | null | undefined>,
+  tokenIds: WidgetTokenId[],
+): boolean => {
+  const tokens = tokenIds.map(normalizeWidgetTokenId);
+  return widgetValues.some((value) => tokens.some((token) => value?.includes(token)));
+};
+
 export const getWidgetOptions = (
   lang: number,
   hasHealth: boolean,
@@ -109,11 +134,13 @@ export const getWidgetOptions = (
   altLabel: string = 'TYO',
   altLabel2: string = 'UTC',
 ): WidgetOption[] => {
-  return WIDGET_TEMPLATES
-    .filter((t) => hasHealth || !HEALTH_LABELS.has(t.label))
+  return WIDGET_TEMPLATES.filter((t) => hasHealth || !HEALTH_LABELS.has(t.label))
     .filter((t) => hasHrm || !HRM_LABELS.has(t.label))
     .map((t) => {
-      const preview = t.value && t.value !== '__custom__' ? renderPreview(t.value, lang, isImperial, altLabel, altLabel2) : '';
+      const preview =
+        t.value && t.value !== '__custom__'
+          ? renderPreview(t.value, lang, isImperial, altLabel, altLabel2)
+          : '';
       return { value: t.value, label: t.label, preview, category: t.category };
     });
 };

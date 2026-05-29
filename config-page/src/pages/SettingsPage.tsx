@@ -1,71 +1,57 @@
 import React from 'react';
 import { useConfig, useCapabilities } from '../context/PebbleConfigContext';
-import { Page, Section, Toggle, ColorPicker, Select, TextInput, ThemePicker, CustomThemePanel, WidgetSelector, DonationLink } from '../components';
+import {
+  Page,
+  Section,
+  Toggle,
+  ColorPicker,
+  Select,
+  ThemePicker,
+  CustomThemePanel,
+  WidgetSelector,
+  DonationLink,
+  AltTimezoneSection,
+} from '../components';
 import { useSavedThemes } from '../hooks/useSavedThemes';
 import lightThemes from '../data/light-themes.json';
 import darkThemes from '../data/dark-themes.json';
 import lightThemesBw from '../data/light-themes-bw.json';
 import darkThemesBw from '../data/dark-themes-bw.json';
 import { prepareThemes } from '../utils/themeUtils';
-import { CITIES, formatStandardOffset, getCityByName } from '../data/cities';
-
-const ALT_TOKEN_RE = /\{alt_tz(?:_label|_time|_day)?\}/;
-const ALT2_TOKEN_RE = /\{alt_tz2(?:_label|_time|_day)?\}/;
-const WEATHER_TOKEN_RE = /\{(?:temp|thi|tlo|cond|cond_day|hum|wind|wind_unit|wind_dir|uv|rain|pop|dew|temp_unit)\}/;
-const ALT_LABEL_MAX_LENGTH = 6;
-
-const normalizeAltLabel = (value: string) =>
-  value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, ALT_LABEL_MAX_LENGTH);
+import {
+  ALT_TIMEZONE_WIDGET_IDS,
+  ALT_TIMEZONE2_WIDGET_IDS,
+  WEATHER_WIDGET_IDS,
+  containsWidgets,
+} from '../data/widgetTypes';
 
 export const SettingsPage: React.FC = () => {
   const { settings, updateSetting } = useConfig();
   const capabilities = useCapabilities();
-  const altCity = getCityByName(settings.SETTING_ALT_CITY);
-  const altCity2 = getCityByName(settings.SETTING_ALT_CITY2);
-  const cityOptions = React.useMemo(() => CITIES.map((city) => ({
-    label: `${city.displayName} (${formatStandardOffset(city.offset)})`,
-    value: city.name,
-  })), []);
   const widgetValues = [
     settings.SETTING_WIDGET_UPPER_SECONDARY,
     settings.SETTING_WIDGET_UPPER_PRIMARY,
     settings.SETTING_WIDGET_LOWER_PRIMARY,
     settings.SETTING_WIDGET_LOWER_SECONDARY,
   ];
-  const altWidgetSelected = widgetValues.some((value) => ALT_TOKEN_RE.test(value || ''));
-  const alt2WidgetSelected = widgetValues.some((value) => ALT2_TOKEN_RE.test(value || ''));
-  const weatherWidgetSelected = widgetValues.some((value) => WEATHER_TOKEN_RE.test(value || ''));
+  const altWidgetSelected = containsWidgets(widgetValues, ALT_TIMEZONE_WIDGET_IDS);
+  const alt2WidgetSelected = containsWidgets(widgetValues, ALT_TIMEZONE2_WIDGET_IDS);
+  const weatherWidgetSelected = containsWidgets(widgetValues, WEATHER_WIDGET_IDS);
 
-  const handleAltCityChange = (value: string) => {
-    const previousDefault = altCity.abbreviation;
-    const nextCity = getCityByName(value);
-    updateSetting('SETTING_ALT_CITY', nextCity.name);
-    if (settings.SETTING_ALT_LABEL === previousDefault) {
-      updateSetting('SETTING_ALT_LABEL', nextCity.abbreviation);
-    }
-  };
-
-  const handleAltCity2Change = (value: string) => {
-    const previousDefault = altCity2.abbreviation;
-    const nextCity = getCityByName(value);
-    updateSetting('SETTING_ALT_CITY2', nextCity.name);
-    if (settings.SETTING_ALT_LABEL2 === previousDefault) {
-      updateSetting('SETTING_ALT_LABEL2', nextCity.abbreviation);
-    }
-  };
-
-  const activeThemes = React.useMemo(() =>
-    capabilities.BW
-      ? prepareThemes(lightThemesBw, darkThemesBw, false)
-      : prepareThemes(lightThemes, darkThemes, false),
-    [capabilities.BW]
+  const activeThemes = React.useMemo(
+    () =>
+      capabilities.BW
+        ? prepareThemes(lightThemesBw, darkThemesBw, false)
+        : prepareThemes(lightThemes, darkThemes, false),
+    [capabilities.BW],
   );
 
-  const activeNightThemes = React.useMemo(() =>
-    capabilities.BW
-      ? prepareThemes(darkThemesBw, lightThemesBw, true)
-      : prepareThemes(darkThemes, lightThemes, true),
-    [capabilities.BW]
+  const activeNightThemes = React.useMemo(
+    () =>
+      capabilities.BW
+        ? prepareThemes(darkThemesBw, lightThemesBw, true)
+        : prepareThemes(darkThemes, lightThemes, true),
+    [capabilities.BW],
   );
 
   const daySavedThemes = useSavedThemes(false);
@@ -84,7 +70,7 @@ export const SettingsPage: React.FC = () => {
           messageKey="SETTING_THEME"
           themes={activeThemes}
           savedThemes={daySavedThemes.savedThemes}
-          label='Theme preset'
+          label="Theme preset"
         />
         <CustomThemePanel
           themeId={settings.SETTING_THEME}
@@ -97,11 +83,7 @@ export const SettingsPage: React.FC = () => {
         />
         {settings.SETTING_THEME === 'custom' && (
           <>
-            <ColorPicker
-              label="Time color"
-              messageKey="SETTING_TIME_COLOR"
-              bwAllowGrey={false}
-            />
+            <ColorPicker label="Time color" messageKey="SETTING_TIME_COLOR" bwAllowGrey={false} />
             <ColorPicker
               label="Widget text color (primary)"
               messageKey="SETTING_SUBTEXT_PRIMARY_COLOR"
@@ -112,26 +94,14 @@ export const SettingsPage: React.FC = () => {
               messageKey="SETTING_SUBTEXT_SECONDARY_COLOR"
               bwAllowGrey={false}
             />
-            <ColorPicker
-              label="Background color"
-              messageKey="SETTING_BG_COLOR"
-            />
-            <ColorPicker
-              label="Ring day section color"
-              messageKey="SETTING_RING_DAY_COLOR"
-            />
+            <ColorPicker label="Background color" messageKey="SETTING_BG_COLOR" />
+            <ColorPicker label="Ring day section color" messageKey="SETTING_RING_DAY_COLOR" />
             <ColorPicker
               label="Ring sunrise section color"
               messageKey="SETTING_RING_SUNRISE_COLOR"
             />
-            <ColorPicker
-              label="Ring sunset section color"
-              messageKey="SETTING_RING_SUNSET_COLOR"
-            />
-            <ColorPicker
-              label="Ring night section color"
-              messageKey="SETTING_RING_NIGHT_COLOR"
-            />
+            <ColorPicker label="Ring sunset section color" messageKey="SETTING_RING_SUNSET_COLOR" />
+            <ColorPicker label="Ring night section color" messageKey="SETTING_RING_NIGHT_COLOR" />
             <ColorPicker
               label="Dial marker color (primary)"
               messageKey="SETTING_PIP_COLOR_PRIMARY"
@@ -152,10 +122,7 @@ export const SettingsPage: React.FC = () => {
               messageKey="SETTING_SUN_STROKE_COLOR"
               bwAllowGrey={false}
             />
-            <ColorPicker
-              label="Sun fill color"
-              messageKey="SETTING_SUN_FILL_COLOR"
-            />
+            <ColorPicker label="Sun fill color" messageKey="SETTING_SUN_FILL_COLOR" />
           </>
         )}
       </Section>
@@ -170,7 +137,7 @@ export const SettingsPage: React.FC = () => {
           <>
             <ThemePicker
               messageKey="SETTING_NIGHT_THEME"
-              label='Night theme preset'
+              label="Night theme preset"
               themes={activeNightThemes}
               watchPreviewProps={{ isNight: true }}
               savedThemes={nightSavedThemes.savedThemes}
@@ -202,10 +169,7 @@ export const SettingsPage: React.FC = () => {
                   messageKey="SETTING_NIGHT_SUBTEXT_SECONDARY_COLOR"
                   bwAllowGrey={false}
                 />
-                <ColorPicker
-                  label="Background color"
-                  messageKey="SETTING_NIGHT_BG_COLOR"
-                />
+                <ColorPicker label="Background color" messageKey="SETTING_NIGHT_BG_COLOR" />
                 <ColorPicker
                   label="Ring day section color"
                   messageKey="SETTING_NIGHT_RING_DAY_COLOR"
@@ -242,10 +206,7 @@ export const SettingsPage: React.FC = () => {
                   messageKey="SETTING_NIGHT_SUN_STROKE_COLOR"
                   bwAllowGrey={false}
                 />
-                <ColorPicker
-                  label="Sun fill color"
-                  messageKey="SETTING_NIGHT_SUN_FILL_COLOR"
-                />
+                <ColorPicker label="Sun fill color" messageKey="SETTING_NIGHT_SUN_FILL_COLOR" />
               </>
             )}
           </>
@@ -257,47 +218,19 @@ export const SettingsPage: React.FC = () => {
       </Section>
 
       {altWidgetSelected && (
-        <Section title="Alternate Time Zone 1">
-          <Select
-            label="City"
-            messageKey="SETTING_ALT_CITY"
-            options={cityOptions}
-            value={altCity.name}
-            onChange={handleAltCityChange}
-            className="halite-alt-time-control"
-          />
-          <TextInput
-            label="Label"
-            messageKey="SETTING_ALT_LABEL"
-            value={settings.SETTING_ALT_LABEL ?? altCity.abbreviation}
-            maxLength={ALT_LABEL_MAX_LENGTH}
-            normalizeValue={normalizeAltLabel}
-            spellCheck={false}
-            className="halite-alt-time-control"
-          />
-        </Section>
+        <AltTimezoneSection
+          title="Alternate Time Zone 1"
+          cityKey="SETTING_ALT_CITY"
+          labelKey="SETTING_ALT_LABEL"
+        />
       )}
 
       {alt2WidgetSelected && (
-        <Section title="Alternate Time Zone 2">
-          <Select
-            label="City"
-            messageKey="SETTING_ALT_CITY2"
-            options={cityOptions}
-            value={altCity2.name}
-            onChange={handleAltCity2Change}
-            className="halite-alt-time-control"
-          />
-          <TextInput
-            label="Label"
-            messageKey="SETTING_ALT_LABEL2"
-            value={settings.SETTING_ALT_LABEL2 ?? altCity2.abbreviation}
-            maxLength={ALT_LABEL_MAX_LENGTH}
-            normalizeValue={normalizeAltLabel}
-            spellCheck={false}
-            className="halite-alt-time-control"
-          />
-        </Section>
+        <AltTimezoneSection
+          title="Alternate Time Zone 2"
+          cityKey="SETTING_ALT_CITY2"
+          labelKey="SETTING_ALT_LABEL2"
+        />
       )}
 
       {weatherWidgetSelected && (
@@ -388,6 +321,6 @@ export const SettingsPage: React.FC = () => {
         />
       </Section>
       <DonationLink />
-    </Page >
+    </Page>
   );
 };
