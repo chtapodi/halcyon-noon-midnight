@@ -218,9 +218,8 @@ static void quickViewLayerReposition() {
                             bounds.size.h - 2 * EDGE_THICKNESS);
   layer_set_frame(centerLayer, centerFrame);
 
-  // Resize the infoLayer to match the new centerLayer
-  layer_set_frame(infoLayer,
-                  GRect(0, 0, centerFrame.size.w, centerFrame.size.h));
+  layer_set_frame(infoLayer, GRect(0, centerFrame.origin.y, full_bounds.size.w,
+                                   centerFrame.size.h));
 
   // Mark everything as dirty to redraw
   layer_mark_dirty(ringLayer);
@@ -306,9 +305,10 @@ static void main_window_load(Window *window) {
 
   layer_add_child(shiftingLayer, centerLayer);
 
-  infoLayer = layer_create(layer_get_bounds(centerLayer));
+  infoLayer = layer_create(
+      GRect(0, centerFrame.origin.y, bounds.size.w, centerFrame.size.h));
   layer_set_update_proc(infoLayer, draw_center_text);
-  layer_add_child(centerLayer, infoLayer);
+  layer_add_child(shiftingLayer, infoLayer);
 
   // create ring layer
   ringLayer = layer_create(bounds);
