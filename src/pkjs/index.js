@@ -1,4 +1,4 @@
-var USE_LOCAL_CONFIG = true;
+var USE_LOCAL_CONFIG = false;
 var configDataUri = 'https://halcyon.freakified.net/';
 var configLocalUri = 'http://10.25.219.23:3000/index.html';
 
@@ -473,8 +473,8 @@ Pebble.addEventListener('webviewclosed', function (e) {
   // Process non-color, non-widget settings
   Object.keys(configData).forEach(function (key) {
     if (colorKeys.indexOf(key) === -1 && widgetKeys.indexOf(key) === -1 &&
-        key !== 'SETTING_ALT_CITY' && key !== 'SETTING_ALT_LABEL' &&
-        key !== 'SETTING_ALT_CITY2' && key !== 'SETTING_ALT_LABEL2') {
+      key !== 'SETTING_ALT_CITY' && key !== 'SETTING_ALT_LABEL' &&
+      key !== 'SETTING_ALT_CITY2' && key !== 'SETTING_ALT_LABEL2') {
       var value = configData[key];
       if (typeof value === 'boolean') {
         dict[key] = value ? 1 : 0;
