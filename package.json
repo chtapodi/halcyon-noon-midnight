@@ -89,6 +89,11 @@
     "resources": {
       "media": [
         {
+          "file": "images/bg-image.png",
+          "name": "BG_IMAGE",
+          "type": "bitmap"
+        },
+        {
           "file": "images/menuicon.png",
           "menuIcon": true,
           "name": "MENU_ICON",

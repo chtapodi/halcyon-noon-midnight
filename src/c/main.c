@@ -26,6 +26,8 @@ static Layer *centerLayer;
 static Layer *ringLayer;
 static Layer *infoLayer;
 static bool s_quick_view_visible = false;
+static GBitmap *s_bg_bitmap;
+static GColor s_bg_palette[2];
 
 // Time string (populated each tick)
 static char timeText[TIME_STR_LEN];
@@ -51,6 +53,57 @@ static char widgetTextUS[WIDGET_TEXT_LEN]; // upper secondary
 static char widgetTextUP[WIDGET_TEXT_LEN]; // upper primary
 static char widgetTextLP[WIDGET_TEXT_LEN]; // lower primary
 static char widgetTextLS[WIDGET_TEXT_LEN]; // lower secondary
+
+static GColor subtle_overlay_color(GColor bgColor, GColor contrastColor) {
+#ifdef PBL_COLOR
+#define COLOR_CHANNEL(color, shift) (((color).argb >> (shift)) & 0x3)
+  int bg_r = COLOR_CHANNEL(bgColor, 4);
+  int bg_g = COLOR_CHANNEL(bgColor, 2);
+  int bg_b = COLOR_CHANNEL(bgColor, 0);
+  int contrast_r = COLOR_CHANNEL(contrastColor, 4);
+  int contrast_g = COLOR_CHANNEL(contrastColor, 2);
+  int contrast_b = COLOR_CHANNEL(contrastColor, 0);
+
+  int r = bg_r + ((contrast_r - bg_r) / 3);
+  int g = bg_g + ((contrast_g - bg_g) / 3);
+  int b = bg_b + ((contrast_b - bg_b) / 3);
+
+  if (r == bg_r && contrast_r != bg_r) {
+    r += contrast_r > bg_r ? 1 : -1;
+  }
+  if (g == bg_g && contrast_g != bg_g) {
+    g += contrast_g > bg_g ? 1 : -1;
+  }
+  if (b == bg_b && contrast_b != bg_b) {
+    b += contrast_b > bg_b ? 1 : -1;
+  }
+
+  return GColorFromRGB(r * 85, g * 85, b * 85);
+#undef COLOR_CHANNEL
+#else
+  return gcolor_equal(bgColor, GColorWhite) ? GColorLightGray : GColorWhite;
+#endif
+}
+
+static void draw_info_background(GContext *ctx, GRect bounds,
+                                 ColorTheme theme) {
+  if (!s_bg_bitmap) {
+    return;
+  }
+
+  GRect bitmap_bounds = gbitmap_get_bounds(s_bg_bitmap);
+  GRect draw_bounds =
+      GRect((bounds.size.w - bitmap_bounds.size.w) / 2,
+            (bounds.size.h - bitmap_bounds.size.h) / 2, bitmap_bounds.size.w,
+            bitmap_bounds.size.h);
+
+  s_bg_palette[0] = theme.bgColor;
+  s_bg_palette[1] = subtle_overlay_color(theme.bgColor, theme.timeColor);
+  gbitmap_set_palette(s_bg_bitmap, s_bg_palette, false);
+
+  graphics_context_set_compositing_mode(ctx, GCompOpSet);
+  graphics_draw_bitmap_in_rect(ctx, s_bg_bitmap, draw_bounds);
+}
 
 static void update_widget_text(void) {
   if (globalSettings.widgetUpperSecondary[0] != '\0') {
@@ -81,14 +134,10 @@ static void update_widget_text(void) {
 
 static void draw_center_text(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
-  bool useLargeFont = globalSettings.useLargeFonts;
+  ColorTheme currentTheme = getCurrentColorTheme();
+  draw_info_background(ctx, bounds, currentTheme);
 
-  bool useNightColors = false;
-  if (globalSettings.useNightTheme) {
-    struct tm *timeInfo = getCurrentTime();
-    int currentMinutes = timeInfo->tm_hour * 60 + timeInfo->tm_min;
-    useNightColors = isNightTime(currentMinutes);
-  }
+  bool useLargeFont = globalSettings.useLargeFonts;
 
   // ---- Font selection ----
   GFont time_font = fonts_get_system_font(FONT_TIME);
@@ -110,13 +159,9 @@ static void draw_center_text(Layer *layer, GContext *ctx) {
                                       : FONT_WIDGET_SECONDARY_OFFSET;
 
   // ---- Color selection ----
-  GColor timeColor =
-      useNightColors ? globalSettings.nightTimeColor : globalSettings.timeColor;
-  GColor primaryColor = useNightColors ? globalSettings.nightSubtextPrimaryColor
-                                       : globalSettings.subtextPrimaryColor;
-  GColor secondaryColor = useNightColors
-                              ? globalSettings.nightSubtextSecondaryColor
-                              : globalSettings.subtextSecondaryColor;
+  GColor timeColor = currentTheme.timeColor;
+  GColor primaryColor = currentTheme.subtextPrimaryColor;
+  GColor secondaryColor = currentTheme.subtextSecondaryColor;
 
   // ---- Build ordered slot list (top to bottom) ----
   // We use a fixed-size array and fill only active (non-empty) slots.
@@ -296,6 +341,8 @@ static void main_window_load(Window *window) {
   shiftingLayer = layer_create(bounds);
   layer_add_child(windowLayer, shiftingLayer);
 
+  s_bg_bitmap = gbitmap_create_with_resource(RESOURCE_ID_BG_IMAGE);
+
   // create central rectangle
   GRect centerFrame = GRect(
       bounds.origin.x + EDGE_THICKNESS, bounds.origin.y + EDGE_THICKNESS,
@@ -330,6 +377,10 @@ static void main_window_load(Window *window) {
 
 static void main_window_unload(Window *window) {
   // destroy everything
+  if (s_bg_bitmap) {
+    gbitmap_destroy(s_bg_bitmap);
+    s_bg_bitmap = NULL;
+  }
   layer_destroy(ringLayer);
   layer_destroy(infoLayer);
   layer_destroy(centerLayer);
