@@ -11,10 +11,16 @@ function getCondition(code, lang) {
 var OPENMETEO_BASE = 'https://api.open-meteo.com/v1/forecast';
 var FETCH_TIMEOUT_MS = 15000;
 var WEATHER_CACHE_MAX_AGE_MS = 30 * 60 * 1000;
+var WEATHER_CACHE_DISPLAY_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 
 function isFreshWeather(weather) {
   return !!(weather && weather.fetchedAt &&
     (Date.now() - weather.fetchedAt) <= WEATHER_CACHE_MAX_AGE_MS);
+}
+
+function isDisplayableWeather(weather) {
+  return !!(weather && weather.fetchedAt &&
+    (Date.now() - weather.fetchedAt) <= WEATHER_CACHE_DISPLAY_MAX_AGE_MS);
 }
 
 function clearWeather() {
@@ -88,7 +94,7 @@ function restoreWeather() {
   if (saved) {
     try {
       var weather = JSON.parse(saved);
-      if (isFreshWeather(weather)) return weather;
+      if (isDisplayableWeather(weather)) return weather;
       clearWeather();
       return null;
     } catch (e) {
@@ -120,6 +126,7 @@ module.exports = {
   fetch: fetchWeather,
   restore: restoreWeather,
   isFresh: isFreshWeather,
+  isDisplayable: isDisplayableWeather,
   clear: clearWeather,
   toF: toF,
   toMPH: toMPH,

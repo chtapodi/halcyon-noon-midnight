@@ -46,6 +46,19 @@ var DEFAULT_WIDGETS = {
   'SETTING_WIDGET_LOWER_SECONDARY': '{steps} {t:STEPS}'
 };
 
+var WIDGET_SLOT_KEYS = [
+  'SETTING_WIDGET_UPPER_SECONDARY',
+  'SETTING_WIDGET_UPPER_PRIMARY',
+  'SETTING_WIDGET_LOWER_PRIMARY',
+  'SETTING_WIDGET_LOWER_SECONDARY'
+];
+
+var WEATHER_WIDGET_TOKENS = [
+  '{temp}', '{thi}', '{tlo}', '{cond}', '{cond_day}', '{hum}',
+  '{wind}', '{uv}', '{rain}', '{pop}', '{dew}', '{temp_unit}',
+  '{wind_unit}', '{wind_dir}'
+];
+
 function getDefaultWidgets() {
   var defaults = {};
   Object.keys(DEFAULT_WIDGETS).forEach(function (key) {
@@ -58,6 +71,23 @@ function getDefaultWidgets() {
   }
 
   return defaults;
+}
+
+function settingsUseWeather(settings) {
+  var defaultWidgets = getDefaultWidgets();
+  settings = settings || {};
+
+  return WIDGET_SLOT_KEYS.some(function (key) {
+    var fmt = settings[key];
+    if (fmt === undefined || fmt === null) {
+      fmt = defaultWidgets[key];
+    }
+    if (!fmt) return false;
+
+    return WEATHER_WIDGET_TOKENS.some(function (token) {
+      return fmt.indexOf(token) !== -1;
+    });
+  });
 }
 
 // ---- Time helpers ----
@@ -196,7 +226,7 @@ function sendDataToWatch() {
   var isImperial = (settings.SETTING_TEMP_UNIT === 1);
   var lang = settings.SETTING_LANGUAGE || 0;
   var use24h = cachedIs24h;
-  var weather = Weather.isFresh(cachedWeather) ? cachedWeather : null;
+  var weather = Weather.isDisplayable(cachedWeather) ? cachedWeather : null;
   var defaultWidgets = getDefaultWidgets();
 
   if (cachedWeather && !weather) {
@@ -204,17 +234,9 @@ function sendDataToWatch() {
     Weather.clear();
   }
 
-  // Prepare Pass 1 output for each widget slot
-  var slotKeys = [
-    'SETTING_WIDGET_UPPER_SECONDARY',
-    'SETTING_WIDGET_UPPER_PRIMARY',
-    'SETTING_WIDGET_LOWER_PRIMARY',
-    'SETTING_WIDGET_LOWER_SECONDARY'
-  ];
-
   var msg = {};
 
-  slotKeys.forEach(function (key) {
+  WIDGET_SLOT_KEYS.forEach(function (key) {
     // Use configured setting, falling back to default format string
     var fmt = settings[key];
     if (fmt === undefined || fmt === null) {
@@ -305,6 +327,12 @@ function locationSuccess(pos) {
 
   // Send to watch immediately (even before weather)
   sendDataToWatch();
+
+  if (!settingsUseWeather(cachedSettings)) {
+    console.log('No weather widgets configured; skipping weather fetch');
+    resetBackoff();
+    return;
+  }
 
   Weather.fetch(lat, lng,
     function (data) {
