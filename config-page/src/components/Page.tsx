@@ -1,17 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useConfig } from '../context/PebbleConfigContext';
+import { ConfirmModal } from './ConfirmModal';
 
 export const Page: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => {
   const { resetToDefaults, save } = useConfig();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const handleReset = () => {
-    const confirmed = window.confirm(
-      'Reset all settings to their defaults? This will not affect saved custom themes.'
-    );
-
-    if (confirmed) {
-      resetToDefaults();
-    }
+    setIsConfirmOpen(true);
   };
 
   return (
@@ -26,6 +22,14 @@ export const Page: React.FC<{ title: string; children: React.ReactNode }> = ({ t
       <main className="halite-content">
         {children}
       </main>
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        onConfirm={resetToDefaults}
+        title="Reset Settings"
+        description="Reset all settings to their defaults? This will not affect saved custom themes."
+        confirmLabel="Reset to defaults"
+      />
     </div>
   );
 };
