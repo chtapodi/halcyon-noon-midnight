@@ -11,7 +11,7 @@
   },
   "pebble": {
     "displayName": "Halcyon+",
-    "uuid": "c8e97ab8-7c12-45fb-975d-e85d5de61e8b",
+    "uuid": "c2baf977-47fb-4934-8ba4-057e513537d6",
     "sdkVersion": "3",
     "enableMultiJS": true,
     "targetPlatforms": [
