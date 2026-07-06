@@ -73,7 +73,7 @@ void Settings_loadFromStorage() {
       DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR;
 
   // various appearance settings
-  globalSettings.showNoonMidnightMarkers = false;
+  globalSettings.showNoonMidnightMarkers = true;
   globalSettings.useNightTheme = true;
   globalSettings.useLargeFonts = false;
   globalSettings.showLeadingZero = false;
