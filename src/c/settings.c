@@ -18,6 +18,14 @@ static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra
   storedSettingsExtra->localUtcOffset = globalSettings.localUtcOffset;
   storedSettingsExtra->usePrimaryFontForAllWidgets =
       globalSettings.usePrimaryFontForAllWidgets;
+  storedSettingsExtra->showNoonMidnightMarkers =
+      globalSettings.showNoonMidnightMarkers;
+  storedSettingsExtra->noonMarkerColor = globalSettings.noonMarkerColor;
+  storedSettingsExtra->midnightMarkerColor = globalSettings.midnightMarkerColor;
+  storedSettingsExtra->nightNoonMarkerColor =
+      globalSettings.nightNoonMarkerColor;
+  storedSettingsExtra->nightMidnightMarkerColor =
+      globalSettings.nightMidnightMarkerColor;
 }
 
 void Settings_init() { Settings_loadFromStorage(); }
@@ -42,6 +50,8 @@ void Settings_loadFromStorage() {
   globalSettings.ringSunsetColor = DEFAULT_RING_SUNSET_COLOR;
   globalSettings.sunStrokeColor = DEFAULT_SUN_STROKE_COLOR;
   globalSettings.sunFillColor = DEFAULT_SUN_FILL_COLOR;
+  globalSettings.noonMarkerColor = DEFAULT_NOON_MARKER_COLOR;
+  globalSettings.midnightMarkerColor = DEFAULT_MIDNIGHT_MARKER_COLOR;
 
   // night theme colors
   globalSettings.nightTimeColor = DEFAULT_NIGHT_TIME_COLOR;
@@ -58,8 +68,12 @@ void Settings_loadFromStorage() {
   globalSettings.nightRingSunsetColor = DEFAULT_NIGHT_RING_SUNSET_COLOR;
   globalSettings.nightSunStrokeColor = DEFAULT_NIGHT_SUN_STROKE_COLOR;
   globalSettings.nightSunFillColor = DEFAULT_NIGHT_SUN_FILL_COLOR;
+  globalSettings.nightNoonMarkerColor = DEFAULT_NIGHT_NOON_MARKER_COLOR;
+  globalSettings.nightMidnightMarkerColor =
+      DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR;
 
   // various appearance settings
+  globalSettings.showNoonMidnightMarkers = false;
   globalSettings.useNightTheme = true;
   globalSettings.useLargeFonts = false;
   globalSettings.showLeadingZero = false;
@@ -127,6 +141,15 @@ void Settings_loadFromStorage() {
       globalSettings.localUtcOffset = storedSettingsExtra.localUtcOffset;
       globalSettings.usePrimaryFontForAllWidgets =
           storedSettingsExtra.usePrimaryFontForAllWidgets;
+      globalSettings.showNoonMidnightMarkers =
+          storedSettingsExtra.showNoonMidnightMarkers;
+      globalSettings.noonMarkerColor = storedSettingsExtra.noonMarkerColor;
+      globalSettings.midnightMarkerColor =
+          storedSettingsExtra.midnightMarkerColor;
+      globalSettings.nightNoonMarkerColor =
+          storedSettingsExtra.nightNoonMarkerColor;
+      globalSettings.nightMidnightMarkerColor =
+          storedSettingsExtra.nightMidnightMarkerColor;
     }
   }
 
@@ -201,6 +224,8 @@ ColorTheme getCurrentColorTheme() {
     theme.ringSunsetColor = globalSettings.nightRingSunsetColor;
     theme.sunStrokeColor = globalSettings.nightSunStrokeColor;
     theme.sunFillColor = globalSettings.nightSunFillColor;
+    theme.noonMarkerColor = globalSettings.nightNoonMarkerColor;
+    theme.midnightMarkerColor = globalSettings.nightMidnightMarkerColor;
   } else {
     theme.timeColor = globalSettings.timeColor;
     theme.subtextPrimaryColor = globalSettings.subtextPrimaryColor;
@@ -215,6 +240,8 @@ ColorTheme getCurrentColorTheme() {
     theme.ringSunsetColor = globalSettings.ringSunsetColor;
     theme.sunStrokeColor = globalSettings.sunStrokeColor;
     theme.sunFillColor = globalSettings.sunFillColor;
+    theme.noonMarkerColor = globalSettings.noonMarkerColor;
+    theme.midnightMarkerColor = globalSettings.midnightMarkerColor;
   }
 
   return theme;

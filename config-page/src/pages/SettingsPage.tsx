@@ -321,6 +321,33 @@ export const SettingsPage: React.FC = () => {
           ]}
         />
       </Section>
+      <Section title="Ring Markers">
+        <Toggle
+          label="Noon / Midnight markers"
+          description="Draw lines on the ring at noon and midnight positions"
+          messageKey="SETTING_SHOW_NOON_MIDNIGHT_MARKERS"
+        />
+        {settings.SETTING_SHOW_NOON_MIDNIGHT_MARKERS === 1 && (
+          <>
+            <ColorPicker
+              label="Noon marker color"
+              messageKey="SETTING_NOON_MARKER_COLOR"
+            />
+            <ColorPicker
+              label="Midnight marker color"
+              messageKey="SETTING_MIDNIGHT_MARKER_COLOR"
+            />
+            <ColorPicker
+              label="Night noon marker color"
+              messageKey="SETTING_NIGHT_NOON_MARKER_COLOR"
+            />
+            <ColorPicker
+              label="Night midnight marker color"
+              messageKey="SETTING_NIGHT_MIDNIGHT_MARKER_COLOR"
+            />
+          </>
+        )}
+      </Section>
       <DonationLink />
     </Page>
   );

@@ -84,6 +84,17 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   Tuple *usePrimaryFontForAllWidgets_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_USE_PRIMARY_WIDGET_FONT);
 
+  Tuple *showNoonMidnightMarkers_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_NOON_MIDNIGHT_MARKERS);
+  Tuple *noonMarkerColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NOON_MARKER_COLOR);
+  Tuple *midnightMarkerColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_MIDNIGHT_MARKER_COLOR);
+  Tuple *nightNoonMarkerColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_NOON_MARKER_COLOR);
+  Tuple *nightMidnightMarkerColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_MIDNIGHT_MARKER_COLOR);
+
   Tuple *showLeadingZero_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_LEADING_ZERO);
 
@@ -254,6 +265,27 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (usePrimaryFontForAllWidgets_tuple != NULL) {
     globalSettings.usePrimaryFontForAllWidgets =
         (bool)usePrimaryFontForAllWidgets_tuple->value->int8;
+  }
+
+  if (showNoonMidnightMarkers_tuple != NULL) {
+    globalSettings.showNoonMidnightMarkers =
+        (bool)showNoonMidnightMarkers_tuple->value->int8;
+  }
+  if (noonMarkerColor_tuple != NULL) {
+    globalSettings.noonMarkerColor =
+        GColorFromHEX(noonMarkerColor_tuple->value->int32);
+  }
+  if (midnightMarkerColor_tuple != NULL) {
+    globalSettings.midnightMarkerColor =
+        GColorFromHEX(midnightMarkerColor_tuple->value->int32);
+  }
+  if (nightNoonMarkerColor_tuple != NULL) {
+    globalSettings.nightNoonMarkerColor =
+        GColorFromHEX(nightNoonMarkerColor_tuple->value->int32);
+  }
+  if (nightMidnightMarkerColor_tuple != NULL) {
+    globalSettings.nightMidnightMarkerColor =
+        GColorFromHEX(nightMidnightMarkerColor_tuple->value->int32);
   }
 
   if (useNightTheme_tuple != NULL) {

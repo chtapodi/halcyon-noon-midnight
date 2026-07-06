@@ -212,5 +212,25 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   graphics_context_set_stroke_color(ctx, currentTheme.sunStrokeColor);
   graphics_fill_circle(ctx, sunPos, SUN_DIAMETER);
   graphics_draw_circle(ctx, sunPos, SUN_DIAMETER);
+
+  // ---- Draw noon and midnight markers on the ring ---- //
+  if (globalSettings.showNoonMidnightMarkers) {
+    int markerWidth = 2;
+
+    // Noon marker (top edge, vertical bar)
+    graphics_context_set_fill_color(ctx, currentTheme.noonMarkerColor);
+    graphics_fill_rect(ctx,
+        GRect(bounds.size.w / 2 - markerWidth / 2, bounds.origin.y,
+              markerWidth, thickness),
+        0, GCornerNone);
+
+    // Midnight marker (bottom edge, vertical bar)
+    graphics_context_set_fill_color(ctx, currentTheme.midnightMarkerColor);
+    graphics_fill_rect(ctx,
+        GRect(bounds.size.w / 2 - markerWidth / 2,
+              bounds.origin.y + bounds.size.h - thickness,
+              markerWidth, thickness),
+        0, GCornerNone);
+  }
 }
 #endif

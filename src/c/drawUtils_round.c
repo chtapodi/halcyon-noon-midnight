@@ -170,6 +170,37 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   graphics_fill_circle(ctx, sunPos, SUN_DIAMETER);
   graphics_draw_circle(ctx, sunPos, SUN_DIAMETER);
 
+  // ---- Draw noon and midnight markers on the ring ---- //
+  if (globalSettings.showNoonMidnightMarkers) {
+    // With 12h shift: noon (12:00) → shifted=0 → angle 0
+    //                 midnight (0:00) → shifted=12 → angle TRIG_MAX_ANGLE/2
+    int noonAngle = 0;
+    int midnightAngle = TRIG_MAX_ANGLE / 2;
+
+    // Inner bounds for the ring's inner edge
+    GRect markerInnerBounds =
+        grect_inset(bounds, GEdgeInsets(thickness, thickness, thickness, thickness));
+
+    GPoint noonOuter =
+        gpoint_from_polar(bounds, GOvalScaleModeFitCircle, noonAngle);
+    GPoint noonInner =
+        gpoint_from_polar(markerInnerBounds, GOvalScaleModeFitCircle, noonAngle);
+    GPoint midnightOuter =
+        gpoint_from_polar(bounds, GOvalScaleModeFitCircle, midnightAngle);
+    GPoint midnightInner = gpoint_from_polar(markerInnerBounds,
+                                             GOvalScaleModeFitCircle, midnightAngle);
+
+    graphics_context_set_stroke_width(ctx, 2);
+
+    // Noon marker (right side, 3 o'clock)
+    graphics_context_set_stroke_color(ctx, currentTheme.noonMarkerColor);
+    graphics_draw_line(ctx, noonOuter, noonInner);
+
+    // Midnight marker (left side, 9 o'clock)
+    graphics_context_set_stroke_color(ctx, currentTheme.midnightMarkerColor);
+    graphics_draw_line(ctx, midnightOuter, midnightInner);
+  }
+
   //   graphics_context_set_fill_color(ctx, GColorRed);
   // graphics_fill_rect(ctx, sunBoundingRect, 0, GCornerNone);
 }

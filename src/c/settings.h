@@ -3,7 +3,7 @@
 #include <pebble.h>
 #include <sys/syslimits.h>
 
-#define CURRENT_SETTINGS_VERSION 3
+#define CURRENT_SETTINGS_VERSION 5
 #define SETTINGS_VERSION_PERSIST_KEY 1
 #define SETTINGS_PERSIST_KEY 2
 #define SETTINGS_EXTRA_PERSIST_KEY 3
@@ -24,6 +24,8 @@
 #define DEFAULT_RING_SUNSET_COLOR GColorChromeYellow
 #define DEFAULT_SUN_STROKE_COLOR GColorBlack
 #define DEFAULT_SUN_FILL_COLOR GColorYellow
+#define DEFAULT_NOON_MARKER_COLOR GColorOrange
+#define DEFAULT_MIDNIGHT_MARKER_COLOR GColorDarkGray
 
 // night theme defaults
 #define DEFAULT_NIGHT_TIME_COLOR GColorFromHEX(0xFFFFFF)
@@ -39,6 +41,8 @@
 #define DEFAULT_NIGHT_RING_SUNSET_COLOR GColorFromHEX(0x0055FF)
 #define DEFAULT_NIGHT_SUN_STROKE_COLOR GColorBlack
 #define DEFAULT_NIGHT_SUN_FILL_COLOR GColorFromHEX(0xFFFFFF)
+#define DEFAULT_NIGHT_NOON_MARKER_COLOR GColorFromHEX(0xFFAA00)
+#define DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR GColorFromHEX(0x5555FF)
 #else
 #define DEFAULT_TIME_COLOR GColorBlack
 #define DEFAULT_SUBTEXT_PRIMARY_COLOR GColorBlack
@@ -53,6 +57,8 @@
 #define DEFAULT_RING_SUNSET_COLOR GColorLightGray
 #define DEFAULT_SUN_STROKE_COLOR GColorBlack
 #define DEFAULT_SUN_FILL_COLOR GColorWhite
+#define DEFAULT_NOON_MARKER_COLOR GColorBlack
+#define DEFAULT_MIDNIGHT_MARKER_COLOR GColorBlack
 
 // night theme defaults
 #define DEFAULT_NIGHT_TIME_COLOR GColorWhite
@@ -68,6 +74,8 @@
 #define DEFAULT_NIGHT_RING_SUNSET_COLOR GColorLightGray
 #define DEFAULT_NIGHT_SUN_STROKE_COLOR GColorBlack
 #define DEFAULT_NIGHT_SUN_FILL_COLOR GColorWhite
+#define DEFAULT_NIGHT_NOON_MARKER_COLOR GColorWhite
+#define DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR GColorWhite
 #endif
 
 // default settings, black and white
@@ -101,6 +109,8 @@ typedef struct {
   GColor ringSunsetColor;
   GColor sunStrokeColor;
   GColor sunFillColor;
+  GColor noonMarkerColor;
+  GColor midnightMarkerColor;
 } ColorTheme;
 
 typedef struct {
@@ -120,6 +130,8 @@ typedef struct {
   GColor ringSunsetColor;
   GColor sunStrokeColor;
   GColor sunFillColor;
+  GColor noonMarkerColor;
+  GColor midnightMarkerColor;
 
   // night theme colors
   GColor nightTimeColor;
@@ -135,7 +147,10 @@ typedef struct {
   GColor nightRingSunsetColor;
   GColor nightSunStrokeColor;
   GColor nightSunFillColor;
+  GColor nightNoonMarkerColor;
+  GColor nightMidnightMarkerColor;
 
+  bool showNoonMidnightMarkers;
   bool useNightTheme;
   bool useLargeFonts;
   bool showLeadingZero;
@@ -174,6 +189,8 @@ typedef struct {
   GColor ringSunsetColor;
   GColor sunStrokeColor;
   GColor sunFillColor;
+  GColor noonMarkerColor;
+  GColor midnightMarkerColor;
 
   // night theme colors
   GColor nightTimeColor;
@@ -189,7 +206,10 @@ typedef struct {
   GColor nightRingSunsetColor;
   GColor nightSunStrokeColor;
   GColor nightSunFillColor;
+  GColor nightNoonMarkerColor;
+  GColor nightMidnightMarkerColor;
 
+  bool showNoonMidnightMarkers;
   bool useNightTheme;
   bool useLargeFonts;
   bool showLeadingZero;
@@ -214,6 +234,11 @@ typedef struct {
   int16_t altCity2UtcOffset;
   int16_t localUtcOffset;
   bool usePrimaryFontForAllWidgets;
+  bool showNoonMidnightMarkers;
+  GColor noonMarkerColor;
+  GColor midnightMarkerColor;
+  GColor nightNoonMarkerColor;
+  GColor nightMidnightMarkerColor;
 } StoredSettingsExtra;
 
 typedef char StoredSettings_must_fit_in_persist_data
