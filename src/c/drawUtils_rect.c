@@ -286,11 +286,11 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     int anchorRight = bounds.size.w - thickness - (inside ? stroke : 0);
     int anchorLeft = thickness + (inside ? stroke : 0);
 
-    // Inner clip rectangle — inset further for inside mode
-    int clipLeft = thickness + (inside ? stroke : 0);
-    int clipRight = bounds.size.w - thickness - (inside ? stroke : 0);
-    int clipTop = thickness + (inside ? stroke : 0);
-    int clipBottom = bounds.size.h - thickness - (inside ? stroke : 0);
+    // Clip rectangle: inside mode stops at inset boundary; outside fills full ring perimeter
+    int clipLeft   = inside ? (thickness + stroke) : 0;
+    int clipRight  = inside ? (bounds.size.w - thickness - stroke) : bounds.size.w;
+    int clipTop    = inside ? (thickness + stroke) : 0;
+    int clipBottom = inside ? (bounds.size.h - thickness - stroke) : bounds.size.h;
 
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
 

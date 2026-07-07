@@ -206,7 +206,7 @@ void Settings_loadFromStorage() {
   // Seed mock tide data for emulator/demo if no real data from phone
   if (tidePointCount == 0) {
     tide_init_mock_data();
-    globalSettings.showTidePlot = true;  // auto-enable for emulator testing
+    globalSettings.showTidePlot = true;
   }
 }
 
