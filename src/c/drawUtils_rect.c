@@ -279,6 +279,12 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     int vStep = (bounds.size.h * 4) / tideSteps + 1;  // left/right step height
     bool inside = globalSettings.tidePlotInside;
 
+    // Inner boundary rectangle — clip at corners
+    int innerLeft = thickness;
+    int innerRight = bounds.size.w - thickness;
+    int innerTop = thickness;
+    int innerBottom = bounds.size.h - thickness;
+
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
 
     for (int i = 0; i < tideSteps; i++) {
@@ -295,33 +301,53 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
 
       int cx = pos.x, cy = pos.y;
 
-      if (progress < 0.25f) {
+      if (progress < 0.25f && cx >= innerLeft && cx <= innerRight) {
         int y0 = thickness;
+        int rx = cx - hStep/2;
+        int rw = hStep;
+        if (rx < innerLeft) { rw -= (innerLeft - rx); rx = innerLeft; }
+        if (rx + rw > innerRight) rw = innerRight - rx;
+        if (rw <= 0) continue;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0, hStep, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0 - d, hStep, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
         }
-      } else if (progress < 0.5f) {
+      } else if (progress < 0.5f && cy >= innerTop && cy <= innerBottom) {
         int x0 = bounds.size.w - thickness;
+        int ry = cy - vStep/2;
+        int rh = vStep;
+        if (ry < innerTop) { rh -= (innerTop - ry); ry = innerTop; }
+        if (ry + rh > innerBottom) rh = innerBottom - ry;
+        if (rh <= 0) continue;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(x0 - d, cy - vStep/2, d, vStep), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(x0, cy - vStep/2, d, vStep), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
         }
-      } else if (progress < 0.75f) {
+      } else if (progress < 0.75f && cx >= innerLeft && cx <= innerRight) {
         int y0 = bounds.size.h - thickness;
+        int rx = cx - hStep/2;
+        int rw = hStep;
+        if (rx < innerLeft) { rw -= (innerLeft - rx); rx = innerLeft; }
+        if (rx + rw > innerRight) rw = innerRight - rx;
+        if (rw <= 0) continue;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0 - d, hStep, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0, hStep, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
         }
-      } else {
+      } else if (cy >= innerTop && cy <= innerBottom) {
         int x0 = thickness;
+        int ry = cy - vStep/2;
+        int rh = vStep;
+        if (ry < innerTop) { rh -= (innerTop - ry); ry = innerTop; }
+        if (ry + rh > innerBottom) rh = innerBottom - ry;
+        if (rh <= 0) continue;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(x0, cy - vStep/2, d, vStep), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(x0 - d, cy - vStep/2, d, vStep), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
         }
       }
     }
