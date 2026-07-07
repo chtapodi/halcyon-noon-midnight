@@ -124,7 +124,7 @@ void Settings_loadFromStorage() {
   // tide plot settings
   globalSettings.showTidePlot = true;
   globalSettings.tidePlotInside = true;   // inside ring by default
-  globalSettings.tideAmplitude = 16;
+  globalSettings.tideAmplitude = 24;
   globalSettings.tidePlotColor = DEFAULT_TIDE_PLOT_COLOR;
   globalSettings.nightTidePlotColor = DEFAULT_NIGHT_TIDE_PLOT_COLOR;
 #ifdef PBL_COLOR

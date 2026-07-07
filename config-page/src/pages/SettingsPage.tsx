@@ -397,6 +397,8 @@ export const SettingsPage: React.FC = () => {
                 { label: '16px', value: 16 },
                 { label: '20px', value: 20 },
                 { label: '24px', value: 24 },
+                { label: '28px', value: 28 },
+                { label: '32px', value: 32 },
               ]}
             />
             <Select
