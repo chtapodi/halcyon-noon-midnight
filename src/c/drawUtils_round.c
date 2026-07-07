@@ -221,12 +221,14 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   if (globalSettings.showTidePlot && tidePointCount >= 2) {
     int tideSteps = 96;
     int radius = bounds.size.w / 2;
+    bool inside = globalSettings.tidePlotInside;
     // Anchor at ring's inner boundary (divider), not centerline
     int boundaryRadius = radius - thickness;
+    // Inside mode: push past the black stroke
+    int anchorRadius = inside ? (boundaryRadius - RING_STROKE_WIDTH) : boundaryRadius;
     int amp = globalSettings.tideAmplitude;
     int16_t range = tideDataMaxHeight - tideDataMinHeight;
     if (range < 1) range = 1;
-    bool inside = globalSettings.tidePlotInside;
 
     graphics_context_set_stroke_color(ctx, currentTheme.tidePlotColor);
 
@@ -249,8 +251,8 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       int dy = inner.y - cy;
 
       // Anchor at ring boundary; positive d = high tide
-      int r0 = boundaryRadius;
-      int r1 = inside ? (boundaryRadius - d) : (boundaryRadius + d);
+      int r0 = anchorRadius;
+      int r1 = inside ? (anchorRadius - d) : (anchorRadius + d);
       if (r1 < 0) r1 = 0;
       if (r1 > radius) r1 = radius;
 

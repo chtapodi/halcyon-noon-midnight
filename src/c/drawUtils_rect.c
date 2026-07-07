@@ -278,12 +278,19 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     int hStep = (bounds.size.w * 4) / tideSteps + 1;  // top/bottom step width
     int vStep = (bounds.size.h * 4) / tideSteps + 1;  // left/right step height
     bool inside = globalSettings.tidePlotInside;
+    int stroke = RING_STROKE_WIDTH;  // 3px — inside mode starts past the black border
 
-    // Inner boundary rectangle — clip at corners
-    int innerLeft = thickness;
-    int innerRight = bounds.size.w - thickness;
-    int innerTop = thickness;
-    int innerBottom = bounds.size.h - thickness;
+    // Anchor point: outside = ring boundary, inside = past the stroke
+    int anchorTop = thickness + (inside ? stroke : 0);
+    int anchorBottom = bounds.size.h - thickness - (inside ? stroke : 0);
+    int anchorRight = bounds.size.w - thickness - (inside ? stroke : 0);
+    int anchorLeft = thickness + (inside ? stroke : 0);
+
+    // Inner clip rectangle — inset further for inside mode
+    int clipLeft = thickness + (inside ? stroke : 0);
+    int clipRight = bounds.size.w - thickness - (inside ? stroke : 0);
+    int clipTop = thickness + (inside ? stroke : 0);
+    int clipBottom = bounds.size.h - thickness - (inside ? stroke : 0);
 
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
 
@@ -301,48 +308,48 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
 
       int cx = pos.x, cy = pos.y;
 
-      if (progress < 0.25f && cx >= innerLeft && cx <= innerRight) {
-        int y0 = thickness;
+      if (progress < 0.25f && cx >= clipLeft && cx <= clipRight) {
+        int y0 = anchorTop;
         int rx = cx - hStep/2;
         int rw = hStep;
-        if (rx < innerLeft) { rw -= (innerLeft - rx); rx = innerLeft; }
-        if (rx + rw > innerRight) rw = innerRight - rx;
+        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
+        if (rx + rw > clipRight) rw = clipRight - rx;
         if (rw <= 0) continue;
         if (inside) {
           graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
         } else {
           graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
         }
-      } else if (progress < 0.5f && cy >= innerTop && cy <= innerBottom) {
-        int x0 = bounds.size.w - thickness;
+      } else if (progress < 0.5f && cy >= clipTop && cy <= clipBottom) {
+        int x0 = anchorRight;
         int ry = cy - vStep/2;
         int rh = vStep;
-        if (ry < innerTop) { rh -= (innerTop - ry); ry = innerTop; }
-        if (ry + rh > innerBottom) rh = innerBottom - ry;
+        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
+        if (ry + rh > clipBottom) rh = clipBottom - ry;
         if (rh <= 0) continue;
         if (inside) {
           graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
         } else {
           graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
         }
-      } else if (progress < 0.75f && cx >= innerLeft && cx <= innerRight) {
-        int y0 = bounds.size.h - thickness;
+      } else if (progress < 0.75f && cx >= clipLeft && cx <= clipRight) {
+        int y0 = anchorBottom;
         int rx = cx - hStep/2;
         int rw = hStep;
-        if (rx < innerLeft) { rw -= (innerLeft - rx); rx = innerLeft; }
-        if (rx + rw > innerRight) rw = innerRight - rx;
+        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
+        if (rx + rw > clipRight) rw = clipRight - rx;
         if (rw <= 0) continue;
         if (inside) {
           graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
         } else {
           graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
         }
-      } else if (cy >= innerTop && cy <= innerBottom) {
-        int x0 = thickness;
+      } else if (cy >= clipTop && cy <= clipBottom) {
+        int x0 = anchorLeft;
         int ry = cy - vStep/2;
         int rh = vStep;
-        if (ry < innerTop) { rh -= (innerTop - ry); ry = innerTop; }
-        if (ry + rh > innerBottom) rh = innerBottom - ry;
+        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
+        if (ry + rh > clipBottom) rh = clipBottom - ry;
         if (rh <= 0) continue;
         if (inside) {
           graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
