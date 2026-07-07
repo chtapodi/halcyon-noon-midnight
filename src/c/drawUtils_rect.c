@@ -63,30 +63,43 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
 #ifdef PBL_COLOR
-  // ---- Inside-mode tide plot: drawn on center layer behind pips ---- //
-  // Center layer bounds are frame-relative (0,0 is inner frame top-left).
-  // Bars extend from each edge inward; no corner scaling needed.
+  // ---- Parametric tide ribbon: continuous boundary walk, no corner special-casing ---- //
+  // Walks the center-layer frame perimeter as one continuous path, mapping each
+  // t ∈ [0,1] to a boundary point + inward normal via segment arithmetic.
+  // Tide height → displacement along normal. Thin rects form a gap-free ribbon.
   if (globalSettings.showTidePlot && globalSettings.tidePlotInside && tidePointCount >= 2) {
-    int tideSteps = 96;
+    int N = 120;  // sample count (96=current, 120=smoother corners)
     int amp = globalSettings.tideAmplitude;
     int16_t range = tideDataMaxHeight - tideDataMinHeight;
     if (range < 1) range = 1;
-    int stepW = (bounds.size.w * 4) / tideSteps;
-    int stepH = (bounds.size.h * 4) / tideSteps;
-    int hStep = globalSettings.tideBarWidth;
-    int vStep = globalSettings.tideBarWidth;
-    int gapW = globalSettings.tideBarGap;
-    if (hStep == 0) hStep = (gapW > 0) ? (stepW - gapW) : (stepW + 1);
-    else if (gapW > 0 && hStep + gapW > stepW) hStep = stepW - gapW;
-    if (hStep < 1) hStep = 1;
-    if (vStep == 0) vStep = (gapW > 0) ? (stepH - gapW) : (stepH + 1);
-    else if (gapW > 0 && vStep + gapW > stepH) vStep = stepH - gapW;
-    if (vStep < 1) vStep = 1;
+    int w = bounds.size.w, h = bounds.size.h;
+    int perim = 2 * (w + h);
+    int seg1 = w;             // top edge end
+    int seg2 = seg1 + h;      // right edge end
+    int seg3 = seg2 + w;      // bottom edge end
+    int stepW = perim / N + 1; // bar width along perimeter (gap-free)
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
-    for (int i = 0; i < tideSteps; i++) {
-      float p = (float)i / (float)tideSteps;
-      GPoint pos = get_rect_position(p, bounds);
-      int shiftedMinute = (int)(p * 1440.0f);
+    for (int i = 0; i < N; i++) {
+      // ---- parametric boundary: map i → (bx, by, nx, ny) ---- //
+      int dist = (i * perim) / N;
+      int bx, by, nx, ny;
+      if (dist < seg1) {
+        // Top edge: (dist, 0), normal=(0,1) — bar extends DOWN
+        bx = dist; by = 0; nx = 0; ny = 1;
+      } else if (dist < seg2) {
+        // Right edge: (w, dist-seg1), normal=(-1,0) — bar extends LEFT
+        bx = w; by = dist - seg1; nx = -1; ny = 0;
+      } else if (dist < seg3) {
+        // Bottom edge: (w-(dist-seg2), h), normal=(0,-1) — bar extends UP
+        bx = w - (dist - seg2); by = h; nx = 0; ny = -1;
+      } else {
+        // Left edge: (0, h-(dist-seg3)), normal=(1,0) — bar extends RIGHT
+        bx = 0; by = h - (dist - seg3); nx = 1; ny = 0;
+      }
+
+      // ---- tide height at this perimeter position ---- //
+      float t = (float)i / (float)N;
+      int shiftedMinute = (int)(t * 1440.0f);
       int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
       int16_t height = tide_interpolate_height(realMinute);
       int16_t d = ((height - tideDataMinHeight) * amp) / range;
@@ -94,33 +107,34 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
       if (d < 0) d = 0;
       bool hasTide = (height > tideDataMinHeight);
       if (hasTide && d < 4) d = 4;
-      if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
-      int cx = pos.x, cy = pos.y;
-      if (p < 0.25f) {
-        int rx = cx - hStep/2; int rw = hStep;
-        if (rx < 0) { rw += rx; rx = 0; }
-        if (rx + rw > bounds.size.w) rw = bounds.size.w - rx;
-        if (rw <= 0) continue;
-        graphics_fill_rect(ctx, GRect(rx, 0, rw, d), 0, GCornerNone);
-      } else if (p < 0.5f) {
-        int ry = cy - vStep/2; int rh = vStep;
-        if (ry < 0) { rh += ry; ry = 0; }
-        if (ry + rh > bounds.size.h) rh = bounds.size.h - ry;
-        if (rh <= 0) continue;
-        graphics_fill_rect(ctx, GRect(bounds.size.w - d, ry, d, rh), 0, GCornerNone);
-      } else if (p < 0.75f) {
-        int rx = cx - hStep/2; int rw = hStep;
-        if (rx < 0) { rw += rx; rx = 0; }
-        if (rx + rw > bounds.size.w) rw = bounds.size.w - rx;
-        if (rw <= 0) continue;
-        graphics_fill_rect(ctx, GRect(rx, bounds.size.h - d, rw, d), 0, GCornerNone);
-      } else {
-        int ry = cy - vStep/2; int rh = vStep;
-        if (ry < 0) { rh += ry; ry = 0; }
-        if (ry + rh > bounds.size.h) rh = bounds.size.h - ry;
-        if (rh <= 0) continue;
-        graphics_fill_rect(ctx, GRect(0, ry, d, rh), 0, GCornerNone);
+      if (TIDE_BIN_LEVELS > 1 && d > 4) {
+        int bs = amp / (TIDE_BIN_LEVELS - 1);
+        d = ((d + bs/2) / bs) * bs;
       }
+      if (d <= 0) continue;
+
+      // ---- draw thin rect from boundary point inward along normal ---- //
+      // Horizontal bars (top/bottom): centered on bx, extend along x (stepW wide),
+      //   height=d from boundary inward. ny>0=down(top), ny<0=up(bottom).
+      // Vertical bars (left/right): centered on by, extend along y (stepW tall),
+      //   width=d from boundary inward. nx>0=right(left), nx<0=left(right).
+      int rx, ry, rw, rh;
+      if (ny != 0) {
+        // Horizontal bar: width along perimeter, height along normal
+        rx = bx - stepW/2; rw = stepW;
+        ry = (ny > 0) ? by : (by - d); rh = d;
+      } else {
+        // Vertical bar: height along perimeter, width along normal
+        ry = by - stepW/2; rh = stepW;
+        rx = (nx > 0) ? bx : (bx - d); rw = d;
+      }
+      // Clip to bounds
+      if (rx < 0) { rw += rx; rx = 0; }
+      if (ry < 0) { rh += ry; ry = 0; }
+      if (rx + rw > w) rw = w - rx;
+      if (ry + rh > h) rh = h - ry;
+      if (rw <= 0 || rh <= 0) continue;
+      graphics_fill_rect(ctx, GRect(rx, ry, rw, rh), 0, GCornerNone);
     }
   }
 #endif
