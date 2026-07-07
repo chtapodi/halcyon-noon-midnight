@@ -16,6 +16,42 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
   graphics_fill_radial(ctx, bounds, GOvalScaleModeFitCircle, bounds.size.w / 2,
                        0, TRIG_MAX_ANGLE);
 
+#ifdef PBL_COLOR
+  // ---- Inside-mode tide plot: drawn on center layer so it renders behind pips ---- //
+  // Center layer bounds ARE the inner frame — coordinates are (0,0)-(w,h) here
+  if (globalSettings.showTidePlot && globalSettings.tidePlotInside && tidePointCount >= 2) {
+    int tideSteps = 96;
+    int radius = bounds.size.w / 2;
+    int amp = globalSettings.tideAmplitude;
+    int16_t range = tideDataMaxHeight - tideDataMinHeight;
+    if (range < 1) range = 1;
+    graphics_context_set_stroke_color(ctx, currentTheme.tidePlotColor);
+    int lw = globalSettings.tideBarWidth;
+    if (lw == 0) lw = 3;
+    graphics_context_set_stroke_width(ctx, lw);
+    for (int i = 0; i < tideSteps; i++) {
+      int angle = (i * TRIG_MAX_ANGLE) / tideSteps;
+      int shiftedMinute = (i * 1440) / tideSteps;
+      int realMinute = (shiftedMinute - 12 * 60 + 1440) % 1440;
+      int16_t height = tide_interpolate_height(realMinute);
+      int16_t d = ((height - tideDataMinHeight) * amp) / range;
+      if (d > amp) d = amp;
+      if (d < 0) d = 0;
+      if (d > radius) d = radius;
+      int r0 = radius;
+      int r1 = radius - d;
+      if (r1 < 0) r1 = 0;
+      GPoint inner = gpoint_from_polar(bounds, GOvalScaleModeFitCircle, angle);
+      int cx = bounds.origin.x + bounds.size.w / 2;
+      int cy = bounds.origin.y + bounds.size.h / 2;
+      int dx = inner.x - cx;
+      int dy = inner.y - cy;
+      graphics_draw_line(ctx, GPoint(cx + (dx * r0) / radius, cy + (dy * r0) / radius),
+                               GPoint(cx + (dx * r1) / radius, cy + (dy * r1) / radius));
+    }
+  }
+#endif
+
   // Parameters for pips
   int numPips = 24;        // Number of pips (adjust as needed)
   int pip_length = 3;      // Length for smaller pips
@@ -164,12 +200,11 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
                        expanded_thickness, sunsetStartAngle, sunsetEndAngle);
 
   // ---- Draw tide plot UNDER sun and markers ---- //
-  if (globalSettings.showTidePlot && tidePointCount >= 2) {
+  if (globalSettings.showTidePlot && !globalSettings.tidePlotInside && tidePointCount >= 2) {
     int tideSteps = 96;
     int radius = bounds.size.w / 2;
-    bool inside = globalSettings.tidePlotInside;
     int boundaryRadius = radius - thickness;
-    int anchorRadius = inside ? (boundaryRadius - RING_STROKE_WIDTH) : boundaryRadius;
+    int anchorRadius = boundaryRadius;
     int amp = globalSettings.tideAmplitude;
     int16_t range = tideDataMaxHeight - tideDataMinHeight;
     if (range < 1) range = 1;
@@ -188,13 +223,43 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       int dx = inner.x - cx;
       int dy = inner.y - cy;
       int r0 = anchorRadius;
-      int r1 = inside ? (anchorRadius - d) : (anchorRadius + d);
-      if (r1 < 0) r1 = 0;
+      int r1 = anchorRadius + d;
       if (r1 > radius) r1 = radius;
+#ifdef PBL_COLOR
+      int lw = globalSettings.tideBarWidth;
+      if (lw == 0) lw = 3;
+      graphics_context_set_stroke_width(ctx, lw);
+#else
       graphics_context_set_stroke_width(ctx, 3);
+#endif
       graphics_draw_line(ctx, GPoint(cx + (dx * r0) / radius, cy + (dy * r0) / radius),
                                GPoint(cx + (dx * r1) / radius, cy + (dy * r1) / radius));
     }
+#ifdef PBL_COLOR
+    // === Border pass — 1px outline at outer edge ===
+    if (globalSettings.tidePlotBorder) {
+      graphics_context_set_stroke_color(ctx, currentTheme.tidePlotBorderColor);
+      for (int i = 0; i < tideSteps; i++) {
+        int angle = (i * TRIG_MAX_ANGLE) / tideSteps;
+        int shiftedMinute = (i * 1440) / tideSteps;
+        int realMinute = (shiftedMinute - 12 * 60 + 1440) % 1440;
+        int16_t height = tide_interpolate_height(realMinute);
+        int16_t d = ((height - tideDataMinHeight) * amp) / range;
+        if (d > amp) d = amp;
+        if (d < 0) d = 0;
+        GPoint inner = gpoint_from_polar(bounds, GOvalScaleModeFitCircle, angle);
+        int cx = bounds.origin.x + bounds.size.w / 2;
+        int cy = bounds.origin.y + bounds.size.h / 2;
+        int dx = inner.x - cx;
+        int dy = inner.y - cy;
+        int r1 = anchorRadius + d;
+        if (r1 > radius) r1 = radius;
+        int bx = cx + (dx * r1) / radius;
+        int by = cy + (dy * r1) / radius;
+        graphics_fill_rect(ctx, GRect(bx, by, 1, 1), 0, GCornerNone);
+      }
+    }
+#endif
   }
 
   // Draw the sun position
