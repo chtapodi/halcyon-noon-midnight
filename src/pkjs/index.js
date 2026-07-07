@@ -1,5 +1,5 @@
 var USE_LOCAL_CONFIG = false;
-var configDataUri = 'http://192.168.50.84/halcyon-config/';
+var configDataUri = 'http://stickyrice/halcyon-config/';
 var configLocalUri = 'http://10.25.219.23:3000/index.html';
 
 var SunCalc = require('./suncalc');
@@ -515,7 +515,8 @@ Pebble.addEventListener('webviewclosed', function (e) {
     'SETTING_NIGHT_SUN_STROKE_COLOR', 'SETTING_NIGHT_SUN_FILL_COLOR',
     'SETTING_NOON_MARKER_COLOR', 'SETTING_MIDNIGHT_MARKER_COLOR',
     'SETTING_NIGHT_NOON_MARKER_COLOR', 'SETTING_NIGHT_MIDNIGHT_MARKER_COLOR',
-    'SETTING_TIDE_PLOT_COLOR', 'SETTING_NIGHT_TIDE_PLOT_COLOR'
+    'SETTING_TIDE_PLOT_COLOR', 'SETTING_NIGHT_TIDE_PLOT_COLOR',
+    'SETTING_TIDE_PLOT_BORDER_COLOR', 'SETTING_NIGHT_TIDE_PLOT_BORDER_COLOR'
   ];
 
   // Widget string keys — these get Pass 1 applied instead of raw send

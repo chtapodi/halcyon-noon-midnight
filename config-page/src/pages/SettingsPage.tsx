@@ -133,7 +133,12 @@ export const SettingsPage: React.FC = () => {
           </>
         )}
         {settings.SETTING_SHOW_TIDE_PLOT === 1 && (
-          <ColorPicker label="Tide plot color" messageKey="SETTING_TIDE_PLOT_COLOR" />
+          <>
+            <ColorPicker label="Tide plot color" messageKey="SETTING_TIDE_PLOT_COLOR" />
+            {settings.SETTING_TIDE_PLOT_BORDER === 1 && (
+              <ColorPicker label="Border color" messageKey="SETTING_TIDE_PLOT_BORDER_COLOR" />
+            )}
+          </>
         )}
       </Section>
 
@@ -226,7 +231,12 @@ export const SettingsPage: React.FC = () => {
               </>
             )}
             {settings.SETTING_SHOW_TIDE_PLOT === 1 && (
-              <ColorPicker label="Tide plot color" messageKey="SETTING_NIGHT_TIDE_PLOT_COLOR" />
+              <>
+                <ColorPicker label="Tide plot color" messageKey="SETTING_NIGHT_TIDE_PLOT_COLOR" />
+                {settings.SETTING_TIDE_PLOT_BORDER === 1 && (
+                  <ColorPicker label="Border color" messageKey="SETTING_NIGHT_TIDE_PLOT_BORDER_COLOR" />
+                )}
+              </>
             )}
           </>
         )}
@@ -389,6 +399,54 @@ export const SettingsPage: React.FC = () => {
                 { label: '24px', value: 24 },
               ]}
             />
+            <Select
+              label="Bar width"
+              messageKey="SETTING_TIDE_BAR_WIDTH"
+              options={[
+                { label: '0px', value: 0 },
+                { label: '2px', value: 2 },
+                { label: '4px', value: 4 },
+                { label: '6px', value: 6 },
+                { label: '8px', value: 8 },
+                { label: '10px', value: 10 },
+                { label: '14px', value: 14 },
+                { label: '20px', value: 20 },
+              ]}
+            />
+            <Select
+              label="Gap width"
+              messageKey="SETTING_TIDE_BAR_GAP"
+              options={[
+                { label: '0px', value: 0 },
+                { label: '1px', value: 1 },
+                { label: '2px', value: 2 },
+                { label: '3px', value: 3 },
+                { label: '4px', value: 4 },
+                { label: '5px', value: 5 },
+                { label: '6px', value: 6 },
+              ]}
+            />
+            <Toggle
+              label="Plot border"
+              description="Draw an outline along the outer edge of the tide plot"
+              messageKey="SETTING_TIDE_PLOT_BORDER"
+            />
+            {settings.SETTING_TIDE_PLOT_BORDER === 1 && (
+              <>
+                <Select
+                  label="Border width"
+                  messageKey="SETTING_TIDE_BORDER_WIDTH"
+                  options={[
+                    { label: '1px', value: 1 },
+                    { label: '2px', value: 2 },
+                    { label: '3px', value: 3 },
+                    { label: '4px', value: 4 },
+                    { label: '5px', value: 5 },
+                  ]}
+                />
+                <ColorPicker label="Border color" messageKey="SETTING_TIDE_PLOT_BORDER_COLOR" />
+              </>
+            )}
           </>
         )}
       </Section>
