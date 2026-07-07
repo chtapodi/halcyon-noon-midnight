@@ -6,6 +6,12 @@
 
 Settings globalSettings;
 
+// Tide data — runtime only, populated by messaging.c from phone JS
+TidePoint tideData[MAX_TIDE_POINTS];
+uint8_t tidePointCount = 0;
+int16_t tideDataMinHeight = 0;
+int16_t tideDataMaxHeight = 0;
+
 static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra) {
   strncpy(storedSettingsExtra->altCityLabel, globalSettings.altCityLabel,
           ALT_CITY_LABEL_LEN);
@@ -28,6 +34,13 @@ static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra
       globalSettings.nightNoonMarkerColor;
   storedSettingsExtra->nightMidnightMarkerColor =
       globalSettings.nightMidnightMarkerColor;
+  storedSettingsExtra->showTidePlot = globalSettings.showTidePlot;
+  storedSettingsExtra->tidePlotInside = globalSettings.tidePlotInside;
+  storedSettingsExtra->tideAmplitude = globalSettings.tideAmplitude;
+  storedSettingsExtra->tidePlotColor = globalSettings.tidePlotColor;
+  storedSettingsExtra->nightTidePlotColor = globalSettings.nightTidePlotColor;
+  strncpy(storedSettingsExtra->noaaStationId, globalSettings.noaaStationId,
+          NOAA_STATION_ID_LEN);
 }
 
 void Settings_init() { Settings_loadFromStorage(); }
@@ -73,6 +86,14 @@ void Settings_loadFromStorage() {
   globalSettings.nightNoonMarkerColor = DEFAULT_NIGHT_NOON_MARKER_COLOR;
   globalSettings.nightMidnightMarkerColor =
       DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR;
+
+  // tide plot settings
+  globalSettings.showTidePlot = false;
+  globalSettings.tidePlotInside = false;  // outside ring by default
+  globalSettings.tideAmplitude = 16;
+  globalSettings.tidePlotColor = DEFAULT_TIDE_PLOT_COLOR;
+  globalSettings.nightTidePlotColor = DEFAULT_NIGHT_TIDE_PLOT_COLOR;
+  memset(globalSettings.noaaStationId, 0, NOAA_STATION_ID_LEN);
 
   // various appearance settings
   globalSettings.showNoonMidnightMarkers = true;
@@ -155,6 +176,13 @@ void Settings_loadFromStorage() {
           storedSettingsExtra.nightNoonMarkerColor;
       globalSettings.nightMidnightMarkerColor =
           storedSettingsExtra.nightMidnightMarkerColor;
+      globalSettings.showTidePlot = storedSettingsExtra.showTidePlot;
+      globalSettings.tidePlotInside = storedSettingsExtra.tidePlotInside;
+      globalSettings.tideAmplitude = storedSettingsExtra.tideAmplitude;
+      globalSettings.tidePlotColor = storedSettingsExtra.tidePlotColor;
+      globalSettings.nightTidePlotColor = storedSettingsExtra.nightTidePlotColor;
+      strncpy(globalSettings.noaaStationId, storedSettingsExtra.noaaStationId,
+              NOAA_STATION_ID_LEN);
     }
   }
 
@@ -231,6 +259,8 @@ ColorTheme getCurrentColorTheme() {
     theme.sunFillColor = globalSettings.nightSunFillColor;
     theme.noonMarkerColor = globalSettings.nightNoonMarkerColor;
     theme.midnightMarkerColor = globalSettings.nightMidnightMarkerColor;
+    theme.tidePlotColor = globalSettings.nightTidePlotColor;
+    theme.nightTidePlotColor = globalSettings.nightTidePlotColor;
   } else {
     theme.timeColor = globalSettings.timeColor;
     theme.subtextPrimaryColor = globalSettings.subtextPrimaryColor;
@@ -247,6 +277,8 @@ ColorTheme getCurrentColorTheme() {
     theme.sunFillColor = globalSettings.sunFillColor;
     theme.noonMarkerColor = globalSettings.noonMarkerColor;
     theme.midnightMarkerColor = globalSettings.midnightMarkerColor;
+    theme.tidePlotColor = globalSettings.tidePlotColor;
+    theme.nightTidePlotColor = globalSettings.nightTidePlotColor;
   }
 
   return theme;

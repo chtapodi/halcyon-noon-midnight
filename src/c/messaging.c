@@ -97,6 +97,28 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   Tuple *noonMidnightLineWidth_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_NOON_MIDNIGHT_LINE_WIDTH);
 
+  // Tide data tuples
+  Tuple *tidePointCount_tuple =
+      dict_find(iterator, MESSAGE_KEY_TIDE_POINT_COUNT);
+  Tuple *tideMinutes_tuple =
+      dict_find(iterator, MESSAGE_KEY_TIDE_MINUTES);
+  Tuple *tideHeights_tuple =
+      dict_find(iterator, MESSAGE_KEY_TIDE_HEIGHTS);
+
+  // Tide settings
+  Tuple *showTidePlot_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_TIDE_PLOT);
+  Tuple *tidePlotInside_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_PLOT_INSIDE);
+  Tuple *tidePlotColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_PLOT_COLOR);
+  Tuple *nightTidePlotColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_TIDE_PLOT_COLOR);
+  Tuple *tideAmplitude_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_AMPLITUDE);
+  Tuple *noaaStationId_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NOAA_STATION_ID);
+
   Tuple *showLeadingZero_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_LEADING_ZERO);
 
@@ -292,6 +314,77 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (noonMidnightLineWidth_tuple != NULL) {
     globalSettings.noonMidnightLineWidth =
         (uint8_t)noonMidnightLineWidth_tuple->value->int8;
+  }
+
+  // Parse tide data from comma-separated strings
+  if (tidePointCount_tuple != NULL && tideMinutes_tuple != NULL &&
+      tideHeights_tuple != NULL) {
+    int count = (int)tidePointCount_tuple->value->int32;
+    if (count > MAX_TIDE_POINTS) count = MAX_TIDE_POINTS;
+
+    const char *minStr = tideMinutes_tuple->value->cstring;
+    const char *hgtStr = tideHeights_tuple->value->cstring;
+
+    int idx = 0;
+    int hgtCount = 0;
+    int16_t heights[MAX_TIDE_POINTS];
+
+    // Parse heights first
+    const char *p = hgtStr;
+    while (*p && hgtCount < MAX_TIDE_POINTS) {
+      heights[hgtCount++] = (int16_t)atoi(p);
+      while (*p && *p != ',') p++;
+      if (*p == ',') p++;
+    }
+
+    // Parse minutes and pair with heights
+    p = minStr;
+    while (*p && idx < count && idx < hgtCount) {
+      tideData[idx].minute = (int16_t)atoi(p);
+      tideData[idx].height_cm = heights[idx];
+      idx++;
+      while (*p && *p != ',') p++;
+      if (*p == ',') p++;
+    }
+
+    tidePointCount = (uint8_t)idx;
+
+    // Compute min/max heights for amplitude mapping
+    if (idx > 0) {
+      tideDataMinHeight = tideData[0].height_cm;
+      tideDataMaxHeight = tideData[0].height_cm;
+      for (int i = 1; i < idx; i++) {
+        if (tideData[i].height_cm < tideDataMinHeight)
+          tideDataMinHeight = tideData[i].height_cm;
+        if (tideData[i].height_cm > tideDataMaxHeight)
+          tideDataMaxHeight = tideData[i].height_cm;
+      }
+    }
+  }
+
+  // Tide settings
+  if (showTidePlot_tuple != NULL) {
+    globalSettings.showTidePlot = (bool)showTidePlot_tuple->value->int8;
+  }
+  if (tidePlotInside_tuple != NULL) {
+    globalSettings.tidePlotInside = (bool)tidePlotInside_tuple->value->int8;
+  }
+  if (tidePlotColor_tuple != NULL) {
+    globalSettings.tidePlotColor =
+        GColorFromHEX(tidePlotColor_tuple->value->int32);
+  }
+  if (nightTidePlotColor_tuple != NULL) {
+    globalSettings.nightTidePlotColor =
+        GColorFromHEX(nightTidePlotColor_tuple->value->int32);
+  }
+  if (tideAmplitude_tuple != NULL) {
+    globalSettings.tideAmplitude =
+        (uint8_t)tideAmplitude_tuple->value->int8;
+  }
+  if (noaaStationId_tuple != NULL) {
+    strncpy(globalSettings.noaaStationId,
+            noaaStationId_tuple->value->cstring, NOAA_STATION_ID_LEN);
+    globalSettings.noaaStationId[NOAA_STATION_ID_LEN - 1] = '\0';
   }
 
   if (useNightTheme_tuple != NULL) {

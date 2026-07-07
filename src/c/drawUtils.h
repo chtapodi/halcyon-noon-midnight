@@ -23,5 +23,9 @@
 #define RING_STROKE_WIDTH 3
 #define EDGE_THICKNESS (RING_THICKNESS + RING_STROKE_WIDTH)
 
+// Tide plot interpolation — returns height in cm for any minute of day
+// Uses sinusoidal interpolation between consecutive tide extrema
+int16_t tide_interpolate_height(int minuteOfDay);
+
 void draw_center_layer(Layer *layer, GContext *ctx);
 void draw_ring_layer(Layer *layer, GContext *ctx);

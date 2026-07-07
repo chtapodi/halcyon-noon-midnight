@@ -132,6 +132,9 @@ export const SettingsPage: React.FC = () => {
             <ColorPicker label="Midnight marker color" messageKey="SETTING_MIDNIGHT_MARKER_COLOR" />
           </>
         )}
+        {settings.SETTING_SHOW_TIDE_PLOT === 1 && (
+          <ColorPicker label="Tide plot color" messageKey="SETTING_TIDE_PLOT_COLOR" />
+        )}
       </Section>
 
       <Section title="Night Theme">
@@ -221,6 +224,9 @@ export const SettingsPage: React.FC = () => {
                 <ColorPicker label="Noon marker color" messageKey="SETTING_NIGHT_NOON_MARKER_COLOR" />
                 <ColorPicker label="Midnight marker color" messageKey="SETTING_NIGHT_MIDNIGHT_MARKER_COLOR" />
               </>
+            )}
+            {settings.SETTING_SHOW_TIDE_PLOT === 1 && (
+              <ColorPicker label="Tide plot color" messageKey="SETTING_NIGHT_TIDE_PLOT_COLOR" />
             )}
           </>
         )}
@@ -356,6 +362,34 @@ export const SettingsPage: React.FC = () => {
               { label: '12px', value: 12 },
             ]}
           />
+        )}
+      </Section>
+      <Section title="Tide Plot">
+        <Toggle
+          label="Show tide plot"
+          description="Draw tide height as a plot on the ring (requires NOAA data)"
+          messageKey="SETTING_SHOW_TIDE_PLOT"
+        />
+        {settings.SETTING_SHOW_TIDE_PLOT === 1 && (
+          <>
+            <Toggle
+              label="Plot inside ring"
+              description="Draw tide plot toward center instead of outside"
+              messageKey="SETTING_TIDE_PLOT_INSIDE"
+            />
+            <Select
+              label="Amplitude"
+              messageKey="SETTING_TIDE_AMPLITUDE"
+              options={[
+                { label: '4px', value: 4 },
+                { label: '8px', value: 8 },
+                { label: '12px', value: 12 },
+                { label: '16px', value: 16 },
+                { label: '20px', value: 20 },
+                { label: '24px', value: 24 },
+              ]}
+            />
+          </>
         )}
       </Section>
       <DonationLink />

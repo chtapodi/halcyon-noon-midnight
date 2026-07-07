@@ -4,6 +4,7 @@ var configLocalUri = 'http://10.25.219.23:3000/index.html';
 
 var SunCalc = require('./suncalc');
 var Weather = require('./weather');
+var Tide = require('./tides');
 var Languages = require('./languages');
 var Cities = require('./cities');
 
@@ -11,6 +12,7 @@ var Cities = require('./cities');
 var cachedWeather = null;
 var cachedSolar = null;
 var cachedSettings = null;
+var cachedTide = null;
 
 var TIME_FORMAT_STORAGE_KEY = 'halcyonIs24h';
 var DEFAULT_ALT_CITY = 'TOKYO';
@@ -260,6 +262,16 @@ function sendDataToWatch() {
     msg['WEATHER_SUNSET_MINUTE'] = cachedSolar.sunsetMinute;
   }
 
+  // Send tide data for the ring plot
+  if (cachedTide && cachedTide.points && cachedTide.points.length > 0) {
+    msg['TIDE_POINT_COUNT'] = cachedTide.points.length;
+    msg['TIDE_MINUTES'] = cachedTide.points.map(function (p) { return p.minute; }).join(',');
+    msg['TIDE_HEIGHTS'] = cachedTide.points.map(function (p) { return p.height_cm; }).join(',');
+    if (cachedTide.stationId) {
+      msg['SETTING_NOAA_STATION_ID'] = cachedTide.stationId;
+    }
+  }
+
   // Send temp unit setting
   msg['SETTING_TEMP_UNIT'] = isImperial ? 1 : 0;
 
@@ -345,6 +357,21 @@ function locationSuccess(pos) {
     }
   );
 
+  // Fetch tide predictions if tide plot is enabled
+  var showTide = cachedSettings && cachedSettings.SETTING_SHOW_TIDE_PLOT;
+  if (showTide) {
+    Tide.fetch(lat, lng,
+      function (tideData) {
+        cachedTide = tideData;
+        localStorage.setItem('halcyonTide', JSON.stringify(tideData));
+        sendDataToWatch();
+      },
+      function (reason) {
+        console.log('Tide fetch failed: ' + reason);
+      }
+    );
+  }
+
   // NOTE: No setInterval here! The watch sends REQUEST_UPDATE on a timer,
   // which triggers getLocation() → this function again. That approach is
   // reliable because the watch timer always runs, unlike JS setInterval
@@ -369,6 +396,12 @@ Pebble.addEventListener('ready', function (e) {
   var savedSolar = localStorage.getItem('halcyonSolar');
   if (savedSolar) {
     try { cachedSolar = JSON.parse(savedSolar); } catch (e) { }
+  }
+
+  // Restore cached tide
+  var savedTide = localStorage.getItem('halcyonTide');
+  if (savedTide) {
+    try { cachedTide = JSON.parse(savedTide); } catch (e) { }
   }
 
   // Restore settings
@@ -481,7 +514,8 @@ Pebble.addEventListener('webviewclosed', function (e) {
     'SETTING_NIGHT_RING_SUNRISE_COLOR', 'SETTING_NIGHT_RING_SUNSET_COLOR',
     'SETTING_NIGHT_SUN_STROKE_COLOR', 'SETTING_NIGHT_SUN_FILL_COLOR',
     'SETTING_NOON_MARKER_COLOR', 'SETTING_MIDNIGHT_MARKER_COLOR',
-    'SETTING_NIGHT_NOON_MARKER_COLOR', 'SETTING_NIGHT_MIDNIGHT_MARKER_COLOR'
+    'SETTING_NIGHT_NOON_MARKER_COLOR', 'SETTING_NIGHT_MIDNIGHT_MARKER_COLOR',
+    'SETTING_TIDE_PLOT_COLOR', 'SETTING_NIGHT_TIDE_PLOT_COLOR'
   ];
 
   // Widget string keys — these get Pass 1 applied instead of raw send
