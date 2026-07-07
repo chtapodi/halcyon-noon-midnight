@@ -163,6 +163,40 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   graphics_fill_radial(ctx, draw_bounds, GOvalScaleModeFitCircle,
                        expanded_thickness, sunsetStartAngle, sunsetEndAngle);
 
+  // ---- Draw tide plot UNDER sun and markers ---- //
+  if (globalSettings.showTidePlot && tidePointCount >= 2) {
+    int tideSteps = 96;
+    int radius = bounds.size.w / 2;
+    bool inside = globalSettings.tidePlotInside;
+    int boundaryRadius = radius - thickness;
+    int anchorRadius = inside ? (boundaryRadius - RING_STROKE_WIDTH) : boundaryRadius;
+    int amp = globalSettings.tideAmplitude;
+    int16_t range = tideDataMaxHeight - tideDataMinHeight;
+    if (range < 1) range = 1;
+    graphics_context_set_stroke_color(ctx, currentTheme.tidePlotColor);
+    for (int i = 0; i < tideSteps; i++) {
+      int angle = (i * TRIG_MAX_ANGLE) / tideSteps;
+      int shiftedMinute = (i * 1440) / tideSteps;
+      int realMinute = (shiftedMinute - 12 * 60 + 1440) % 1440;
+      int16_t height = tide_interpolate_height(realMinute);
+      int16_t d = ((height - tideDataMinHeight) * amp) / range;
+      if (d > amp) d = amp;
+      if (d < 0) d = 0;
+      GPoint inner = gpoint_from_polar(bounds, GOvalScaleModeFitCircle, angle);
+      int cx = bounds.origin.x + bounds.size.w / 2;
+      int cy = bounds.origin.y + bounds.size.h / 2;
+      int dx = inner.x - cx;
+      int dy = inner.y - cy;
+      int r0 = anchorRadius;
+      int r1 = inside ? (anchorRadius - d) : (anchorRadius + d);
+      if (r1 < 0) r1 = 0;
+      if (r1 > radius) r1 = radius;
+      graphics_context_set_stroke_width(ctx, 3);
+      graphics_draw_line(ctx, GPoint(cx + (dx * r0) / radius, cy + (dy * r0) / radius),
+                               GPoint(cx + (dx * r1) / radius, cy + (dy * r1) / radius));
+    }
+  }
+
   // Draw the sun position
   graphics_context_set_stroke_width(ctx, strokeWidth);
   graphics_context_set_fill_color(ctx, currentTheme.sunFillColor);
@@ -214,56 +248,7 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     graphics_draw_line(ctx, midnightOuter, midnightInner);
     graphics_context_set_stroke_width(ctx, lw);
     graphics_context_set_stroke_color(ctx, currentTheme.midnightMarkerColor);
-    graphics_draw_line(ctx, midnightOuter, midnightInner);
-  }
-
-  // ---- Draw tide plot on the ring (radial displacement) ---- //
-  if (globalSettings.showTidePlot && tidePointCount >= 2) {
-    int tideSteps = 96;
-    int radius = bounds.size.w / 2;
-    bool inside = globalSettings.tidePlotInside;
-    // Anchor at ring's inner boundary (divider), not centerline
-    int boundaryRadius = radius - thickness;
-    // Inside mode: push past the black stroke
-    int anchorRadius = inside ? (boundaryRadius - RING_STROKE_WIDTH) : boundaryRadius;
-    int amp = globalSettings.tideAmplitude;
-    int16_t range = tideDataMaxHeight - tideDataMinHeight;
-    if (range < 1) range = 1;
-
-    graphics_context_set_stroke_color(ctx, currentTheme.tidePlotColor);
-
-    for (int i = 0; i < tideSteps; i++) {
-      int angle = (i * TRIG_MAX_ANGLE) / tideSteps;
-      int shiftedMinute = (i * 1440) / tideSteps;
-      int realMinute = (shiftedMinute - 12 * 60 + 1440) % 1440;
-
-      int16_t height = tide_interpolate_height(realMinute);
-      int16_t d = ((height - tideDataMinHeight) * amp) / range;
-      if (d > amp) d = amp;
-      if (d < 0) d = 0;
-
-      // d in [0, amp]; inside: toward center, outside: toward screen edge
-
-      GPoint inner = gpoint_from_polar(bounds, GOvalScaleModeFitCircle, angle);
-      int cx = bounds.origin.x + bounds.size.w / 2;
-      int cy = bounds.origin.y + bounds.size.h / 2;
-      int dx = inner.x - cx;
-      int dy = inner.y - cy;
-
-      // Anchor at ring boundary; positive d = high tide
-      int r0 = anchorRadius;
-      int r1 = inside ? (anchorRadius - d) : (anchorRadius + d);
-      if (r1 < 0) r1 = 0;
-      if (r1 > radius) r1 = radius;
-
-      int x0 = cx + (dx * r0) / radius;
-      int y0 = cy + (dy * r0) / radius;
-      int x1 = cx + (dx * r1) / radius;
-      int y1 = cy + (dy * r1) / radius;
-
-      graphics_context_set_stroke_width(ctx, 3);
-      graphics_draw_line(ctx, GPoint(x0, y0), GPoint(x1, y1));
-    }
+    #undef DRAW_EDGE_MARKER
   }
 
   //   graphics_context_set_fill_color(ctx, GColorRed);

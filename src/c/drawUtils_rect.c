@@ -207,6 +207,77 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       ctx, GRect(twilightEndRect.origin.x - 2, twilightEndRect.origin.y - 2,
                  twilightEndRect.size.w + 4, twilightEndRect.size.h + 4));
 
+  // ---- Draw tide plot UNDER sun and markers ---- //
+  if (globalSettings.showTidePlot && tidePointCount >= 2) {
+    int tideSteps = 96;
+    int amp = globalSettings.tideAmplitude;
+    int16_t range = tideDataMaxHeight - tideDataMinHeight;
+    if (range < 1) range = 1;
+    int hStep = (bounds.size.w * 4) / tideSteps + 1;
+    int vStep = (bounds.size.h * 4) / tideSteps + 1;
+    bool inside = globalSettings.tidePlotInside;
+    int stroke = RING_STROKE_WIDTH;
+    int anchorTop = thickness + (inside ? stroke : 0);
+    int anchorBottom = bounds.size.h - thickness - (inside ? stroke : 0);
+    int anchorRight = bounds.size.w - thickness - (inside ? stroke : 0);
+    int anchorLeft = thickness + (inside ? stroke : 0);
+    int clipLeft   = inside ? (thickness + stroke) : 0;
+    int clipRight  = inside ? (bounds.size.w - thickness - stroke) : bounds.size.w;
+    int clipTop    = inside ? (thickness + stroke) : 0;
+    int clipBottom = inside ? (bounds.size.h - thickness - stroke) : bounds.size.h;
+    graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
+    for (int i = 0; i < tideSteps; i++) {
+      float p = (float)i / (float)tideSteps;
+      GPoint pos = get_rect_position(p, bounds);
+      int shiftedMinute = (int)(p * 1440.0f);
+      int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
+      int16_t height = tide_interpolate_height(realMinute);
+      int16_t d = ((height - tideDataMinHeight) * amp) / range;
+      if (d > amp) d = amp;
+      if (d < 0) d = 0;
+      int cx = pos.x, cy = pos.y;
+      int cap;
+      if (p < 0.25f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
+      else if (p < 0.5f) { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
+      else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
+      else { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
+      if (d > cap) d = cap;
+      if (p < 0.25f && cx >= clipLeft && cx <= clipRight) {
+        int y0 = inside ? anchorTop : cap;
+        int rx = cx - hStep/2; int rw = hStep;
+        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
+        if (rx + rw > clipRight) rw = clipRight - rx;
+        if (rw <= 0) continue;
+        if (inside) graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
+        else graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
+      } else if (p < 0.5f && cy >= clipTop && cy <= clipBottom) {
+        int x0 = inside ? anchorRight : (bounds.size.w - cap);
+        int ry = cy - vStep/2; int rh = vStep;
+        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
+        if (ry + rh > clipBottom) rh = clipBottom - ry;
+        if (rh <= 0) continue;
+        if (inside) graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
+        else graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
+      } else if (p < 0.75f && cx >= clipLeft && cx <= clipRight) {
+        int y0 = inside ? anchorBottom : (bounds.size.h - cap);
+        int rx = cx - hStep/2; int rw = hStep;
+        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
+        if (rx + rw > clipRight) rw = clipRight - rx;
+        if (rw <= 0) continue;
+        if (inside) graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
+        else graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
+      } else if (cy >= clipTop && cy <= clipBottom) {
+        int x0 = inside ? anchorLeft : cap;
+        int ry = cy - vStep/2; int rh = vStep;
+        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
+        if (ry + rh > clipBottom) rh = clipBottom - ry;
+        if (rh <= 0) continue;
+        if (inside) graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
+        else graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
+      }
+    }
+  }
+
   // cue the sun!
   graphics_context_set_fill_color(ctx, currentTheme.sunFillColor);
   graphics_context_set_stroke_color(ctx, currentTheme.sunStrokeColor);
@@ -265,126 +336,6 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     DRAW_EDGE_MARKER(midnightPos.x, midnightPos.y, midnightProgress, currentTheme.midnightMarkerColor);
 
     #undef DRAW_EDGE_MARKER
-  }
-
-  // ---- Draw tide plot on the ring ---- //
-  if (globalSettings.showTidePlot && tidePointCount >= 2) {
-    int tideSteps = 96;
-    int amp = globalSettings.tideAmplitude;
-    int16_t range = tideDataMaxHeight - tideDataMinHeight;
-    if (range < 1) range = 1;
-
-    // Step widths for gap-free fill — rect spans full segment along ring
-    int hStep = (bounds.size.w * 4) / tideSteps + 1;  // top/bottom step width
-    int vStep = (bounds.size.h * 4) / tideSteps + 1;  // left/right step height
-    bool inside = globalSettings.tidePlotInside;
-    int stroke = RING_STROKE_WIDTH;  // 3px — inside mode starts past the black border
-
-    // Anchor point: outside = ring boundary, inside = past the stroke
-    int anchorTop = thickness + (inside ? stroke : 0);
-    int anchorBottom = bounds.size.h - thickness - (inside ? stroke : 0);
-    int anchorRight = bounds.size.w - thickness - (inside ? stroke : 0);
-    int anchorLeft = thickness + (inside ? stroke : 0);
-
-    // Clip rectangle: inside mode stops at inset boundary; outside fills full ring perimeter
-    int clipLeft   = inside ? (thickness + stroke) : 0;
-    int clipRight  = inside ? (bounds.size.w - thickness - stroke) : bounds.size.w;
-    int clipTop    = inside ? (thickness + stroke) : 0;
-    int clipBottom = inside ? (bounds.size.h - thickness - stroke) : bounds.size.h;
-
-    graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
-
-    for (int i = 0; i < tideSteps; i++) {
-      float progress = (float)i / (float)tideSteps;
-      GPoint pos = get_rect_position(progress, bounds);
-
-      int shiftedMinute = (int)(progress * 1440.0f);
-      int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
-
-      int16_t height = tide_interpolate_height(realMinute);
-      int16_t d = ((height - tideDataMinHeight) * amp) / range;
-      if (d > amp) d = amp;
-      if (d < 0) d = 0;
-
-      int cx = pos.x, cy = pos.y;
-
-      // Outside mode: cap corners at 45° diagonal from inner boundary to screen edge
-      // This creates a clean mitered join where adjacent edges meet
-      int cap;
-      if (progress < 0.25f) {
-        // TOP edge: cap depth varies with x in corner zones
-        cap = thickness;
-        if (cx < thickness) cap = cx;
-        else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx;
-      } else if (progress < 0.5f) {
-        // RIGHT edge: cap varies with y
-        cap = thickness;
-        if (cy < thickness) cap = cy;
-        else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy;
-      } else if (progress < 0.75f) {
-        // BOTTOM edge
-        cap = thickness;
-        if (cx < thickness) cap = cx;
-        else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx;
-      } else {
-        // LEFT edge
-        cap = thickness;
-        if (cy < thickness) cap = cy;
-        else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy;
-      }
-      // Clamp d so it doesn't exceed the cap
-      if (d > cap) d = cap;
-
-      if (progress < 0.25f && cx >= clipLeft && cx <= clipRight) {
-        int y0 = inside ? anchorTop : cap;
-        int rx = cx - hStep/2;
-        int rw = hStep;
-        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
-        if (rx + rw > clipRight) rw = clipRight - rx;
-        if (rw <= 0) continue;
-        if (inside) {
-          graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
-        } else {
-          graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
-        }
-      } else if (progress < 0.5f && cy >= clipTop && cy <= clipBottom) {
-        int x0 = inside ? anchorRight : (bounds.size.w - cap);
-        int ry = cy - vStep/2;
-        int rh = vStep;
-        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
-        if (ry + rh > clipBottom) rh = clipBottom - ry;
-        if (rh <= 0) continue;
-        if (inside) {
-          graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
-        } else {
-          graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
-        }
-      } else if (progress < 0.75f && cx >= clipLeft && cx <= clipRight) {
-        int y0 = inside ? anchorBottom : (bounds.size.h - cap);
-        int rx = cx - hStep/2;
-        int rw = hStep;
-        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
-        if (rx + rw > clipRight) rw = clipRight - rx;
-        if (rw <= 0) continue;
-        if (inside) {
-          graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
-        } else {
-          graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
-        }
-      } else if (cy >= clipTop && cy <= clipBottom) {
-        int x0 = inside ? anchorLeft : cap;
-        int ry = cy - vStep/2;
-        int rh = vStep;
-        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
-        if (ry + rh > clipBottom) rh = clipBottom - ry;
-        if (rh <= 0) continue;
-        if (inside) {
-          graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
-        } else {
-          graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
-        }
-      }
-    }
   }
 }
 #endif
