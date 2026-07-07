@@ -308,26 +308,35 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
 
       int cx = pos.x, cy = pos.y;
 
-      // Outside mode: taper displacement to zero at screen corners
-      // so the plot doesn't extend past where the inner boundary ends
-      if (!inside && d > 0) {
-        int cornerDist;
-        if (progress < 0.25f || (progress >= 0.5f && progress < 0.75f)) {
-          // Top or bottom edge — taper by distance from left/right screen edge
-          cornerDist = cx;
-          if (bounds.size.w - cx < cornerDist) cornerDist = bounds.size.w - cx;
-        } else {
-          // Left or right edge — taper by distance from top/bottom screen edge
-          cornerDist = cy;
-          if (bounds.size.h - cy < cornerDist) cornerDist = bounds.size.h - cy;
-        }
-        if (cornerDist < thickness) {
-          d = (d * cornerDist) / thickness;
-        }
+      // Outside mode: cap corners at 45° diagonal from inner boundary to screen edge
+      // This creates a clean mitered join where adjacent edges meet
+      int cap;
+      if (progress < 0.25f) {
+        // TOP edge: cap depth varies with x in corner zones
+        cap = thickness;
+        if (cx < thickness) cap = cx;
+        else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx;
+      } else if (progress < 0.5f) {
+        // RIGHT edge: cap varies with y
+        cap = thickness;
+        if (cy < thickness) cap = cy;
+        else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy;
+      } else if (progress < 0.75f) {
+        // BOTTOM edge
+        cap = thickness;
+        if (cx < thickness) cap = cx;
+        else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx;
+      } else {
+        // LEFT edge
+        cap = thickness;
+        if (cy < thickness) cap = cy;
+        else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy;
       }
+      // Clamp d so it doesn't exceed the cap
+      if (d > cap) d = cap;
 
       if (progress < 0.25f && cx >= clipLeft && cx <= clipRight) {
-        int y0 = anchorTop;
+        int y0 = inside ? anchorTop : cap;
         int rx = cx - hStep/2;
         int rw = hStep;
         if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
@@ -339,7 +348,7 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
           graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
         }
       } else if (progress < 0.5f && cy >= clipTop && cy <= clipBottom) {
-        int x0 = anchorRight;
+        int x0 = inside ? anchorRight : (bounds.size.w - cap);
         int ry = cy - vStep/2;
         int rh = vStep;
         if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
@@ -351,7 +360,7 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
           graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
         }
       } else if (progress < 0.75f && cx >= clipLeft && cx <= clipRight) {
-        int y0 = anchorBottom;
+        int y0 = inside ? anchorBottom : (bounds.size.h - cap);
         int rx = cx - hStep/2;
         int rw = hStep;
         if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
@@ -363,7 +372,7 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
           graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
         }
       } else if (cy >= clipTop && cy <= clipBottom) {
-        int x0 = anchorLeft;
+        int x0 = inside ? anchorLeft : cap;
         int ry = cy - vStep/2;
         int rh = vStep;
         if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
