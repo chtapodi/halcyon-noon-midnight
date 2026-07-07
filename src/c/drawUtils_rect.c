@@ -5,6 +5,8 @@
 #include "solarUtils.h"
 #include "utils.h"
 
+#define TIDE_BIN_LEVELS 5  // 0=off, 2+=snap d to N discrete levels (4px steps at amp=16)
+
 static ColorTheme currentTheme;
 
 GPoint get_rect_position(float progress, GRect bounds) {
@@ -235,13 +237,16 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       int16_t d = ((height - tideDataMinHeight) * amp) / range;
       if (d > amp) d = amp;
       if (d < 0) d = 0;
+      bool hasTide = (height > tideDataMinHeight);
       int cx = pos.x, cy = pos.y;
       int cap;
       if (p < 0.25f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
       else if (p < 0.5f) { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
       else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
       else { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
-      if (d > cap) d = cap;
+      d = (d * cap) / thickness;  // scale — proportional taper toward corners
+      if (hasTide && d < 4) d = 4;
+      if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
       if (p < 0.25f && cx >= clipLeft && cx <= clipRight) {
         int y0 = inside ? anchorTop : cap;
         int rx = cx - hStep/2; int rw = hStep;
@@ -276,6 +281,66 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
         else graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
       }
     }
+#ifdef PBL_COLOR
+    // === Border pass — draws a thin outline at the outer edge of each bar ===
+    if (globalSettings.tidePlotBorder) {
+      int bdrW = globalSettings.tideBorderWidth;
+      if (bdrW < 1) bdrW = 1;
+      graphics_context_set_fill_color(ctx, currentTheme.tidePlotBorderColor);
+      for (int i = 0; i < tideSteps; i++) {
+        float p = (float)i / (float)tideSteps;
+        GPoint pos = get_rect_position(p, bounds);
+        int shiftedMinute = (int)(p * 1440.0f);
+        int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
+        int16_t height = tide_interpolate_height(realMinute);
+        int16_t d = ((height - tideDataMinHeight) * amp) / range;
+        if (d > amp) d = amp;
+        if (d < 0) d = 0;
+        int cx = pos.x, cy = pos.y;
+        int cap;
+        if (p < 0.25f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
+        else if (p < 0.5f) { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
+        else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
+        else { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
+        d = (d * cap) / thickness;
+        int eb = (d < bdrW) ? d : bdrW;  // shrink gracefully on thin corner bars
+        if (eb <= 0) continue;
+        if (p < 0.25f && cx >= clipLeft && cx <= clipRight) {
+          int y0 = inside ? anchorTop : cap;
+          int rx = cx - hStep/2; int rw = hStep;
+          if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
+          if (rx + rw > clipRight) rw = clipRight - rx;
+          if (rw <= 0) continue;
+          if (inside) graphics_fill_rect(ctx, GRect(rx, y0 + d - eb, rw, eb), 0, GCornerNone);
+          else        graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, eb), 0, GCornerNone);
+        } else if (p < 0.5f && cy >= clipTop && cy <= clipBottom) {
+          int x0 = inside ? anchorRight : (bounds.size.w - cap);
+          int ry = cy - vStep/2; int rh = vStep;
+          if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
+          if (ry + rh > clipBottom) rh = clipBottom - ry;
+          if (rh <= 0) continue;
+          if (inside) graphics_fill_rect(ctx, GRect(x0 - d, ry, eb, rh), 0, GCornerNone);
+          else        graphics_fill_rect(ctx, GRect(x0 + d - eb, ry, eb, rh), 0, GCornerNone);
+        } else if (p < 0.75f && cx >= clipLeft && cx <= clipRight) {
+          int y0 = inside ? anchorBottom : (bounds.size.h - cap);
+          int rx = cx - hStep/2; int rw = hStep;
+          if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
+          if (rx + rw > clipRight) rw = clipRight - rx;
+          if (rw <= 0) continue;
+          if (inside) graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, eb), 0, GCornerNone);
+          else        graphics_fill_rect(ctx, GRect(rx, y0 + d - eb, rw, eb), 0, GCornerNone);
+        } else if (cy >= clipTop && cy <= clipBottom) {
+          int x0 = inside ? anchorLeft : cap;
+          int ry = cy - vStep/2; int rh = vStep;
+          if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
+          if (ry + rh > clipBottom) rh = clipBottom - ry;
+          if (rh <= 0) continue;
+          if (inside) graphics_fill_rect(ctx, GRect(x0 + d - eb, ry, eb, rh), 0, GCornerNone);
+          else        graphics_fill_rect(ctx, GRect(x0 - d, ry, eb, rh), 0, GCornerNone);
+        }
+      }
+    }
+#endif
   }
 
   // cue the sun!
