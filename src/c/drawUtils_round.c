@@ -221,42 +221,38 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   if (globalSettings.showTidePlot && tidePointCount >= 2) {
     int tideSteps = 96;
     int radius = bounds.size.w / 2;
-    int centerRadius = radius - thickness / 2;
+    // Anchor at ring's inner boundary (divider), not centerline
+    int boundaryRadius = radius - thickness;
     int amp = globalSettings.tideAmplitude;
-    int16_t midHeight = (tideDataMinHeight + tideDataMaxHeight) / 2;
-    int16_t halfRange = (tideDataMaxHeight - tideDataMinHeight) / 2;
-    if (halfRange < 1) halfRange = 1;
-    int sign = globalSettings.tidePlotInside ? 1 : -1;
+    int16_t range = tideDataMaxHeight - tideDataMinHeight;
+    if (range < 1) range = 1;
+    bool inside = globalSettings.tidePlotInside;
 
     graphics_context_set_stroke_color(ctx, currentTheme.tidePlotColor);
 
     for (int i = 0; i < tideSteps; i++) {
       int angle = (i * TRIG_MAX_ANGLE) / tideSteps;
-
-      // Reverse 12h shift to get real minute
       int shiftedMinute = (i * 1440) / tideSteps;
       int realMinute = (shiftedMinute - 12 * 60 + 1440) % 1440;
 
       int16_t height = tide_interpolate_height(realMinute);
-      int16_t disp = ((height - midHeight) * amp) / halfRange;
-      if (disp > amp) disp = amp;
-      if (disp < -amp) disp = -amp;
+      int16_t d = ((height - tideDataMinHeight) * amp) / range;
+      if (d > amp) d = amp;
+      if (d < 0) d = 0;
 
-      // Radial inner/outer endpoints
+      // d in [0, amp]; inside: toward center, outside: toward screen edge
+
       GPoint inner = gpoint_from_polar(bounds, GOvalScaleModeFitCircle, angle);
-      // Scale inner point to ring centerline radius
       int cx = bounds.origin.x + bounds.size.w / 2;
       int cy = bounds.origin.y + bounds.size.h / 2;
       int dx = inner.x - cx;
       int dy = inner.y - cy;
 
-      int r0 = centerRadius;
-      int r1 = centerRadius + disp * sign;
-
+      // Anchor at ring boundary; positive d = high tide
+      int r0 = boundaryRadius;
+      int r1 = inside ? (boundaryRadius - d) : (boundaryRadius + d);
       if (r1 < 0) r1 = 0;
       if (r1 > radius) r1 = radius;
-      if (r0 < 0) r0 = 0;
-      if (r0 > radius) r0 = radius;
 
       int x0 = cx + (dx * r0) / radius;
       int y0 = cy + (dy * r0) / radius;

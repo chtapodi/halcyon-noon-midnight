@@ -270,68 +270,62 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
   // ---- Draw tide plot on the ring ---- //
   if (globalSettings.showTidePlot && tidePointCount >= 2) {
     int tideSteps = 96;
-    int halfThickness = thickness / 2;
     int amp = globalSettings.tideAmplitude;
-    int16_t midHeight = (tideDataMinHeight + tideDataMaxHeight) / 2;
-    int16_t halfRange = (tideDataMaxHeight - tideDataMinHeight) / 2;
-    if (halfRange < 1) halfRange = 1;
+    int16_t range = tideDataMaxHeight - tideDataMinHeight;
+    if (range < 1) range = 1;
 
+    // Map [minHeight, maxHeight] → [0, amp] — always extends from boundary
+    // OUTSIDE: extends toward screen edge; INSIDE: extends toward center
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
 
     for (int i = 0; i < tideSteps; i++) {
       float progress = (float)i / (float)tideSteps;
       GPoint pos = get_rect_position(progress, bounds);
 
-      // Reverse the 15h shift to get real minute of day
       int shiftedMinute = (int)(progress * 1440.0f);
       int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
 
       int16_t height = tide_interpolate_height(realMinute);
-      int16_t disp = ((height - midHeight) * amp) / halfRange;
+      int16_t d = ((height - tideDataMinHeight) * amp) / range;
+      if (d > amp) d = amp;
+      if (d < 0) d = 0;
 
-      // Clamp to screen bounds
-      if (disp > amp) disp = amp;
-      if (disp < -amp) disp = -amp;
-
-      int cx = pos.x;
-      int cy = pos.y;
-      int sign = globalSettings.tidePlotInside ? 1 : -1;
+      // Positive d = high tide extends further; 0 = min tide at boundary
+      // OUTSIDE: extends toward screen edge   INSIDE: extends toward center
+      bool inside = globalSettings.tidePlotInside;
+      int cx = pos.x, cy = pos.y;
 
       if (progress < 0.25f) {
-        // TOP edge: vertical displacement
-        int y0 = halfThickness;
-        int d = disp * sign;
-        if (d > 0) {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0 - d, 3, d), 0, GCornerNone);
-        } else {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0, 3, -d), 0, GCornerNone);
-        }
-      } else if (progress < 0.5f) {
-        // RIGHT edge: horizontal displacement
-        int x0 = bounds.size.w - halfThickness;
-        int d = disp * sign;
-        if (d > 0) {
-          graphics_fill_rect(ctx, GRect(x0 - d, cy - 1, d, 3), 0, GCornerNone);
-        } else {
-          graphics_fill_rect(ctx, GRect(x0, cy - 1, -d, 3), 0, GCornerNone);
-        }
-      } else if (progress < 0.75f) {
-        // BOTTOM edge: vertical displacement (inverted)
-        int y0 = bounds.size.h - halfThickness;
-        int d = disp * sign;
-        if (d > 0) {
+        // TOP: ring inner boundary at y=thickness
+        int y0 = thickness;
+        if (inside) {
           graphics_fill_rect(ctx, GRect(cx - 1, y0, 3, d), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0 + d, 3, -d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(cx - 1, y0 - d, 3, d), 0, GCornerNone);
+        }
+      } else if (progress < 0.5f) {
+        // RIGHT: ring inner boundary at x=width-thickness
+        int x0 = bounds.size.w - thickness;
+        if (inside) {
+          graphics_fill_rect(ctx, GRect(x0 - d, cy - 1, d, 3), 0, GCornerNone);
+        } else {
+          graphics_fill_rect(ctx, GRect(x0, cy - 1, d, 3), 0, GCornerNone);
+        }
+      } else if (progress < 0.75f) {
+        // BOTTOM: ring inner boundary at y=height-thickness
+        int y0 = bounds.size.h - thickness;
+        if (inside) {
+          graphics_fill_rect(ctx, GRect(cx - 1, y0 - d, 3, d), 0, GCornerNone);
+        } else {
+          graphics_fill_rect(ctx, GRect(cx - 1, y0, 3, d), 0, GCornerNone);
         }
       } else {
-        // LEFT edge: horizontal displacement (inverted)
-        int x0 = halfThickness;
-        int d = disp * sign;
-        if (d > 0) {
+        // LEFT: ring inner boundary at x=thickness
+        int x0 = thickness;
+        if (inside) {
           graphics_fill_rect(ctx, GRect(x0, cy - 1, d, 3), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(x0 + d, cy - 1, -d, 3), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0 - d, cy - 1, d, 3), 0, GCornerNone);
         }
       }
     }

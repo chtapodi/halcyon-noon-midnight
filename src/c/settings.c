@@ -12,6 +12,21 @@ uint8_t tidePointCount = 0;
 int16_t tideDataMinHeight = 0;
 int16_t tideDataMaxHeight = 0;
 
+// Mock tide data for emulator/testing — overridden when real data arrives
+static void tide_init_mock_data(void) {
+  // Semi-diurnal tide pattern: two highs, two lows per day
+  // Heights in cm, typical SF Bay range (~-50 to +250 cm MLLW)
+  tideData[0] = (TidePoint){.minute = 120, .height_cm = 200};   // 02:00 high +200cm
+  tideData[1] = (TidePoint){.minute = 390, .height_cm = -30};   // 06:30 low -30cm
+  tideData[2] = (TidePoint){.minute = 630, .height_cm = 180};   // 10:30 high +180cm
+  tideData[3] = (TidePoint){.minute = 960, .height_cm = 40};    // 16:00 low +40cm
+  tideData[4] = (TidePoint){.minute = 1200, .height_cm = 220};  // 20:00 high +220cm
+  tideData[5] = (TidePoint){.minute = 1410, .height_cm = -10};  // 23:30 low -10cm
+  tidePointCount = 6;
+  tideDataMinHeight = -30;
+  tideDataMaxHeight = 220;
+}
+
 static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra) {
   strncpy(storedSettingsExtra->altCityLabel, globalSettings.altCityLabel,
           ALT_CITY_LABEL_LEN);
@@ -187,6 +202,12 @@ void Settings_loadFromStorage() {
   }
 
   Settings_updateDynamicSettings();
+
+  // Seed mock tide data for emulator/demo if no real data from phone
+  if (tidePointCount == 0) {
+    tide_init_mock_data();
+    globalSettings.showTidePlot = true;  // auto-enable for emulator testing
+  }
 }
 
 void Settings_saveToStorage() {
