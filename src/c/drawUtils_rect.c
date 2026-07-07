@@ -274,8 +274,11 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     int16_t range = tideDataMaxHeight - tideDataMinHeight;
     if (range < 1) range = 1;
 
-    // Map [minHeight, maxHeight] → [0, amp] — always extends from boundary
-    // OUTSIDE: extends toward screen edge; INSIDE: extends toward center
+    // Step widths for gap-free fill — rect spans full segment along ring
+    int hStep = (bounds.size.w * 4) / tideSteps + 1;  // top/bottom step width
+    int vStep = (bounds.size.h * 4) / tideSteps + 1;  // left/right step height
+    bool inside = globalSettings.tidePlotInside;
+
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
 
     for (int i = 0; i < tideSteps; i++) {
@@ -290,42 +293,35 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       if (d > amp) d = amp;
       if (d < 0) d = 0;
 
-      // Positive d = high tide extends further; 0 = min tide at boundary
-      // OUTSIDE: extends toward screen edge   INSIDE: extends toward center
-      bool inside = globalSettings.tidePlotInside;
       int cx = pos.x, cy = pos.y;
 
       if (progress < 0.25f) {
-        // TOP: ring inner boundary at y=thickness
         int y0 = thickness;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0, 3, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0, hStep, d), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0 - d, 3, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0 - d, hStep, d), 0, GCornerNone);
         }
       } else if (progress < 0.5f) {
-        // RIGHT: ring inner boundary at x=width-thickness
         int x0 = bounds.size.w - thickness;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(x0 - d, cy - 1, d, 3), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0 - d, cy - vStep/2, d, vStep), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(x0, cy - 1, d, 3), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0, cy - vStep/2, d, vStep), 0, GCornerNone);
         }
       } else if (progress < 0.75f) {
-        // BOTTOM: ring inner boundary at y=height-thickness
         int y0 = bounds.size.h - thickness;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0 - d, 3, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0 - d, hStep, d), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(cx - 1, y0, 3, d), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(cx - hStep/2, y0, hStep, d), 0, GCornerNone);
         }
       } else {
-        // LEFT: ring inner boundary at x=thickness
         int x0 = thickness;
         if (inside) {
-          graphics_fill_rect(ctx, GRect(x0, cy - 1, d, 3), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0, cy - vStep/2, d, vStep), 0, GCornerNone);
         } else {
-          graphics_fill_rect(ctx, GRect(x0 - d, cy - 1, d, 3), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0 - d, cy - vStep/2, d, vStep), 0, GCornerNone);
         }
       }
     }

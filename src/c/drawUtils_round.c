@@ -259,7 +259,7 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       int x1 = cx + (dx * r1) / radius;
       int y1 = cy + (dy * r1) / radius;
 
-      graphics_context_set_stroke_width(ctx, 2);
+      graphics_context_set_stroke_width(ctx, 3);
       graphics_draw_line(ctx, GPoint(x0, y0), GPoint(x1, y1));
     }
   }
