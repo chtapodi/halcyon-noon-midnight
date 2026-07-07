@@ -62,6 +62,69 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
 
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
+#ifdef PBL_COLOR
+  // ---- Inside-mode tide plot: drawn on center layer behind pips ---- //
+  // Center layer bounds are frame-relative (0,0 is inner frame top-left).
+  // Bars extend from each edge inward; no corner scaling needed.
+  if (globalSettings.showTidePlot && globalSettings.tidePlotInside && tidePointCount >= 2) {
+    int tideSteps = 96;
+    int amp = globalSettings.tideAmplitude;
+    int16_t range = tideDataMaxHeight - tideDataMinHeight;
+    if (range < 1) range = 1;
+    int stepW = (bounds.size.w * 4) / tideSteps;
+    int stepH = (bounds.size.h * 4) / tideSteps;
+    int hStep = globalSettings.tideBarWidth;
+    int vStep = globalSettings.tideBarWidth;
+    int gapW = globalSettings.tideBarGap;
+    if (hStep == 0) hStep = (gapW > 0) ? (stepW - gapW) : (stepW + 1);
+    else if (gapW > 0 && hStep + gapW > stepW) hStep = stepW - gapW;
+    if (hStep < 1) hStep = 1;
+    if (vStep == 0) vStep = (gapW > 0) ? (stepH - gapW) : (stepH + 1);
+    else if (gapW > 0 && vStep + gapW > stepH) vStep = stepH - gapW;
+    if (vStep < 1) vStep = 1;
+    graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
+    for (int i = 0; i < tideSteps; i++) {
+      float p = (float)i / (float)tideSteps;
+      GPoint pos = get_rect_position(p, bounds);
+      int shiftedMinute = (int)(p * 1440.0f);
+      int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
+      int16_t height = tide_interpolate_height(realMinute);
+      int16_t d = ((height - tideDataMinHeight) * amp) / range;
+      if (d > amp) d = amp;
+      if (d < 0) d = 0;
+      bool hasTide = (height > tideDataMinHeight);
+      if (hasTide && d < 4) d = 4;
+      if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
+      int cx = pos.x, cy = pos.y;
+      if (p < 0.25f) {
+        int rx = cx - hStep/2; int rw = hStep;
+        if (rx < 0) { rw += rx; rx = 0; }
+        if (rx + rw > bounds.size.w) rw = bounds.size.w - rx;
+        if (rw <= 0) continue;
+        graphics_fill_rect(ctx, GRect(rx, 0, rw, d), 0, GCornerNone);
+      } else if (p < 0.5f) {
+        int ry = cy - vStep/2; int rh = vStep;
+        if (ry < 0) { rh += ry; ry = 0; }
+        if (ry + rh > bounds.size.h) rh = bounds.size.h - ry;
+        if (rh <= 0) continue;
+        graphics_fill_rect(ctx, GRect(bounds.size.w - d, ry, d, rh), 0, GCornerNone);
+      } else if (p < 0.75f) {
+        int rx = cx - hStep/2; int rw = hStep;
+        if (rx < 0) { rw += rx; rx = 0; }
+        if (rx + rw > bounds.size.w) rw = bounds.size.w - rx;
+        if (rw <= 0) continue;
+        graphics_fill_rect(ctx, GRect(rx, bounds.size.h - d, rw, d), 0, GCornerNone);
+      } else {
+        int ry = cy - vStep/2; int rh = vStep;
+        if (ry < 0) { rh += ry; ry = 0; }
+        if (ry + rh > bounds.size.h) rh = bounds.size.h - ry;
+        if (rh <= 0) continue;
+        graphics_fill_rect(ctx, GRect(0, ry, d, rh), 0, GCornerNone);
+      }
+    }
+  }
+#endif
+
   int innerPadding = 0;
 
   bounds.origin.x += innerPadding;
@@ -209,8 +272,8 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       ctx, GRect(twilightEndRect.origin.x - 2, twilightEndRect.origin.y - 2,
                  twilightEndRect.size.w + 4, twilightEndRect.size.h + 4));
 
-  // ---- Draw tide plot UNDER sun and markers ---- //
-  if (globalSettings.showTidePlot && tidePointCount >= 2) {
+  // ---- Draw tide plot (outside mode only; inside rendered in center layer) ---- //
+  if (globalSettings.showTidePlot && !globalSettings.tidePlotInside && tidePointCount >= 2) {
     int tideSteps = 96;
     int amp = globalSettings.tideAmplitude;
     int16_t range = tideDataMaxHeight - tideDataMinHeight;
