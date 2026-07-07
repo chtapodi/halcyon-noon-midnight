@@ -56,18 +56,7 @@ int16_t tide_interpolate_height(int minuteOfDay) {
     }
   }
 
-  int32_t period = tideData[idxB].minute;
-  if (idxB == 0 && idxA == tidePointCount - 1) {
-    // Wrapped: B is in next cycle
-    period += 1440;
-  }
-  period -= tideData[idxA].minute;
-  if (idxA == tidePointCount - 1 && idxB == 0) {
-    // A is in current cycle, B is in next cycle
-    // Adjust B upward
-  }
-
-  // Recompute period properly for wrap case
+  // Compute period properly for wrap case
   int32_t aMin = tideData[idxA].minute;
   int32_t bMin = tideData[idxB].minute;
 
@@ -76,7 +65,7 @@ int16_t tide_interpolate_height(int minuteOfDay) {
     bMin += 1440;
   }
 
-  period = bMin - aMin;
+  int32_t period = bMin - aMin;
   if (period <= 0) return tideData[idxA].height_cm;
 
   // Use sin² interpolation: height = A + (B-A) * sin²(π/2 * frac)
