@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build Halcyon+, run emery emulator, screenshot, send to Telegram."""
+"""Build Halcyon+, run emery emulator, screenshot, send to Telegram.
+
+Weather and tide data are seeded via C mock init (no phone JS needed).
+Settings match the deployed Halcyon+ defaults (inside tide, SF Bay mock data).
+"""
 import subprocess, sys, os, requests, argparse
 
 PROJECT = os.path.expanduser('~/projects/pebble-dev/halcyon-noon-midnight')
@@ -27,7 +31,7 @@ def send_image(path, caption, chat_id='385284769'):
 
 def main():
     p = argparse.ArgumentParser(description='Halcyon+ build + screenshot + Telegram')
-    p.add_argument('--inside', action='store_true', help='Inside ring variant')
+    p.add_argument('--outside', action='store_true', help='Outside ring tide variant')
     p.add_argument('--no-send', action='store_true', help='Skip Telegram send')
     p.add_argument('--caption', default=None, help='Custom caption')
     args = p.parse_args()
@@ -35,22 +39,22 @@ def main():
     os.chdir(PROJECT)
 
     # Kill old emulator
-    subprocess.run('pkill -9 -f qemu-pebble 2>/dev/null; pkill -9 -f pypkjs 2>/dev/null', 
+    subprocess.run('pkill -9 -f qemu-pebble 2>/dev/null; pkill -9 -f pypkjs 2>/dev/null',
                    shell=True, capture_output=True)
     os.system('sleep 1')
 
-    # Clear SPI flash
+    # Clear SPI flash for fresh defaults
     if os.path.exists(SPI_FLASH):
         os.remove(SPI_FLASH)
 
-    # Set inside/outside mode
-    if args.inside:
+    # Set mode in mock data init (inside mode is default, --outside flips it)
+    if args.outside:
         with open('src/c/settings.c') as f:
             content = f.read()
-        if 'tidePlotInside = true' not in content:
+        if 'globalSettings.tidePlotInside = false;' not in content:
             content = content.replace(
-                'globalSettings.showTidePlot = true;  // auto-enable for emulator testing',
-                'globalSettings.showTidePlot = true;\n    globalSettings.tidePlotInside = true;')
+                'globalSettings.tidePlotInside = true;   // inside ring by default',
+                'globalSettings.tidePlotInside = false;  // outside ring for screenshot')
             with open('src/c/settings.c', 'w') as f:
                 f.write(content)
 
@@ -67,7 +71,7 @@ def main():
         sys.exit(1)
 
     # Screenshot
-    mode = 'inside' if args.inside else 'outside'
+    mode = 'outside' if args.outside else 'inside'
     path = f'/tmp/halcyon-emery-{mode}.png'
     r = sh(f'DISPLAY=:99 pebble screenshot {path}', timeout=15)
     if 'Saved screenshot' not in r.stdout:
@@ -77,18 +81,18 @@ def main():
     print(f'Screenshot saved: {path}')
 
     # Restore settings if we modified them
-    if args.inside:
+    if args.outside:
         with open('src/c/settings.c') as f:
             content = f.read()
         content = content.replace(
-            'globalSettings.showTidePlot = true;\n    globalSettings.tidePlotInside = true;',
-            'globalSettings.showTidePlot = true;  // auto-enable for emulator testing')
+            'globalSettings.tidePlotInside = false;  // outside ring for screenshot',
+            'globalSettings.tidePlotInside = true;   // inside ring by default')
         with open('src/c/settings.c', 'w') as f:
             f.write(content)
 
     # Send
     if not args.no_send:
-        caption = args.caption or f'Halcyon+ emery - green tide {mode}'
+        caption = args.caption or f'Halcyon+ emery - tide {mode} (SF Bay mock weather)'
         result = send_image(path, caption)
         if result.get('ok'):
             print(f'Sent: msg_id={result["result"]["message_id"]}')
