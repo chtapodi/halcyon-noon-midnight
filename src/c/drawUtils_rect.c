@@ -215,22 +215,56 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
 
   // ---- Draw noon and midnight markers on the ring ---- //
   if (globalSettings.showNoonMidnightMarkers) {
-    int markerWidth = 2;
+    // Solar noon = midpoint between sunrise and sunset
+    int solarNoonMinute = (currentSolarInfo.sunriseMinute + currentSolarInfo.sunsetMinute) / 2;
+    // Solar midnight = 12 hours (720 min) after solar noon
+    int solarMidnightMinute = (solarNoonMinute + 720) % 1440;
 
-    // Noon marker (top edge, vertical bar)
-    graphics_context_set_fill_color(ctx, currentTheme.noonMarkerColor);
-    graphics_fill_rect(ctx,
-        GRect(bounds.size.w / 2 - markerWidth / 2, bounds.origin.y,
-              markerWidth, thickness),
-        0, GCornerNone);
+    // Apply 15h shift
+    int shiftedNoonMinute = (solarNoonMinute + 15 * 60) % (24 * 60);
+    int shiftedMidnightMinute = (solarMidnightMinute + 15 * 60) % (24 * 60);
 
-    // Midnight marker (bottom edge, vertical bar)
-    graphics_context_set_fill_color(ctx, currentTheme.midnightMarkerColor);
-    graphics_fill_rect(ctx,
-        GRect(bounds.size.w / 2 - markerWidth / 2,
-              bounds.origin.y + bounds.size.h - thickness,
-              markerWidth, thickness),
-        0, GCornerNone);
+    float noonProgress = shiftedNoonMinute / 1440.0f;
+    float midnightProgress = shiftedMidnightMinute / 1440.0f;
+
+    GPoint noonPos = get_rect_position(noonProgress, bounds);
+    GPoint midnightPos = get_rect_position(midnightProgress, bounds);
+
+    int lw = globalSettings.noonMidnightLineWidth;
+    int ol = RING_STROKE_WIDTH;  // outline — matches sun outline thickness
+
+    // Helper macro: draw a black-bordered marker perpendicular to the edge
+    #define DRAW_EDGE_MARKER(x, y, progress, color) \
+      if ((progress) < 0.25f) { \
+        /* TOP edge — bar extends down */ \
+        graphics_context_set_fill_color(ctx, GColorBlack); \
+        graphics_fill_rect(ctx, GRect((x) - lw/2 - ol, (y) - ol, lw + 2*ol, thickness + 2*ol), 0, GCornerNone); \
+        graphics_context_set_fill_color(ctx, color); \
+        graphics_fill_rect(ctx, GRect((x) - lw/2, (y), lw, thickness), 0, GCornerNone); \
+      } else if ((progress) < 0.5f) { \
+        /* RIGHT edge — bar extends left */ \
+        graphics_context_set_fill_color(ctx, GColorBlack); \
+        graphics_fill_rect(ctx, GRect((x) - thickness - ol, (y) - lw/2 - ol, thickness + 2*ol, lw + 2*ol), 0, GCornerNone); \
+        graphics_context_set_fill_color(ctx, color); \
+        graphics_fill_rect(ctx, GRect((x) - thickness, (y) - lw/2, thickness, lw), 0, GCornerNone); \
+      } else if ((progress) < 0.75f) { \
+        /* BOTTOM edge — bar extends up */ \
+        graphics_context_set_fill_color(ctx, GColorBlack); \
+        graphics_fill_rect(ctx, GRect((x) - lw/2 - ol, (y) - thickness - ol, lw + 2*ol, thickness + 2*ol), 0, GCornerNone); \
+        graphics_context_set_fill_color(ctx, color); \
+        graphics_fill_rect(ctx, GRect((x) - lw/2, (y) - thickness, lw, thickness), 0, GCornerNone); \
+      } else { \
+        /* LEFT edge — bar extends right */ \
+        graphics_context_set_fill_color(ctx, GColorBlack); \
+        graphics_fill_rect(ctx, GRect((x) - ol, (y) - lw/2 - ol, thickness + 2*ol, lw + 2*ol), 0, GCornerNone); \
+        graphics_context_set_fill_color(ctx, color); \
+        graphics_fill_rect(ctx, GRect((x), (y) - lw/2, thickness, lw), 0, GCornerNone); \
+      }
+
+    DRAW_EDGE_MARKER(noonPos.x, noonPos.y, noonProgress, currentTheme.noonMarkerColor);
+    DRAW_EDGE_MARKER(midnightPos.x, midnightPos.y, midnightProgress, currentTheme.midnightMarkerColor);
+
+    #undef DRAW_EDGE_MARKER
   }
 }
 #endif

@@ -329,6 +329,22 @@ export const SettingsPage: React.FC = () => {
         />
         {settings.SETTING_SHOW_NOON_MIDNIGHT_MARKERS === 1 && (
           <>
+            <Select
+              label="Line width"
+              messageKey="SETTING_NOON_MIDNIGHT_LINE_WIDTH"
+              options={[
+                { label: '1px', value: 1 },
+                { label: '2px', value: 2 },
+                { label: '3px', value: 3 },
+                { label: '4px', value: 4 },
+                { label: '5px', value: 5 },
+                { label: '6px', value: 6 },
+                { label: '7px', value: 7 },
+                { label: '8px', value: 8 },
+                { label: '10px', value: 10 },
+                { label: '12px', value: 12 },
+              ]}
+            />
             <ColorPicker
               label="Noon marker color"
               messageKey="SETTING_NOON_MARKER_COLOR"

@@ -94,6 +94,8 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
       dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_NOON_MARKER_COLOR);
   Tuple *nightMidnightMarkerColor_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_MIDNIGHT_MARKER_COLOR);
+  Tuple *noonMidnightLineWidth_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NOON_MIDNIGHT_LINE_WIDTH);
 
   Tuple *showLeadingZero_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_LEADING_ZERO);
@@ -286,6 +288,10 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (nightMidnightMarkerColor_tuple != NULL) {
     globalSettings.nightMidnightMarkerColor =
         GColorFromHEX(nightMidnightMarkerColor_tuple->value->int32);
+  }
+  if (noonMidnightLineWidth_tuple != NULL) {
+    globalSettings.noonMidnightLineWidth =
+        (uint8_t)noonMidnightLineWidth_tuple->value->int8;
   }
 
   if (useNightTheme_tuple != NULL) {

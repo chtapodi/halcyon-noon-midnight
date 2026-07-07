@@ -151,6 +151,7 @@ typedef struct {
   GColor nightMidnightMarkerColor;
 
   bool showNoonMidnightMarkers;
+  uint8_t noonMidnightLineWidth;
   bool useNightTheme;
   bool useLargeFonts;
   bool showLeadingZero;
@@ -210,6 +211,7 @@ typedef struct {
   GColor nightMidnightMarkerColor;
 
   bool showNoonMidnightMarkers;
+  uint8_t noonMidnightLineWidth;
   bool useNightTheme;
   bool useLargeFonts;
   bool showLeadingZero;
@@ -235,6 +237,7 @@ typedef struct {
   int16_t localUtcOffset;
   bool usePrimaryFontForAllWidgets;
   bool showNoonMidnightMarkers;
+  uint8_t noonMidnightLineWidth;
   GColor noonMarkerColor;
   GColor midnightMarkerColor;
   GColor nightNoonMarkerColor;

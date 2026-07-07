@@ -20,6 +20,8 @@ static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra
       globalSettings.usePrimaryFontForAllWidgets;
   storedSettingsExtra->showNoonMidnightMarkers =
       globalSettings.showNoonMidnightMarkers;
+  storedSettingsExtra->noonMidnightLineWidth =
+      globalSettings.noonMidnightLineWidth;
   storedSettingsExtra->noonMarkerColor = globalSettings.noonMarkerColor;
   storedSettingsExtra->midnightMarkerColor = globalSettings.midnightMarkerColor;
   storedSettingsExtra->nightNoonMarkerColor =
@@ -74,6 +76,7 @@ void Settings_loadFromStorage() {
 
   // various appearance settings
   globalSettings.showNoonMidnightMarkers = true;
+  globalSettings.noonMidnightLineWidth = 5;
   globalSettings.useNightTheme = true;
   globalSettings.useLargeFonts = false;
   globalSettings.showLeadingZero = false;
@@ -143,6 +146,8 @@ void Settings_loadFromStorage() {
           storedSettingsExtra.usePrimaryFontForAllWidgets;
       globalSettings.showNoonMidnightMarkers =
           storedSettingsExtra.showNoonMidnightMarkers;
+      globalSettings.noonMidnightLineWidth =
+          storedSettingsExtra.noonMidnightLineWidth;
       globalSettings.noonMarkerColor = storedSettingsExtra.noonMarkerColor;
       globalSettings.midnightMarkerColor =
           storedSettingsExtra.midnightMarkerColor;

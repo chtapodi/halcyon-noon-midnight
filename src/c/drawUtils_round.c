@@ -172,10 +172,17 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
 
   // ---- Draw noon and midnight markers on the ring ---- //
   if (globalSettings.showNoonMidnightMarkers) {
-    // With 12h shift: noon (12:00) → shifted=0 → angle 0
-    //                 midnight (0:00) → shifted=12 → angle TRIG_MAX_ANGLE/2
-    int noonAngle = 0;
-    int midnightAngle = TRIG_MAX_ANGLE / 2;
+    // Solar noon = midpoint between sunrise and sunset
+    int solarNoonMinute = (currentSolarInfo.sunriseMinute + currentSolarInfo.sunsetMinute) / 2;
+    // Solar midnight = 12 hours (720 min) after solar noon
+    int solarMidnightMinute = (solarNoonMinute + 720) % 1440;
+
+    // Apply 12h shift and convert to angle
+    int shiftedNoonMinute = (solarNoonMinute + 12 * 60) % (24 * 60);
+    int shiftedMidnightMinute = (solarMidnightMinute + 12 * 60) % (24 * 60);
+
+    int noonAngle = (int)((shiftedNoonMinute / 1440.0f) * TRIG_MAX_ANGLE);
+    int midnightAngle = (int)((shiftedMidnightMinute / 1440.0f) * TRIG_MAX_ANGLE);
 
     // Inner bounds for the ring's inner edge
     GRect markerInnerBounds =
@@ -190,13 +197,22 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     GPoint midnightInner = gpoint_from_polar(markerInnerBounds,
                                              GOvalScaleModeFitCircle, midnightAngle);
 
-    graphics_context_set_stroke_width(ctx, 2);
+    int lw = globalSettings.noonMidnightLineWidth;
+    int ol = RING_STROKE_WIDTH;  // outline — matches sun outline thickness
 
-    // Noon marker (right side, 3 o'clock)
+    // Noon marker — black border line then colored line on top
+    graphics_context_set_stroke_width(ctx, lw + 2*ol);
+    graphics_context_set_stroke_color(ctx, GColorBlack);
+    graphics_draw_line(ctx, noonOuter, noonInner);
+    graphics_context_set_stroke_width(ctx, lw);
     graphics_context_set_stroke_color(ctx, currentTheme.noonMarkerColor);
     graphics_draw_line(ctx, noonOuter, noonInner);
 
-    // Midnight marker (left side, 9 o'clock)
+    // Midnight marker — black border line then colored line on top
+    graphics_context_set_stroke_width(ctx, lw + 2*ol);
+    graphics_context_set_stroke_color(ctx, GColorBlack);
+    graphics_draw_line(ctx, midnightOuter, midnightInner);
+    graphics_context_set_stroke_width(ctx, lw);
     graphics_context_set_stroke_color(ctx, currentTheme.midnightMarkerColor);
     graphics_draw_line(ctx, midnightOuter, midnightInner);
   }
