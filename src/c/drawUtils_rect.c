@@ -308,6 +308,24 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
 
       int cx = pos.x, cy = pos.y;
 
+      // Outside mode: taper displacement to zero at screen corners
+      // so the plot doesn't extend past where the inner boundary ends
+      if (!inside && d > 0) {
+        int cornerDist;
+        if (progress < 0.25f || (progress >= 0.5f && progress < 0.75f)) {
+          // Top or bottom edge — taper by distance from left/right screen edge
+          cornerDist = cx;
+          if (bounds.size.w - cx < cornerDist) cornerDist = bounds.size.w - cx;
+        } else {
+          // Left or right edge — taper by distance from top/bottom screen edge
+          cornerDist = cy;
+          if (bounds.size.h - cy < cornerDist) cornerDist = bounds.size.h - cy;
+        }
+        if (cornerDist < thickness) {
+          d = (d * cornerDist) / thickness;
+        }
+      }
+
       if (progress < 0.25f && cx >= clipLeft && cx <= clipRight) {
         int y0 = anchorTop;
         int rx = cx - hStep/2;
