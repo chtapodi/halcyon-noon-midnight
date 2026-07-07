@@ -215,8 +215,22 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     int amp = globalSettings.tideAmplitude;
     int16_t range = tideDataMaxHeight - tideDataMinHeight;
     if (range < 1) range = 1;
-    int hStep = (bounds.size.w * 4) / tideSteps + 1;
-    int vStep = (bounds.size.h * 4) / tideSteps + 1;
+    int stepW = (bounds.size.w * 4) / tideSteps;
+    int stepH = (bounds.size.h * 4) / tideSteps;
+#ifdef PBL_COLOR
+    int hStep = globalSettings.tideBarWidth;
+    int vStep = globalSettings.tideBarWidth;
+    int gapW = globalSettings.tideBarGap;
+    if (hStep == 0) hStep = (gapW > 0) ? (stepW - gapW) : (stepW + 1);
+    else if (gapW > 0 && hStep + gapW > stepW) hStep = stepW - gapW;
+    if (hStep < 1) hStep = 1;
+    if (vStep == 0) vStep = (gapW > 0) ? (stepH - gapW) : (stepH + 1);
+    else if (gapW > 0 && vStep + gapW > stepH) vStep = stepH - gapW;
+    if (vStep < 1) vStep = 1;
+#else
+    int hStep = stepW + 1;
+    int vStep = stepH + 1;
+#endif
     bool inside = globalSettings.tidePlotInside;
     int stroke = RING_STROKE_WIDTH;
     int anchorTop = thickness + (inside ? stroke : 0);
