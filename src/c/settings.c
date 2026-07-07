@@ -12,19 +12,30 @@ uint8_t tidePointCount = 0;
 int16_t tideDataMinHeight = 0;
 int16_t tideDataMaxHeight = 0;
 
+// Mock weather data for emulator/testing — seeds realistic values and
+// pre-renders widget strings the same way the phone-side JS would.
+// Called alongside tide mock when no AppMessage data has arrived.
+static void weather_init_mock_data(void) {
+  // SF Bay summer afternoon: 22°C, high 25°, low 18°, cloudy, 65% humidity,
+  // 15 km/h W wind, UV 6, no rain, 10% precip probability, 12°C dew point.
+  // Widget strings are pre-rendered to match what applyJsTokens() would send.
+  strncpy(globalSettings.widgetUpperSecondary, "22C (25C/18C)", WIDGET_TEXT_LEN);
+  strncpy(globalSettings.widgetUpperPrimary, "Cloudy", WIDGET_TEXT_LEN);
+}
+
 // Mock tide data for emulator/testing — overridden when real data arrives
 static void tide_init_mock_data(void) {
-  // Semi-diurnal tide pattern: two highs, two lows per day
-  // Heights in cm, typical SF Bay range (~-50 to +250 cm MLLW)
-  tideData[0] = (TidePoint){.minute = 120, .height_cm = 200};   // 02:00 high +200cm
-  tideData[1] = (TidePoint){.minute = 390, .height_cm = -30};   // 06:30 low -30cm
-  tideData[2] = (TidePoint){.minute = 630, .height_cm = 180};   // 10:30 high +180cm
-  tideData[3] = (TidePoint){.minute = 960, .height_cm = 40};    // 16:00 low +40cm
-  tideData[4] = (TidePoint){.minute = 1200, .height_cm = 220};  // 20:00 high +220cm
-  tideData[5] = (TidePoint){.minute = 1410, .height_cm = -10};  // 23:30 low -10cm
+  // SF Bay (station 9414290) July 7, 2026 — actual NOAA forecast
+  // Sorted by minute for interpolation; wraps handle cross-midnight
+  tideData[0] = (TidePoint){.minute = 36,   .height_cm = 41};   // Jul 8 00:36 L
+  tideData[1] = (TidePoint){.minute = 309,  .height_cm = 119};  // Jul 7 05:09 H
+  tideData[2] = (TidePoint){.minute = 406,  .height_cm = 110};  // Jul 8 06:46 H
+  tideData[3] = (TidePoint){.minute = 651,  .height_cm = 40};   // Jul 7 10:51 L
+  tideData[4] = (TidePoint){.minute = 1076, .height_cm = 174};  // Jul 7 17:56 H
+  tideData[5] = (TidePoint){.minute = 1408, .height_cm = 59};   // Jul 6 23:28 L
   tidePointCount = 6;
-  tideDataMinHeight = -30;
-  tideDataMaxHeight = 220;
+  tideDataMinHeight = 40;
+  tideDataMaxHeight = 174;
 }
 
 static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra) {
@@ -54,6 +65,14 @@ static void populateStoredSettingsExtra(StoredSettingsExtra *storedSettingsExtra
   storedSettingsExtra->tideAmplitude = globalSettings.tideAmplitude;
   storedSettingsExtra->tidePlotColor = globalSettings.tidePlotColor;
   storedSettingsExtra->nightTidePlotColor = globalSettings.nightTidePlotColor;
+#ifdef PBL_COLOR
+  storedSettingsExtra->tidePlotBorder = globalSettings.tidePlotBorder;
+  storedSettingsExtra->tideBarWidth = globalSettings.tideBarWidth;
+  storedSettingsExtra->tideBarGap = globalSettings.tideBarGap;
+  storedSettingsExtra->tideBorderWidth = globalSettings.tideBorderWidth;
+  storedSettingsExtra->tidePlotBorderColor = globalSettings.tidePlotBorderColor;
+  storedSettingsExtra->nightTidePlotBorderColor = globalSettings.nightTidePlotBorderColor;
+#endif
   strncpy(storedSettingsExtra->noaaStationId, globalSettings.noaaStationId,
           NOAA_STATION_ID_LEN);
 }
@@ -103,11 +122,19 @@ void Settings_loadFromStorage() {
       DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR;
 
   // tide plot settings
-  globalSettings.showTidePlot = false;
-  globalSettings.tidePlotInside = false;  // outside ring by default
+  globalSettings.showTidePlot = true;
+  globalSettings.tidePlotInside = true;   // inside ring by default
   globalSettings.tideAmplitude = 16;
   globalSettings.tidePlotColor = DEFAULT_TIDE_PLOT_COLOR;
   globalSettings.nightTidePlotColor = DEFAULT_NIGHT_TIDE_PLOT_COLOR;
+#ifdef PBL_COLOR
+  globalSettings.tidePlotBorder = false;
+  globalSettings.tideBarWidth = 0;
+  globalSettings.tideBarGap = 0;
+  globalSettings.tideBorderWidth = 3;
+  globalSettings.tidePlotBorderColor = DEFAULT_TIDE_PLOT_BORDER_COLOR;
+  globalSettings.nightTidePlotBorderColor = DEFAULT_NIGHT_TIDE_PLOT_BORDER_COLOR;
+#endif
   memset(globalSettings.noaaStationId, 0, NOAA_STATION_ID_LEN);
 
   // various appearance settings
@@ -196,6 +223,14 @@ void Settings_loadFromStorage() {
       globalSettings.tideAmplitude = storedSettingsExtra.tideAmplitude;
       globalSettings.tidePlotColor = storedSettingsExtra.tidePlotColor;
       globalSettings.nightTidePlotColor = storedSettingsExtra.nightTidePlotColor;
+#ifdef PBL_COLOR
+      globalSettings.tidePlotBorder = storedSettingsExtra.tidePlotBorder;
+      globalSettings.tideBarWidth = storedSettingsExtra.tideBarWidth;
+      globalSettings.tideBarGap = storedSettingsExtra.tideBarGap;
+      globalSettings.tideBorderWidth = storedSettingsExtra.tideBorderWidth;
+      globalSettings.tidePlotBorderColor = storedSettingsExtra.tidePlotBorderColor;
+      globalSettings.nightTidePlotBorderColor = storedSettingsExtra.nightTidePlotBorderColor;
+#endif
       strncpy(globalSettings.noaaStationId, storedSettingsExtra.noaaStationId,
               NOAA_STATION_ID_LEN);
     }
@@ -206,7 +241,12 @@ void Settings_loadFromStorage() {
   // Seed mock tide data for emulator/demo if no real data from phone
   if (tidePointCount == 0) {
     tide_init_mock_data();
+    weather_init_mock_data();
     globalSettings.showTidePlot = true;
+#ifdef PBL_COLOR
+    globalSettings.tidePlotBorder = true;   // enable border for testing
+#endif
+    globalSettings.tidePlotInside = true;   // inside ring by default
   }
 }
 
@@ -282,6 +322,10 @@ ColorTheme getCurrentColorTheme() {
     theme.midnightMarkerColor = globalSettings.nightMidnightMarkerColor;
     theme.tidePlotColor = globalSettings.nightTidePlotColor;
     theme.nightTidePlotColor = globalSettings.nightTidePlotColor;
+#ifdef PBL_COLOR
+    theme.tidePlotBorderColor = globalSettings.nightTidePlotBorderColor;
+    theme.nightTidePlotBorderColor = globalSettings.nightTidePlotBorderColor;
+#endif
   } else {
     theme.timeColor = globalSettings.timeColor;
     theme.subtextPrimaryColor = globalSettings.subtextPrimaryColor;
@@ -300,7 +344,13 @@ ColorTheme getCurrentColorTheme() {
     theme.midnightMarkerColor = globalSettings.midnightMarkerColor;
     theme.tidePlotColor = globalSettings.tidePlotColor;
     theme.nightTidePlotColor = globalSettings.nightTidePlotColor;
+#ifdef PBL_COLOR
+    theme.tidePlotBorderColor = globalSettings.tidePlotBorderColor;
+    theme.nightTidePlotBorderColor = globalSettings.nightTidePlotBorderColor;
+#endif
   }
 
   return theme;
 }
+
+// temp: enable border

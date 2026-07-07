@@ -119,6 +119,21 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   Tuple *noaaStationId_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_NOAA_STATION_ID);
 
+#ifdef PBL_COLOR
+  Tuple *tidePlotBorder_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_PLOT_BORDER);
+  Tuple *tidePlotBorderColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_PLOT_BORDER_COLOR);
+  Tuple *nightTidePlotBorderColor_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_NIGHT_TIDE_PLOT_BORDER_COLOR);
+  Tuple *tideBarWidth_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_BAR_WIDTH);
+  Tuple *tideBarGap_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_BAR_GAP);
+  Tuple *tideBorderWidth_tuple =
+      dict_find(iterator, MESSAGE_KEY_SETTING_TIDE_BORDER_WIDTH);
+#endif
+
   Tuple *showLeadingZero_tuple =
       dict_find(iterator, MESSAGE_KEY_SETTING_SHOW_LEADING_ZERO);
 
@@ -386,6 +401,28 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
             noaaStationId_tuple->value->cstring, NOAA_STATION_ID_LEN);
     globalSettings.noaaStationId[NOAA_STATION_ID_LEN - 1] = '\0';
   }
+#ifdef PBL_COLOR
+  if (tidePlotBorder_tuple != NULL) {
+    globalSettings.tidePlotBorder = (bool)tidePlotBorder_tuple->value->int8;
+  }
+  if (tidePlotBorderColor_tuple != NULL) {
+    globalSettings.tidePlotBorderColor =
+        GColorFromHEX(tidePlotBorderColor_tuple->value->int32);
+  }
+  if (nightTidePlotBorderColor_tuple != NULL) {
+    globalSettings.nightTidePlotBorderColor =
+        GColorFromHEX(nightTidePlotBorderColor_tuple->value->int32);
+  }
+  if (tideBarWidth_tuple != NULL) {
+    globalSettings.tideBarWidth = (uint8_t)tideBarWidth_tuple->value->int8;
+  }
+  if (tideBarGap_tuple != NULL) {
+    globalSettings.tideBarGap = (uint8_t)tideBarGap_tuple->value->int8;
+  }
+  if (tideBorderWidth_tuple != NULL) {
+    globalSettings.tideBorderWidth = (uint8_t)tideBorderWidth_tuple->value->int8;
+  }
+#endif
 
   if (useNightTheme_tuple != NULL) {
     globalSettings.useNightTheme = (bool)useNightTheme_tuple->value->int8;

@@ -3,7 +3,7 @@
 #include <pebble.h>
 #include <sys/syslimits.h>
 
-#define CURRENT_SETTINGS_VERSION 6
+#define CURRENT_SETTINGS_VERSION 7
 #define SETTINGS_VERSION_PERSIST_KEY 1
 #define SETTINGS_PERSIST_KEY 2
 #define SETTINGS_EXTRA_PERSIST_KEY 3
@@ -29,6 +29,7 @@
 #define DEFAULT_NOON_MARKER_COLOR GColorOrange
 #define DEFAULT_MIDNIGHT_MARKER_COLOR GColorDarkGray
 #define DEFAULT_TIDE_PLOT_COLOR GColorGreen
+#define DEFAULT_TIDE_PLOT_BORDER_COLOR GColorBlack
 
 // night theme defaults
 #define DEFAULT_NIGHT_TIME_COLOR GColorFromHEX(0xFFFFFF)
@@ -47,6 +48,7 @@
 #define DEFAULT_NIGHT_NOON_MARKER_COLOR GColorFromHEX(0xFFAA00)
 #define DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR GColorFromHEX(0x5555FF)
 #define DEFAULT_NIGHT_TIDE_PLOT_COLOR GColorFromHEX(0x00FF00)
+#define DEFAULT_NIGHT_TIDE_PLOT_BORDER_COLOR GColorFromHEX(0xFFFFFF)
 #else
 #define DEFAULT_TIME_COLOR GColorBlack
 #define DEFAULT_SUBTEXT_PRIMARY_COLOR GColorBlack
@@ -64,6 +66,7 @@
 #define DEFAULT_NOON_MARKER_COLOR GColorBlack
 #define DEFAULT_MIDNIGHT_MARKER_COLOR GColorBlack
 #define DEFAULT_TIDE_PLOT_COLOR GColorGreen
+#define DEFAULT_TIDE_PLOT_BORDER_COLOR GColorBlack
 
 // night theme defaults
 #define DEFAULT_NIGHT_TIME_COLOR GColorWhite
@@ -82,6 +85,7 @@
 #define DEFAULT_NIGHT_NOON_MARKER_COLOR GColorWhite
 #define DEFAULT_NIGHT_MIDNIGHT_MARKER_COLOR GColorWhite
 #define DEFAULT_NIGHT_TIDE_PLOT_COLOR GColorGreen
+#define DEFAULT_NIGHT_TIDE_PLOT_BORDER_COLOR GColorWhite
 #endif
 
 // default settings, black and white
@@ -119,6 +123,10 @@ typedef struct {
   GColor midnightMarkerColor;
   GColor tidePlotColor;
   GColor nightTidePlotColor;
+#ifdef PBL_COLOR
+  GColor tidePlotBorderColor;
+  GColor nightTidePlotBorderColor;
+#endif
 } ColorTheme;
 
 typedef struct {
@@ -165,6 +173,13 @@ typedef struct {
   uint8_t tideAmplitude;
   GColor tidePlotColor;
   GColor nightTidePlotColor;
+#ifdef PBL_COLOR
+  bool tidePlotBorder;
+  uint8_t tideBarWidth;
+  uint8_t tideBarGap;
+  GColor tidePlotBorderColor;
+  GColor nightTidePlotBorderColor;
+#endif
   char noaaStationId[NOAA_STATION_ID_LEN];
   bool useNightTheme;
   bool useLargeFonts;
@@ -185,6 +200,9 @@ typedef struct {
   int16_t altCity2UtcOffset;
   int16_t localUtcOffset;
   bool usePrimaryFontForAllWidgets;
+#ifdef PBL_COLOR
+  uint8_t tideBorderWidth;  // placed after StoredSettings coverage — loaded from StoredSettingsExtra
+#endif
 } Settings;
 
 typedef struct {
@@ -231,6 +249,13 @@ typedef struct {
   uint8_t tideAmplitude;
   GColor tidePlotColor;
   GColor nightTidePlotColor;
+#ifdef PBL_COLOR
+  bool tidePlotBorder;
+  uint8_t tideBarWidth;
+  uint8_t tideBarGap;
+  GColor tidePlotBorderColor;
+  GColor nightTidePlotBorderColor;
+#endif
   char noaaStationId[NOAA_STATION_ID_LEN];
   bool useNightTheme;
   bool useLargeFonts;
@@ -267,6 +292,12 @@ typedef struct {
   uint8_t tideAmplitude;
   GColor tidePlotColor;
   GColor nightTidePlotColor;
+  bool tidePlotBorder;
+  uint8_t tideBarWidth;
+  uint8_t tideBarGap;
+  uint8_t tideBorderWidth;
+  GColor tidePlotBorderColor;
+  GColor nightTidePlotBorderColor;
   char noaaStationId[NOAA_STATION_ID_LEN];
 } StoredSettingsExtra;
 
