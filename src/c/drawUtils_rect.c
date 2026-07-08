@@ -113,9 +113,6 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
       }
       if (d <= 0) continue;
 
-      // Corner skip: top/bottom edges yield corners to left/right edges
-      if (ny != 0 && (bx < amp || bx > w - amp)) continue;
-
       // ---- draw thin rect from boundary point inward along normal ---- //
       // Horizontal bars (top/bottom): centered on bx, extend along x (stepW wide),
       //   height=d from boundary inward. ny>0=down(top), ny<0=up(bottom).
@@ -140,11 +137,12 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
       graphics_fill_rect(ctx, GRect(rx, ry, rw, rh), 0, GCornerNone);
     }
 #ifdef PBL_COLOR
-    // === Border pass — inner-edge outline ===
+    // === Border pass — continuous inner-edge outline via line segments ===
     if (globalSettings.tidePlotBorder) {
       int bdrW = globalSettings.tideBorderWidth;
       if (bdrW < 1) bdrW = 1;
-      graphics_context_set_fill_color(ctx, currentTheme.tidePlotBorderColor);
+      // First pass: collect inner-edge midpoints for all N bars
+      GPoint edgePt[120];
       for (int i = 0; i < N; i++) {
         int dist = (i * perim) / N;
         int bx, by, nx, ny;
@@ -160,23 +158,18 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
         if (d > amp) d = amp;
         if (d < 0) d = 0;
         if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
-        if (ny != 0 && (bx < amp || bx > w - amp)) continue;  // corner skip
-        int eb = (d < bdrW) ? d : bdrW;  // shrinks on short bars naturally
-        if (eb <= 0) continue;
-        int rx, ry, rw, rh;
-        if (ny != 0) {
-          rx = bx - stepW/2; rw = stepW;
-          ry = (ny > 0) ? (d - eb) : (by - d); rh = eb;
-        } else {
-          ry = by - stepW/2; rh = stepW;
-          rx = (nx > 0) ? (d - eb) : (bx - d); rw = eb;
-        }
-        if (rx < 0) { rw += rx; rx = 0; }
-        if (ry < 0) { rh += ry; ry = 0; }
-        if (rx + rw > w) rw = w - rx;
-        if (ry + rh > h) rh = h - ry;
-        if (rw <= 0 || rh <= 0) continue;
-        graphics_fill_rect(ctx, GRect(rx, ry, rw, rh), 0, GCornerNone);
+        // Inner edge point (where fill meets center)
+        if (ny != 0)
+          edgePt[i] = GPoint(bx, (ny > 0) ? d : (h - d));
+        else
+          edgePt[i] = GPoint((nx > 0) ? d : (w - d), by);
+      }
+      // Second pass: draw line segments connecting consecutive inner edges
+      graphics_context_set_stroke_color(ctx, currentTheme.tidePlotBorderColor);
+      graphics_context_set_stroke_width(ctx, bdrW);
+      for (int i = 0; i < N; i++) {
+        int j = (i + 1) % N;
+        graphics_draw_line(ctx, edgePt[i], edgePt[j]);
       }
     }
 #endif
