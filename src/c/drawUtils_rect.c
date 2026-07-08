@@ -308,16 +308,6 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     int hStep = stepW + 1;
     int vStep = stepH + 1;
 #endif
-    bool inside = globalSettings.tidePlotInside;
-    int stroke = RING_STROKE_WIDTH;
-    int anchorTop = thickness + (inside ? stroke : 0);
-    int anchorBottom = bounds.size.h - thickness - (inside ? stroke : 0);
-    int anchorRight = bounds.size.w - thickness - (inside ? stroke : 0);
-    int anchorLeft = thickness + (inside ? stroke : 0);
-    int clipLeft   = inside ? (thickness + stroke) : 0;
-    int clipRight  = inside ? (bounds.size.w - thickness - stroke) : bounds.size.w;
-    int clipTop    = inside ? (thickness + stroke) : 0;
-    int clipBottom = inside ? (bounds.size.h - thickness - stroke) : bounds.size.h;
     graphics_context_set_fill_color(ctx, currentTheme.tidePlotColor);
     for (int i = 0; i < tideSteps; i++) {
       float p = (float)i / (float)tideSteps;
@@ -331,49 +321,44 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
       bool hasTide = (height > tideDataMinHeight);
       int cx = pos.x, cy = pos.y;
       int cap;
-      if (p < 0.25f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
-      else if (p < 0.5f) { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
-      else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
-      else { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
-      d = (d * cap) / thickness;  // scale — proportional taper toward corners
+      if (p < 0.25f)      { cap = thickness; if (cx < thickness) cap = cx; else if (cx > width - thickness) cap = width - cx; }
+      else if (p < 0.5f)  { cap = thickness; if (cy < thickness) cap = cy; else if (cy > height - thickness) cap = height - cy; }
+      else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > width - thickness) cap = width - cx; }
+      else                { cap = thickness; if (cy < thickness) cap = cy; else if (cy > height - thickness) cap = height - cy; }
+      d = (d * cap) / thickness;
       if (hasTide && d < 4) d = 4;
       if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
-      if (p < 0.25f && cx >= clipLeft && cx <= clipRight) {
-        int y0 = inside ? anchorTop : cap;
+      if (p < 0.25f) {
         int rx = cx - hStep/2; int rw = hStep;
-        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
-        if (rx + rw > clipRight) rw = clipRight - rx;
+        if (rx < 0) { rw += rx; rx = 0; }
+        if (rx + rw > width) rw = width - rx;
         if (rw <= 0) continue;
-        if (inside) graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
-        else graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
-      } else if (p < 0.5f && cy >= clipTop && cy <= clipBottom) {
-        int x0 = inside ? anchorRight : (bounds.size.w - cap);
+        graphics_fill_rect(ctx, GRect(rx, cap - d, rw, d), 0, GCornerNone);
+      } else if (p < 0.5f) {
+        int x0 = width - cap;
         int ry = cy - vStep/2; int rh = vStep;
-        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
-        if (ry + rh > clipBottom) rh = clipBottom - ry;
+        if (ry < 0) { rh += ry; ry = 0; }
+        if (ry + rh > height) rh = height - ry;
         if (rh <= 0) continue;
-        if (inside) graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
-        else graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
-      } else if (p < 0.75f && cx >= clipLeft && cx <= clipRight) {
-        int y0 = inside ? anchorBottom : (bounds.size.h - cap);
+        graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
+      } else if (p < 0.75f) {
+        int y0 = height - cap;
         int rx = cx - hStep/2; int rw = hStep;
-        if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
-        if (rx + rw > clipRight) rw = clipRight - rx;
+        if (rx < 0) { rw += rx; rx = 0; }
+        if (rx + rw > width) rw = width - rx;
         if (rw <= 0) continue;
-        if (inside) graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, d), 0, GCornerNone);
-        else graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
-      } else if (cy >= clipTop && cy <= clipBottom) {
-        int x0 = inside ? anchorLeft : cap;
+        graphics_fill_rect(ctx, GRect(rx, y0, rw, d), 0, GCornerNone);
+      } else {
+        int x0 = cap;
         int ry = cy - vStep/2; int rh = vStep;
-        if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
-        if (ry + rh > clipBottom) rh = clipBottom - ry;
+        if (ry < 0) { rh += ry; ry = 0; }
+        if (ry + rh > height) rh = height - ry;
         if (rh <= 0) continue;
-        if (inside) graphics_fill_rect(ctx, GRect(x0, ry, d, rh), 0, GCornerNone);
-        else graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
+        graphics_fill_rect(ctx, GRect(x0 - d, ry, d, rh), 0, GCornerNone);
       }
     }
 #ifdef PBL_COLOR
-    // === Border pass — draws a thin outline at the outer edge of each bar ===
+    // === Border pass ===
     if (globalSettings.tidePlotBorder) {
       int bdrW = globalSettings.tideBorderWidth;
       if (bdrW < 1) bdrW = 1;
@@ -389,45 +374,40 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
         if (d < 0) d = 0;
         int cx = pos.x, cy = pos.y;
         int cap;
-        if (p < 0.25f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
-        else if (p < 0.5f) { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
-        else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > bounds.size.w - thickness) cap = bounds.size.w - cx; }
-        else { cap = thickness; if (cy < thickness) cap = cy; else if (cy > bounds.size.h - thickness) cap = bounds.size.h - cy; }
+        if (p < 0.25f)      { cap = thickness; if (cx < thickness) cap = cx; else if (cx > width - thickness) cap = width - cx; }
+        else if (p < 0.5f)  { cap = thickness; if (cy < thickness) cap = cy; else if (cy > height - thickness) cap = height - cy; }
+        else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > width - thickness) cap = width - cx; }
+        else                { cap = thickness; if (cy < thickness) cap = cy; else if (cy > height - thickness) cap = height - cy; }
         d = (d * cap) / thickness;
-        int eb = (d < bdrW) ? d : bdrW;  // shrink gracefully on thin corner bars
+        int eb = (d < bdrW) ? d : bdrW;
         if (eb <= 0) continue;
-        if (p < 0.25f && cx >= clipLeft && cx <= clipRight) {
-          int y0 = inside ? anchorTop : cap;
+        if (p < 0.25f) {
           int rx = cx - hStep/2; int rw = hStep;
-          if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
-          if (rx + rw > clipRight) rw = clipRight - rx;
+          if (rx < 0) { rw += rx; rx = 0; }
+          if (rx + rw > width) rw = width - rx;
           if (rw <= 0) continue;
-          if (inside) graphics_fill_rect(ctx, GRect(rx, y0 + d - eb, rw, eb), 0, GCornerNone);
-          else        graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, eb), 0, GCornerNone);
-        } else if (p < 0.5f && cy >= clipTop && cy <= clipBottom) {
-          int x0 = inside ? anchorRight : (bounds.size.w - cap);
+          graphics_fill_rect(ctx, GRect(rx, cap - d, rw, eb), 0, GCornerNone);
+        } else if (p < 0.5f) {
+          int x0 = width - cap;
           int ry = cy - vStep/2; int rh = vStep;
-          if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
-          if (ry + rh > clipBottom) rh = clipBottom - ry;
+          if (ry < 0) { rh += ry; ry = 0; }
+          if (ry + rh > height) rh = height - ry;
           if (rh <= 0) continue;
-          if (inside) graphics_fill_rect(ctx, GRect(x0 - d, ry, eb, rh), 0, GCornerNone);
-          else        graphics_fill_rect(ctx, GRect(x0 + d - eb, ry, eb, rh), 0, GCornerNone);
-        } else if (p < 0.75f && cx >= clipLeft && cx <= clipRight) {
-          int y0 = inside ? anchorBottom : (bounds.size.h - cap);
+          graphics_fill_rect(ctx, GRect(x0 + d - eb, ry, eb, rh), 0, GCornerNone);
+        } else if (p < 0.75f) {
+          int y0 = height - cap;
           int rx = cx - hStep/2; int rw = hStep;
-          if (rx < clipLeft) { rw -= (clipLeft - rx); rx = clipLeft; }
-          if (rx + rw > clipRight) rw = clipRight - rx;
+          if (rx < 0) { rw += rx; rx = 0; }
+          if (rx + rw > width) rw = width - rx;
           if (rw <= 0) continue;
-          if (inside) graphics_fill_rect(ctx, GRect(rx, y0 - d, rw, eb), 0, GCornerNone);
-          else        graphics_fill_rect(ctx, GRect(rx, y0 + d - eb, rw, eb), 0, GCornerNone);
-        } else if (cy >= clipTop && cy <= clipBottom) {
-          int x0 = inside ? anchorLeft : cap;
+          graphics_fill_rect(ctx, GRect(rx, y0 + d - eb, rw, eb), 0, GCornerNone);
+        } else {
+          int x0 = cap;
           int ry = cy - vStep/2; int rh = vStep;
-          if (ry < clipTop) { rh -= (clipTop - ry); ry = clipTop; }
-          if (ry + rh > clipBottom) rh = clipBottom - ry;
+          if (ry < 0) { rh += ry; ry = 0; }
+          if (ry + rh > height) rh = height - ry;
           if (rh <= 0) continue;
-          if (inside) graphics_fill_rect(ctx, GRect(x0 + d - eb, ry, eb, rh), 0, GCornerNone);
-          else        graphics_fill_rect(ctx, GRect(x0 - d, ry, eb, rh), 0, GCornerNone);
+          graphics_fill_rect(ctx, GRect(x0 - d, ry, eb, rh), 0, GCornerNone);
         }
       }
     }
