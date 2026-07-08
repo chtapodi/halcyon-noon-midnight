@@ -113,6 +113,9 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
       }
       if (d <= 0) continue;
 
+      // Corner skip: top/bottom edges yield corners to left/right edges
+      if (ny != 0 && (bx < amp || bx > w - amp)) continue;
+
       // ---- draw thin rect from boundary point inward along normal ---- //
       // Horizontal bars (top/bottom): centered on bx, extend along x (stepW wide),
       //   height=d from boundary inward. ny>0=down(top), ny<0=up(bottom).
@@ -157,6 +160,7 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
         if (d > amp) d = amp;
         if (d < 0) d = 0;
         if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
+        if (ny != 0 && (bx < amp || bx > w - amp)) continue;  // corner skip
         int eb = (d < bdrW) ? d : bdrW;  // shrinks on short bars naturally
         if (eb <= 0) continue;
         int rx, ry, rw, rh;
