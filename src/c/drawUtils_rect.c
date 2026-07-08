@@ -141,6 +141,8 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
     if (globalSettings.tidePlotBorder) {
       int bdrW = globalSettings.tideBorderWidth;
       if (bdrW < 1) bdrW = 1;
+      int bw = stepW - 1;  // no overlap (unlike fill which needs +1)
+      if (bw < 1) bw = 1;
       graphics_context_set_fill_color(ctx, currentTheme.tidePlotBorderColor);
       for (int i = 0; i < N; i++) {
         int dist = (i * perim) / N;
@@ -157,14 +159,14 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
         if (d > amp) d = amp;
         if (d < 0) d = 0;
         if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
+        if (d < bdrW * 3) continue;  // bar too short — border would dominate
         int eb = (d < bdrW) ? d : bdrW;
-        if (eb <= 0) continue;
         int rx, ry, rw, rh;
         if (ny != 0) {
-          rx = bx - stepW/2; rw = stepW;
+          rx = bx - bw/2; rw = bw;
           ry = (ny > 0) ? (d - eb) : (by - d); rh = eb;
         } else {
-          ry = by - stepW/2; rh = stepW;
+          ry = by - bw/2; rh = bw;
           rx = (nx > 0) ? (d - eb) : (bx - d); rw = eb;
         }
         if (rx < 0) { rw += rx; rx = 0; }
@@ -402,6 +404,8 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
     if (globalSettings.tidePlotBorder) {
       int bdrW = globalSettings.tideBorderWidth;
       if (bdrW < 1) bdrW = 1;
+      int bw = hStep - 1; if (bw < 1) bw = 1;
+      int bh = vStep - 1; if (bh < 1) bh = 1;
       graphics_context_set_fill_color(ctx, currentTheme.tidePlotBorderColor);
       for (int i = 0; i < tideSteps; i++) {
         float p = (float)i / (float)tideSteps;
@@ -419,31 +423,31 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
         else if (p < 0.75f) { cap = thickness; if (cx < thickness) cap = cx; else if (cx > width - thickness) cap = width - cx; }
         else                { cap = thickness; if (cy < thickness) cap = cy; else if (cy > height - thickness) cap = height - cy; }
         d = (d * cap) / thickness;
+        if (d < bdrW * 3) continue;
         int eb = (d < bdrW) ? d : bdrW;
-        if (eb <= 0) continue;
         if (p < 0.25f) {
-          int rx = cx - hStep/2; int rw = hStep;
+          int rx = cx - bw/2; int rw = bw;
           if (rx < 0) { rw += rx; rx = 0; }
           if (rx + rw > width) rw = width - rx;
           if (rw <= 0) continue;
           graphics_fill_rect(ctx, GRect(rx, cap - d, rw, eb), 0, GCornerNone);
         } else if (p < 0.5f) {
           int x0 = width - cap;
-          int ry = cy - vStep/2; int rh = vStep;
+          int ry = cy - bh/2; int rh = bh;
           if (ry < 0) { rh += ry; ry = 0; }
           if (ry + rh > height) rh = height - ry;
           if (rh <= 0) continue;
           graphics_fill_rect(ctx, GRect(x0 + d - eb, ry, eb, rh), 0, GCornerNone);
         } else if (p < 0.75f) {
           int y0 = height - cap;
-          int rx = cx - hStep/2; int rw = hStep;
+          int rx = cx - bw/2; int rw = bw;
           if (rx < 0) { rw += rx; rx = 0; }
           if (rx + rw > width) rw = width - rx;
           if (rw <= 0) continue;
           graphics_fill_rect(ctx, GRect(rx, y0 + d - eb, rw, eb), 0, GCornerNone);
         } else {
           int x0 = cap;
-          int ry = cy - vStep/2; int rh = vStep;
+          int ry = cy - bh/2; int rh = bh;
           if (ry < 0) { rh += ry; ry = 0; }
           if (ry + rh > height) rh = height - ry;
           if (rh <= 0) continue;
