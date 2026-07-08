@@ -5,7 +5,7 @@
 #include "solarUtils.h"
 #include "utils.h"
 
-#define TIDE_BIN_LEVELS 5  // 0=off, 2+=snap d to N discrete levels (4px steps at amp=16)
+#define TIDE_BIN_LEVELS 8  // 0=off, 2+=snap d to N discrete levels (3px steps at amp=24)
 
 static ColorTheme currentTheme;
 
