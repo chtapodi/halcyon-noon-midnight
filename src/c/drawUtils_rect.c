@@ -136,6 +136,46 @@ void draw_center_layer(Layer *layer, GContext *ctx) {
       if (rw <= 0 || rh <= 0) continue;
       graphics_fill_rect(ctx, GRect(rx, ry, rw, rh), 0, GCornerNone);
     }
+#ifdef PBL_COLOR
+    // === Border pass — inner-edge outline ===
+    if (globalSettings.tidePlotBorder) {
+      int bdrW = globalSettings.tideBorderWidth;
+      if (bdrW < 1) bdrW = 1;
+      graphics_context_set_fill_color(ctx, currentTheme.tidePlotBorderColor);
+      for (int i = 0; i < N; i++) {
+        int dist = (i * perim) / N;
+        int bx, by, nx, ny;
+        if (dist < seg1)      { bx = dist; by = 0; nx = 0; ny = 1; }
+        else if (dist < seg2) { bx = w; by = dist - seg1; nx = -1; ny = 0; }
+        else if (dist < seg3) { bx = w - (dist - seg2); by = h; nx = 0; ny = -1; }
+        else                  { bx = 0; by = h - (dist - seg3); nx = 1; ny = 0; }
+        float t = (float)i / (float)N;
+        int shiftedMinute = (int)(t * 1440.0f);
+        int realMinute = (shiftedMinute - 15 * 60 + 1440) % 1440;
+        int16_t height = tide_interpolate_height(realMinute);
+        int16_t d = ((height - tideDataMinHeight) * amp) / range;
+        if (d > amp) d = amp;
+        if (d < 0) d = 0;
+        if (TIDE_BIN_LEVELS > 1 && d > 4) { int bs = amp / (TIDE_BIN_LEVELS - 1); d = ((d + bs/2) / bs) * bs; }
+        int eb = (d < bdrW) ? d : bdrW;
+        if (eb <= 0) continue;
+        int rx, ry, rw, rh;
+        if (ny != 0) {
+          rx = bx - stepW/2; rw = stepW;
+          ry = (ny > 0) ? (d - eb) : (by - d); rh = eb;
+        } else {
+          ry = by - stepW/2; rh = stepW;
+          rx = (nx > 0) ? (d - eb) : (bx - d); rw = eb;
+        }
+        if (rx < 0) { rw += rx; rx = 0; }
+        if (ry < 0) { rh += ry; ry = 0; }
+        if (rx + rw > w) rw = w - rx;
+        if (ry + rh > h) rh = h - ry;
+        if (rw <= 0 || rh <= 0) continue;
+        graphics_fill_rect(ctx, GRect(rx, ry, rw, rh), 0, GCornerNone);
+      }
+    }
+#endif
   }
 #endif
 
