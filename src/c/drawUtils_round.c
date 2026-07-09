@@ -236,9 +236,12 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
                                GPoint(cx + (dx * r1) / radius, cy + (dy * r1) / radius));
     }
 #ifdef PBL_COLOR
-    // === Border pass — 1px outline at outer edge ===
+    // === Border pass — 1px unbroken polyline at bar midpoints (center of plot ring) ===
     if (globalSettings.tidePlotBorder) {
       graphics_context_set_stroke_color(ctx, currentTheme.tidePlotBorderColor);
+      graphics_context_set_stroke_width(ctx, globalSettings.tideBorderWidth);
+      int prev_bx = 0, prev_by = 0;
+      bool first = true;
       for (int i = 0; i < tideSteps; i++) {
         int angle = (i * TRIG_MAX_ANGLE) / tideSteps;
         int shiftedMinute = (i * 1440) / tideSteps;
@@ -252,11 +255,16 @@ void draw_ring_layer(Layer *layer, GContext *ctx) {
         int cy = bounds.origin.y + bounds.size.h / 2;
         int dx = inner.x - cx;
         int dy = inner.y - cy;
-        int r1 = anchorRadius + d;
-        if (r1 > radius) r1 = radius;
-        int bx = cx + (dx * r1) / radius;
-        int by = cy + (dy * r1) / radius;
-        graphics_fill_rect(ctx, GRect(bx, by, 1, 1), 0, GCornerNone);
+        // Place at bar midpoint — center of the plot ring band
+        int rmid = anchorRadius + d / 2;
+        int bx = cx + (dx * rmid) / radius;
+        int by = cy + (dy * rmid) / radius;
+        if (!first) {
+          graphics_draw_line(ctx, GPoint(prev_bx, prev_by), GPoint(bx, by));
+        }
+        prev_bx = bx;
+        prev_by = by;
+        first = false;
       }
     }
 #endif
